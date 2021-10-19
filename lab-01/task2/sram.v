@@ -9,6 +9,7 @@
  */
 module sram(
     input clk,
+    input reset,
     input oe,
     input cs,
     input we,
@@ -17,18 +18,28 @@ module sram(
     output[7:0] data_out
 );
 
-    reg [7:0] memory [0:127];
+    integer i;
     reg [7:0] buffer;
+    reg [7:0] memory [0:127];
     
     always @(posedge clk) begin
-        if (cs) begin
+        if (!reset && cs) begin
             if (we) begin
-                memory[address] = data_in;
+                memory[address] <= data_in;
             end else begin
                 buffer = memory[address];
             end
         end
     end
 
-    assign data_out = (oe && !we) ? buffer : 8'bz;
+    always @(reset) begin
+        if (reset) begin
+            buffer = 8'bz;
+            for (i = 0; i < 128; i++) begin
+                memory[i] = 8'b0;
+            end
+        end
+    end
+
+    assign data_out = (cs && oe && !we && !reset) ? buffer : 8'bz;
 endmodule

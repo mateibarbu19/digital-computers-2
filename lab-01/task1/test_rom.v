@@ -23,6 +23,5 @@ module test_rom();
             #5;
         end
     end
-
 endmodule
  
