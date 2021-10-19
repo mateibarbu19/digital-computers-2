@@ -4,13 +4,13 @@ SIM = vvp
 
 .PHONY: build clean
 
-build: ram
+build: sram
 
-ram: ram.v test_ram.v
+sram: sram.v test_sram.v
 	$(CC) $(FLAGS) -o $@ $^
 
-run: ram
+run: sram
 	$(SIM) $<
 
 clean:
-	rm -rf ram waves.vcd
+	rm -rf sram waves.vcd
