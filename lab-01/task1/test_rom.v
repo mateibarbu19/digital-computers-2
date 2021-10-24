@@ -5,7 +5,9 @@ module test_rom();
     reg [3:0] address;
 
     // Outputs.
+    /* verilator lint_off UNUSED */
     wire [7:0] out;
+    /* verilator lint_on UNUSED */
 
     // Initialize Unit Under Test (UUT).
     rom sample_memory (

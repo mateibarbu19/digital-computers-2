@@ -7,10 +7,10 @@ SIM = vvp
 build: rom
 
 rom: rom.v test_rom.v
-	$(CC) $(FLAGS) -o $@ $^
+	$(CC) $(FLAGS) -o $@.vvp $^
 
 run: rom
-	$(SIM) $<
+	$(SIM) $<.vvp
 
 clean:
-	rm -rf rom waves.vcd
+	rm -rf rom.vvp waves.vcd

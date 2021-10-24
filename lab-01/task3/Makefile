@@ -7,10 +7,10 @@ SIM = vvp
 build: sram
 
 sram: sram.v test_sram.v
-	$(CC) $(FLAGS) -o $@ $^
+	$(CC) $(FLAGS) -o $@.vvp $^
 
 run: sram
-	$(SIM) $<
+	$(SIM) $<.vvp
 
 clean:
-	rm -rf sram waves.vcd
+	rm -rf sram.vvp waves.vcd

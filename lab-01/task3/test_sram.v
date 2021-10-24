@@ -8,8 +8,8 @@ module test_sram();
 
 
     reg  [7:0] buffer;
-    /* verilator lint_off UNUSED */
     wire [7:0] data;
+    /* verilator lint_off UNUSED */
     /* verilator lint_on UNUSED */
 
 
