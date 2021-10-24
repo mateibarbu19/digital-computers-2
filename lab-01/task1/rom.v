@@ -1,5 +1,5 @@
 module rom (
-    input [3:0] address,
+    input [3:0]      address,
     output reg [7:0] data
 );
     always @* begin

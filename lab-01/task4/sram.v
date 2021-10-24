@@ -1,4 +1,4 @@
- /*
+/*
  * clk - clock
  * oe - output enable, active high
  * cs - chip select, active high
@@ -28,7 +28,7 @@ module sram(
             buffer <= 8'bz;
             for (i = 0; i < 128; i++) begin
                 /* verilator lint_off BLKLOOPINIT */
-                memory[i] <= 8'b0;
+                memory[i] <= 8'bz;
                 /* verilator lint_on BLKLOOPINIT */
             end
         end if (cs) begin

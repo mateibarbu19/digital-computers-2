@@ -17,14 +17,10 @@ module fetcher (
                FALSE                = 1'b0,
                STATE_IDLE           = 2'd0,
                STATE_SRAM_READ_INIT = 2'b01,
-               STATE_SRAM_READ      = 2'b10;
-    
+               STATE_SRAM_READ      = 2'b10,
+               STATE_SRAM_WRITE     = 2'b11;
+
     task clear_signals;
-        // input reg       we_s;
-        // input reg       cs_s;
-        // input reg       oe_s;
-        // input reg [1:0] state_s;
-        // input reg [7:0] out_buffer_s;
         begin
             we         <= FALSE; 
             cs         <= FALSE;
@@ -35,39 +31,47 @@ module fetcher (
     endtask
 
     always @(posedge clk) begin
+        $display("Time %d State %d SBuffer %d CS %d OE %d WE %d CLK %d", $time, state, sram_buffer, cs, oe, we, clk);
         if (rst) begin
             clear_signals;
         end else begin
             case (state)
                 STATE_IDLE: begin
                     we <= FALSE;
-                    cs <= FALSE;
-                    oe <= FALSE;
                     if (address != 4'dz) begin
+                        cs    <= FALSE;
+                        oe    <= FALSE;
                         state <= STATE_IDLE; 
                     end else begin
+                        cs    <= TRUE;
+                        oe    <= TRUE;
                         state <= STATE_SRAM_READ_INIT;
                     end
                 end
 
                 STATE_SRAM_READ_INIT: begin
-                    we    <= FALSE; 
-                    cs    <= TRUE;
-                    oe    <= TRUE;
                     state <= STATE_SRAM_READ;
                 end
 
                 STATE_SRAM_READ: begin
-                    if (sram_buffer !== 8'dx) begin  // if data is in SRAM ????
-                        out_buffer <= sram_buffer;
+                    oe <= FALSE;
+                    if (sram_buffer !== 8'dz) begin                        
+                        we         <= FALSE;
+                        cs         <= FALSE;
                         state      <= STATE_IDLE;
+                        out_buffer <= sram_buffer;
                     end else begin
-                        out_buffer <= rom_buffer; // if data is NOT SRAM, take it from ROM
-                        // set flags to write data in SRAM
-                        oe    <= FALSE; 
-                        we    <= TRUE; 
-                        state <= STATE_IDLE;
+                        we         <= TRUE; 
+                        cs         <= TRUE;
+                        state      <= STATE_SRAM_WRITE;
+                        out_buffer <= rom_buffer;
                     end
+                end
+
+                STATE_SRAM_WRITE: begin
+                    we    <= FALSE;
+                    cs    <= FALSE;
+                    state <= STATE_IDLE;
                 end
 
                 default: begin
@@ -79,7 +83,7 @@ module fetcher (
 
     // Assign a value to data bus
     assign data = out_buffer;
-    assign sram_buffer = ((state == STATE_SRAM_READ) & we) ? out_buffer : 8'dz;
+    assign sram_buffer = ((state == STATE_SRAM_WRITE) & we) ? out_buffer : 8'dz;
 
     rom memory (
         .address(address),

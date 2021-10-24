@@ -1,5 +1,7 @@
 # Digital Computers 2
 
+![alt text](example.svg "Laboratory 1, task 4, fetcher module, synthesized and rendered")
+
 ## Table of Contents
 
 1. [Repository description](#Repository_description)
