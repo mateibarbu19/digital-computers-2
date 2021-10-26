@@ -1,7 +1,7 @@
 `include "defines.vh"
 `timescale 1ns / 1ps
 
-module checker(
+module checker_t (
     output wire [`TEST_I_ADDR_WIDTH - 1: 0] test,
     output reg                              result,
     input  wire                             clk,

@@ -13,7 +13,7 @@ module checker_view();
     wire                            result;
 
     // Instantiate the Unit Under Test (UUT)
-    checker uut (
+    checker_t uut (
         .clk(clk),
         .reset(reset),
         .test(test),
