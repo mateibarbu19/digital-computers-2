@@ -2,7 +2,7 @@
 
 ## CONTROL UNIT
 
-## DECODE UNIT
+### DECODE UNIT
 
 > Description: decodes instructions from machine code.
 
@@ -13,7 +13,7 @@ the number of operands or the access to registers.
 
 Code source: `decode_unit.v`
 
-## SIGNALS
+### SIGNALS
 
 > Description: Determines the control signals, used by the processor,
 > depending on the stage of the assembly line in which it is located and
@@ -22,7 +22,7 @@ Code source: `decode_unit.v`
 
 Code source: `signal_generation_unit.v`
 
-## FSM
+### FSM
 
 > Description: simulates the pipeline.
 
@@ -30,7 +30,7 @@ It is responsible for the transition between the stages of the pipeline.
 
 Code source: `state_machine.v`
 
-## REGISTERS INTERFACE UNIT
+### REGISTERS INTERFACE UNIT
 > Description: determines whether to write/read to/from registers.
 
 Specifies the register used.
@@ -38,7 +38,7 @@ Transports data to/from the registry.
 
 Code source: `reg_file_interface.v`
 
-## BUS INTERFACE UNIT
+### BUS INTERFACE UNIT
 
 > Description: establishes a communication channel.
 
