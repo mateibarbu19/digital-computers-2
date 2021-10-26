@@ -1,4 +1,6 @@
+`timescale 1ns / 1ps
 `include "defines.vh"
+
 module decode_unit #(
         parameter  INSTR_WIDTH  = 16,   // instructions are 16 bits in width
         parameter  R_ADDR_WIDTH = 5

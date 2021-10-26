@@ -2,15 +2,15 @@
 `include "defines.vh"
 
 // Check your code by simulating this file. `result` signal should be 1.
-module checker_view;
+module checker_view();
 		
     // Inputs
     reg clk;
     reg reset;
 
     // Outputs
-    wire [`TEST_I_ADDR_WIDTH - 1: 0]    test;
-    wire                                result;
+    wire [`TEST_I_ADDR_WIDTH - 1:0] test;
+    wire                            result;
 
     // Instantiate the Unit Under Test (UUT)
     checker uut (
@@ -23,6 +23,8 @@ module checker_view;
     always #10 clk = ~clk;
 
     initial begin
+        $dumpfile("waves.vcd");
+        $dumpvars(0, checker_view);
         // Initialize Inputs
         clk = 0;
         reset = 1;
@@ -30,5 +32,8 @@ module checker_view;
         // Wait 100 ns for global reset to finish
         #100;
         reset = 0;
+
+        #700;
+        $finish();
     end
 endmodule

@@ -69,4 +69,3 @@
 `define CONTROL_REG_RR_WRITE    3
 `define CONTROL_REG_RD_READ     4
 `define CONTROL_REG_RD_WRITE    5
-

@@ -1,4 +1,6 @@
+`timescale 1ns / 1ps
 `include "defines.vh"
+
 module control_unit #(
         parameter  INSTR_WIDTH = 16,   // instructions are 16 bits in width
         parameter   DATA_WIDTH = 8,    // registers are 8 bits in width

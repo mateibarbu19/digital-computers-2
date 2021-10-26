@@ -1,4 +1,6 @@
+`timescale 1ns / 1ps
 `include "defines.vh"
+
 module signal_generation_unit (
         input  wire  [`STAGE_COUNT-1:0] pipeline_stage,
         input  wire [`OPCODE_COUNT-1:0] opcode_type,

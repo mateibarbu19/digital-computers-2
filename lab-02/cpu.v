@@ -1,4 +1,6 @@
+`timescale 1ns / 1ps
 `include "defines.vh"
+
 module cpu #(
         parameter      INSTR_WIDTH  = 16,   // instructions are 16 bits in width
         parameter       DATA_WIDTH  = 8,    // registers are 8 bits in width
@@ -18,34 +20,34 @@ module cpu #(
 `endif
     );
 `ifdef DEBUG
-    assign debug_pipeline_stage   = pipeline_stage;
-    assign debug_alu_rr  = alu_rr;
-    assign debug_alu_rd  = alu_rd;
-    assign debug_alu_out = alu_out;
-     assign debug_program_counter = program_counter;
-     assign debug_flags_out = alu_flags_out;
+    assign debug_pipeline_stage  = pipeline_stage;
+    assign debug_alu_rr          = alu_rr;
+    assign debug_alu_rd          = alu_rd;
+    assign debug_alu_out         = alu_out;
+    assign debug_program_counter = program_counter;
+    assign debug_flags_out       = alu_flags_out;
 `endif
 
     wire [`STAGE_COUNT-1:0] pipeline_stage;
-    wire [I_ADDR_WIDTH-1:0]  program_counter;
-    wire [INSTR_WIDTH-1:0] instruction;
-    wire [R_ADDR_WIDTH-1:0]    rr_addr;
-    wire [R_ADDR_WIDTH-1:0]    rd_addr;
-    wire [DATA_WIDTH-1:0]  rr_data;
-    wire [DATA_WIDTH-1:0]  rd_data;
-    wire                   rr_cs;
-    wire                   rd_cs;
-    wire                   rr_we;
-    wire                   rd_we;
-    wire                   rr_oe;
-    wire                   rd_oe;
-    wire                   alu_enable;
-    wire [`OPSEL_COUNT-1:0]  alu_opsel;
-    wire [DATA_WIDTH-1:0]  alu_rr;
-    wire [DATA_WIDTH-1:0]  alu_rd;
-    wire [DATA_WIDTH-1:0]  alu_out;
-    wire [`FLAG_COUNT-1:0]   alu_flags_in;
-    wire [`FLAG_COUNT-1:0]   alu_flags_out;
+    wire [I_ADDR_WIDTH-1:0] program_counter;
+    wire [INSTR_WIDTH-1:0]  instruction;
+    wire [R_ADDR_WIDTH-1:0] rr_addr;
+    wire [R_ADDR_WIDTH-1:0] rd_addr;
+    wire [DATA_WIDTH-1:0]   rr_data;
+    wire [DATA_WIDTH-1:0]   rd_data;
+    wire                    rr_cs;
+    wire                    rd_cs;
+    wire                    rr_we;
+    wire                    rd_we;
+    wire                    rr_oe;
+    wire                    rd_oe;
+    wire                    alu_enable;
+    wire [`OPSEL_COUNT-1:0] alu_opsel;
+    wire [DATA_WIDTH-1:0]   alu_rr;
+    wire [DATA_WIDTH-1:0]   alu_rd;
+    wire [DATA_WIDTH-1:0]   alu_out;
+    wire [`FLAG_COUNT-1:0]  alu_flags_in;
+    wire [`FLAG_COUNT-1:0]  alu_flags_out;
 
     control_unit #(
         .I_ADDR_WIDTH(I_ADDR_WIDTH),

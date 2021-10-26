@@ -1,4 +1,6 @@
+`timescale 1ns / 1ps
 `include "defines.vh"
+
 module state_machine (
         output reg  [`STAGE_COUNT-1:0] pipeline_stage,
         input  wire                    clk,

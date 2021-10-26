@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module rom #(
         parameter   DATA_WIDTH = 16,
         parameter   ADDR_WIDTH = 8          // 2 * 1024 bytes of ROM

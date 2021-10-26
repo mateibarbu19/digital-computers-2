@@ -1,13 +1,12 @@
-// Last modified: 21.10.2018 
-// Author: dosarudaniel@gmail.com
 `include "defines.vh"
+`timescale 1ns / 1ps
 
 module checker(
-        input   wire                                clk,
-        input   wire                                reset,
-        output  wire    [`TEST_I_ADDR_WIDTH - 1: 0] test,
-        output  reg                                 result
-    );
+    output wire [`TEST_I_ADDR_WIDTH - 1: 0] test,
+    output reg                              result,
+    input  wire                             clk,
+    input  wire                             reset
+);
 
 `ifdef DEBUG
     wire [`STAGE_COUNT - 1: 0]          debug_pipeline_stage;
@@ -44,8 +43,8 @@ module checker(
         /* Test instruction number, and OK if alu_rr is value we think it is
          * alu_rd is value we think it is alu_out is value we think it is flags
          * is value we think it is.
-			* This instruction set manual was used for this checker:
-			* http://ww1.microchip.com/downloads/en/devicedoc/atmel-0856-avr-instruction-set-manual.pdf
+            * This instruction set manual was used for this checker:
+            * http://ww1.microchip.com/downloads/en/devicedoc/atmel-0856-avr-instruction-set-manual.pdf
          */
 
         /* 0: nop
@@ -71,11 +70,11 @@ module checker(
                 else
                     result <= 1'bx;
             end
-				
+                
             1: begin
-					 /* neg 1111_1110 # -> out == 0000_0010 ; only carry flag is set*/
+                     /* neg 1111_1110 # -> out == 0000_0010 ; only carry flag is set*/
                 if (debug_flags_out == 8'b0000_0001 && debug_alu_rd == 254 
-							&& debug_alu_out == 2 && debug_pipeline_stage == 3)
+                            && debug_alu_out == 2 && debug_pipeline_stage == 3)
                     result <= 1'b1;
                 else if (debug_pipeline_stage != 3)
                     result <= 1'b1;
@@ -84,7 +83,7 @@ module checker(
             end
 
             2: begin
-					 /* add 0000_0010, 1111_1110 # -> out == 1111_1111; N and S flags are set  */
+                     /* add 0000_0010, 1111_1110 # -> out == 1111_1111; N and S flags are set  */
                 if (debug_flags_out == 8'b0001_0100 && debug_alu_rr == 253 &&
                         debug_alu_rd == 2 && debug_alu_out == 255 &&
                         debug_pipeline_stage == 3)
@@ -96,7 +95,7 @@ module checker(
             end
 
             3: begin
-					 /* sub 1111_1111, 1111_1101 # -> out == 0000_0010; no flag is set */
+                     /* sub 1111_1111, 1111_1101 # -> out == 0000_0010; no flag is set */
                 if (debug_flags_out == 8'b0000_0000 && debug_alu_rr == 253 &&
                         debug_alu_rd == 255 && debug_alu_out == 2 &&
                         debug_pipeline_stage == 3)
@@ -108,7 +107,7 @@ module checker(
             end
 
             4: begin
-					 /* and 0000_0010, 1111_1101 # -> out == 0000_0000; only zero flag is set */
+                     /* and 0000_0010, 1111_1101 # -> out == 0000_0000; only zero flag is set */
                 if (debug_flags_out == 8'b0000_0010 && debug_alu_rr == 253 &&
                         debug_alu_rd == 2 && debug_alu_out == 0 &&
                         debug_pipeline_stage == 3)
@@ -120,7 +119,7 @@ module checker(
             end
 
             5: begin
-					 /* or 0000_0000, 1111_1101 # -> out == 1111_1101;  N and S flags are set */
+                     /* or 0000_0000, 1111_1101 # -> out == 1111_1101;  N and S flags are set */
                 if (debug_flags_out == 8'b0001_0100 && debug_alu_rr == 253 &&
                         debug_alu_rd == 0 && debug_alu_out == 253 &&
                         debug_pipeline_stage == 3)

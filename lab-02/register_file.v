@@ -1,6 +1,8 @@
 /* Traducerea si adaptarea:
  * http://www.asic-world.com/examples/verilog/ram_dp_sr_sw.html
  */
+`timescale 1ns / 1ps
+
 module dual_port_sram #(
         parameter DATA_WIDTH = 8,    // registers are 8 bits in width
         parameter ADDR_WIDTH = 5     // 32 registers

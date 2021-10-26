@@ -1,6 +1,8 @@
 // Last modified: 21.10.2018 
 // Author: dosarudaniel@gmail.com
+`timescale 1ns / 1ps
 `include "defines.vh"
+
 module alu #(
         parameter DATA_WIDTH = 8
     )(
