@@ -26,7 +26,7 @@ module checker_view();
         $dumpfile("waves.vcd");
         $dumpvars(0, checker_view);
         // Initialize Inputs
-        clk = 0;
+        clk   = 0;
         reset = 1;
 
         // Wait 100 ns for global reset to finish

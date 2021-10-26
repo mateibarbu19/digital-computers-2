@@ -1,7 +1,7 @@
 CC = iverilog
 FLAGS = -Wall -Winfloop
 SIM = vvp
-SOURCES = alu.v control_unit.v register_file.v state_machine.v checker.v \
+SOURCES = alu.v control_unit.v dual_port_sram.v state_machine.v checker_t.v \
 			cpu.v checker_view.v decode_unit.v reg_file_interface_unit.v \
 			rom.v signal_generation_unit.v
 

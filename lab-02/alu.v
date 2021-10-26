@@ -15,10 +15,10 @@ module alu #(
         output reg    [DATA_WIDTH-1:0] flags_out
     );
 
-    /* flags_out a fost transformat in reg, pentru a putea
-     * fi atribuit in interiorul unui bloc always, insa va fi
-     * sintetizat tot combinational (UAL-ul nici macar nu are clk
-     * drept input) */
+    /* flags_out is of type reg, so it could be attributed inside an always
+     * block, but it will be synthesized using combinational logic (because
+     * the ALU doesn't even have a clk input)
+     */
 
     /* TODO: De codificat cateva operatii
      * in defines.vh si de implementat aici folosind acest instruction set manual:

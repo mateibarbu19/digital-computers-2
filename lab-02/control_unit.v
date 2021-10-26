@@ -10,29 +10,29 @@ module control_unit #(
         input  wire                    clk,
         input  wire                    reset,
         // To/from instruction memory
-        output reg  [I_ADDR_WIDTH-1:0] program_counter,
-        input  wire  [INSTR_WIDTH-1:0] instruction,
+        output reg  [I_ADDR_WIDTH-1:0]   program_counter,
+        input  wire  [INSTR_WIDTH-1:0]   instruction,
         // From FSM
-        output wire [`STAGE_COUNT-1:0] pipeline_stage,
+        output wire [`STAGE_COUNT-1:0]   pipeline_stage,
         // To/from register file
-        output wire [R_ADDR_WIDTH-1:0] rr_addr,
-        output wire [R_ADDR_WIDTH-1:0] rd_addr,
-        inout  wire   [DATA_WIDTH-1:0] rr_data,
-        inout  wire   [DATA_WIDTH-1:0] rd_data,
-        output wire                    rr_cs,
-        output wire                    rd_cs,
-        output wire                    rr_we,
-        output wire                    rd_we,
-        output wire                    rr_oe,
-        output wire                    rd_oe,
+        output wire [R_ADDR_WIDTH-1:0]   rr_addr,
+        output wire [R_ADDR_WIDTH-1:0]   rd_addr,
+        inout  wire   [DATA_WIDTH-1:0]   rr_data,
+        inout  wire   [DATA_WIDTH-1:0]   rd_data,
+        output wire                      rr_cs,
+        output wire                      rd_cs,
+        output wire                      rr_we,
+        output wire                      rd_we,
+        output wire                      rr_oe,
+        output wire                      rd_oe,
         // To/from ALU
-        output wire                    alu_enable,
+        output wire                      alu_enable,
         output reg    [`OPSEL_COUNT-1:0] alu_opsel,
-        output wire   [DATA_WIDTH-1:0] alu_flags_in,
-        input  wire   [DATA_WIDTH-1:0] alu_flags_out,
-        output reg    [DATA_WIDTH-1:0] alu_rr,
-        output reg    [DATA_WIDTH-1:0] alu_rd,
-        input  wire   [DATA_WIDTH-1:0] alu_out
+        output wire   [DATA_WIDTH-1:0]   alu_flags_in,
+        input  wire   [DATA_WIDTH-1:0]   alu_flags_out,
+        output reg    [DATA_WIDTH-1:0]   alu_rr,
+        output reg    [DATA_WIDTH-1:0]   alu_rd,
+        input  wire   [DATA_WIDTH-1:0]   alu_out
     );
     // From decode unit
     wire [`SIGNAL_COUNT-1:0] signals;
@@ -45,49 +45,49 @@ module control_unit #(
     reg     [DATA_WIDTH-1:0] sreg;
 
     state_machine fsm (
-        .pipeline_stage       (pipeline_stage),
-        .clk         (clk),
-        .reset       (reset)
+        .pipeline_stage (pipeline_stage),
+        .clk            (clk),
+        .reset          (reset)
     );
 
     decode_unit #(
         .INSTR_WIDTH(INSTR_WIDTH)
     ) decode (
-        .instruction (instr_buffer),
-        .opcode_type (opcode_type),
-        .opcode_group(opcode_group),
-        .opcode_rd(rd_addr),
-        .opcode_rr(rr_addr)
+        .instruction  (instr_buffer),
+        .opcode_type  (opcode_type),
+        .opcode_group (opcode_group),
+        .opcode_rd    (rd_addr),
+        .opcode_rr    (rr_addr)
     );
 
     signal_generation_unit sig (
         .pipeline_stage (pipeline_stage),
-        .signals (signals),
-        .opcode_type (opcode_type),
-        .opcode_group(opcode_group)
+        .signals        (signals),
+        .opcode_type    (opcode_type),
+        .opcode_group   (opcode_group)
     );
 
     reg_file_interface_unit #(
-        .DATA_WIDTH  (DATA_WIDTH),
-        .INSTR_WIDTH (INSTR_WIDTH),
-        .R_ADDR_WIDTH(R_ADDR_WIDTH)
+        .DATA_WIDTH   (DATA_WIDTH),
+        .INSTR_WIDTH  (INSTR_WIDTH),
+        .R_ADDR_WIDTH (R_ADDR_WIDTH)
     ) rf_int (
-        .opcode_type    (opcode_type),
-        .writeback_value(writeback_value),
-        .signals        (signals),
-        .rr_addr        (rr_addr),
-        .rd_addr        (rd_addr),
-        .rr_data        (rr_data),
-        .rd_data        (rd_data),
-        .rr_cs          (rr_cs),
-        .rd_cs          (rd_cs),
-        .rr_we          (rr_we),
-        .rd_we          (rd_we),
-        .rr_oe          (rr_oe),
-        .rd_oe          (rd_oe)
+        .opcode_type     (opcode_type),
+        .writeback_value (writeback_value),
+        .signals         (signals),
+        .rr_addr         (rr_addr),
+        .rd_addr         (rd_addr),
+        .rr_data         (rr_data),
+        .rd_data         (rd_data),
+        .rr_cs           (rr_cs),
+        .rd_cs           (rd_cs),
+        .rr_we           (rr_we),
+        .rd_we           (rd_we),
+        .rr_oe           (rr_oe),
+        .rd_oe           (rd_oe)
     );
 
-    /* Bloc de atribuire al program counter-ului */
+    /* Program Counter attribute block */
     always @(posedge clk, posedge reset) begin
         if (reset) begin
             program_counter <= 0;
@@ -97,7 +97,7 @@ module control_unit #(
     end
 
     assign alu_flags_in = sreg;
-    /* Bloc de atribuire al sreg-ului */
+    /* Sreg attribute block */
     always @(posedge clk, posedge reset)
         if (reset)
             sreg <= 0;

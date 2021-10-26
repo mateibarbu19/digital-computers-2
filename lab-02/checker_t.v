@@ -2,19 +2,19 @@
 `timescale 1ns / 1ps
 
 module checker_t (
-    output wire [`TEST_I_ADDR_WIDTH - 1: 0] test,
-    output reg                              result,
-    input  wire                             clk,
-    input  wire                             reset
+    output wire [`TEST_I_ADDR_WIDTH - 1:0] test,
+    output reg                             result,
+    input  wire                            clk,
+    input  wire                            reset
 );
 
 `ifdef DEBUG
-    wire [`STAGE_COUNT - 1: 0]          debug_pipeline_stage;
-    wire [`TEST_DATA_WIDTH - 1: 0]      debug_alu_rr;
-    wire [`TEST_DATA_WIDTH - 1: 0]      debug_alu_rd;
-    wire [`TEST_DATA_WIDTH - 1: 0]      debug_alu_out;
-    wire [`TEST_I_ADDR_WIDTH - 1: 0]    debug_program_counter;
-    wire [`FLAG_COUNT - 1: 0]           debug_flags_out;
+    wire [`STAGE_COUNT - 1:0]       debug_pipeline_stage;
+    wire [`TEST_DATA_WIDTH - 1:0]   debug_alu_rr;
+    wire [`TEST_DATA_WIDTH - 1:0]   debug_alu_rd;
+    wire [`TEST_DATA_WIDTH - 1:0]   debug_alu_out;
+    wire [`TEST_I_ADDR_WIDTH - 1:0] debug_program_counter;
+    wire [`FLAG_COUNT - 1:0]        debug_flags_out;
 `endif
 
 
