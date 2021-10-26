@@ -103,5 +103,5 @@ for all his support, this repository would not be possible without him.
 Although, I frequently used the pronoun I in this README, this project is a
 group effort so I would like to thank:
 
-- Cristian Dima
+- [Cristian Dima](https://github.com/Cartofie)
 - [Dimitrie David](https://github.com/dimitriedavid/)
