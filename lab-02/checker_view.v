@@ -9,8 +9,10 @@ module checker_view();
     reg reset;
 
     // Outputs
+    /* verilator lint_off UNUSED */
     wire [`TEST_I_ADDR_WIDTH - 1:0] test;
     wire                            result;
+    /* verilator lint_on UNUSED */
 
     // Instantiate the Unit Under Test (UUT)
     checker_t uut (

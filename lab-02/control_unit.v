@@ -34,15 +34,19 @@ module control_unit #(
         output reg    [DATA_WIDTH-1:0]   alu_rd,
         input  wire   [DATA_WIDTH-1:0]   alu_out
     );
+
     // From decode unit
     wire [`SIGNAL_COUNT-1:0] signals;
     wire [`OPCODE_COUNT-1:0] opcode_type;
-    wire  [`GROUP_COUNT-1:0] opcode_group;
+    /* verilator lint_off UNOPTFLAT */
+    wire [`GROUP_COUNT-1:0]  opcode_group;
+    /* verilator lint_on UNOPTFLAT */
+
     // Buffers for various stuff
-    reg    [INSTR_WIDTH-1:0] instr_buffer;
-    reg     [DATA_WIDTH-1:0] alu_out_buffer;
-    reg     [DATA_WIDTH-1:0] writeback_value;
-    reg     [DATA_WIDTH-1:0] sreg;
+    reg  [INSTR_WIDTH-1:0]   instr_buffer;
+    reg  [DATA_WIDTH-1:0]    alu_out_buffer;
+    reg  [DATA_WIDTH-1:0]    writeback_value;
+    reg  [DATA_WIDTH-1:0]    sreg;
 
     state_machine fsm (
         .pipeline_stage (pipeline_stage),
@@ -110,7 +114,7 @@ module control_unit #(
             writeback_value <= alu_out_buffer;
     end
 
-    /* Buffer pentru instructiunea citita */
+    /* Read instruction buffer */
     always @(posedge clk, posedge reset)
         if (reset)
             instr_buffer <= 0;
@@ -123,7 +127,7 @@ module control_unit #(
         else if (pipeline_stage == `STAGE_EX)
              alu_out_buffer <= alu_out;
 
-    /* Buffer pentru rd_data si rr_data */
+    /* rd_data and rr_data buffer */
     always @(posedge clk, posedge reset)
         if (reset) begin
             alu_rd <= 0;
@@ -142,10 +146,28 @@ module control_unit #(
             alu_opsel = `OPSEL_COUNT'bx;
         else begin
             case (opcode_type)
+            /* Translate from opcode_type to alu_opsel. */
             `TYPE_ADC:
                 alu_opsel = `OPSEL_ADC;
-				
-            /* TODO: Translatati din opcode_type in alu_opsel. */
+
+            `TYPE_NOP:
+                alu_opsel = `OPSEL_NOP;
+            
+            `TYPE_NEG:
+                alu_opsel = `OPSEL_NEG;
+            
+            `TYPE_ADD:
+                alu_opsel = `OPSEL_ADD;
+            
+            `TYPE_SUB:
+                alu_opsel = `OPSEL_SUB;
+			
+            `TYPE_AND:
+                alu_opsel = `OPSEL_AND;
+            
+            `TYPE_OR:
+                alu_opsel = `OPSEL_OR;
+
             default:
                 alu_opsel = `OPSEL_NONE;
             endcase

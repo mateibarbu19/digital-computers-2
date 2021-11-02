@@ -6,11 +6,17 @@ module reg_file_interface_unit #(
         parameter DATA_WIDTH   = 8,    // registers are 8 bits in width
         parameter R_ADDR_WIDTH = 5     // 32 registers
     )(
+        /* verilator lint_off UNUSED */
         input  wire [`OPCODE_COUNT-1:0] opcode_type,
+        /* verilator lint_on UNUSED */
         input  wire    [DATA_WIDTH-1:0] writeback_value,
+        /* verilator lint_off UNDRIVEN */
+        /* verilator lint_off UNUSED */
         input  wire [`SIGNAL_COUNT-1:0] signals,
+        /* verilator lint_on UNUSED */
         output wire  [R_ADDR_WIDTH-1:0] rr_addr,
         output wire  [R_ADDR_WIDTH-1:0] rd_addr,
+        /* verilator lint_on UNDRIVEN */
         inout  wire    [DATA_WIDTH-1:0] rr_data,
         inout  wire    [DATA_WIDTH-1:0] rd_data,
         output wire                     rr_cs,

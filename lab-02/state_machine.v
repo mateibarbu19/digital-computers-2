@@ -7,32 +7,28 @@ module state_machine (
         input  wire                    reset
     );
 
-    reg [`STAGE_COUNT-1:0] next_stage;
-
-    always @(posedge clk, posedge reset)
+    always @(posedge clk, posedge reset) begin
         if (reset)
             pipeline_stage <= `STAGE_RESET;
-        else
-            pipeline_stage <= next_stage;
-
-    always @* begin
-        case (pipeline_stage)
-        `STAGE_RESET:
-            next_stage = `STAGE_IF;
-        `STAGE_IF:
-            next_stage = `STAGE_ID;
-        `STAGE_ID:
-            next_stage = `STAGE_EX;
-        `STAGE_EX:
-            next_stage = `STAGE_MEM;
-        `STAGE_MEM:
-            next_stage = `STAGE_WB;
-        `STAGE_WB:
-            next_stage = `STAGE_IF;
-        /* Should never get here, but anyway */
-        default:
-            next_stage = `STAGE_RESET;
-        endcase
+        else begin
+            case (pipeline_stage)
+            `STAGE_RESET:
+                pipeline_stage <= `STAGE_IF;
+            `STAGE_IF:
+                pipeline_stage <= `STAGE_ID;
+            `STAGE_ID:
+                pipeline_stage <= `STAGE_EX;
+            `STAGE_EX:
+                pipeline_stage <= `STAGE_MEM;
+            `STAGE_MEM:
+                pipeline_stage <= `STAGE_WB;
+            `STAGE_WB:
+                pipeline_stage <= `STAGE_IF;
+            /* Should never get here, but anyway */
+            default:
+                pipeline_stage <= `STAGE_RESET;
+            endcase
+        end
     end
 
 endmodule

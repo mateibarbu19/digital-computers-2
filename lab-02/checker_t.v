@@ -64,22 +64,22 @@ module checker_t (
                 /* Test no register changed and no flag changed. */
                 if (debug_flags_out == 8'b0000_0000 && debug_alu_rr === 8'bz &&
                         debug_alu_rd === 8'bz && debug_pipeline_stage == 3)
-                    result <= 1'b1;
+                    result = 1'b1;
                 else if (debug_pipeline_stage != 3)
-                    result <= 1'b1;
+                    result = 1'b1;
                 else
-                    result <= 1'bx;
+                    result = 1'bx;
             end
                 
             1: begin
                      /* neg 1111_1110 # -> out == 0000_0010 ; only carry flag is set*/
                 if (debug_flags_out == 8'b0000_0001 && debug_alu_rd == 254 
                             && debug_alu_out == 2 && debug_pipeline_stage == 3)
-                    result <= 1'b1;
+                    result = 1'b1;
                 else if (debug_pipeline_stage != 3)
-                    result <= 1'b1;
+                    result = 1'b1;
                 else
-                    result <= 1'bx;
+                    result = 1'bx;
             end
 
             2: begin
@@ -87,11 +87,11 @@ module checker_t (
                 if (debug_flags_out == 8'b0001_0100 && debug_alu_rr == 253 &&
                         debug_alu_rd == 2 && debug_alu_out == 255 &&
                         debug_pipeline_stage == 3)
-                    result <= 1'b1;
+                    result = 1'b1;
                 else if (debug_pipeline_stage != 3)
-                    result <= 1'b1;
+                    result = 1'b1;
                 else
-                    result <= 1'bx;
+                    result = 1'bx;
             end
 
             3: begin
@@ -99,11 +99,11 @@ module checker_t (
                 if (debug_flags_out == 8'b0000_0000 && debug_alu_rr == 253 &&
                         debug_alu_rd == 255 && debug_alu_out == 2 &&
                         debug_pipeline_stage == 3)
-                    result <= 1'b1;
+                    result = 1'b1;
                 else if (debug_pipeline_stage != 3)
-                    result <= 1'b1;
+                    result = 1'b1;
                 else
-                    result <= 1'bx;
+                    result = 1'bx;
             end
 
             4: begin
@@ -111,11 +111,11 @@ module checker_t (
                 if (debug_flags_out == 8'b0000_0010 && debug_alu_rr == 253 &&
                         debug_alu_rd == 2 && debug_alu_out == 0 &&
                         debug_pipeline_stage == 3)
-                    result <= 1'b1;
+                    result = 1'b1;
                 else if (debug_pipeline_stage != 3)
-                    result <= 1'b1;
+                    result = 1'b1;
                 else
-                    result <= 1'bx;
+                    result = 1'bx;
             end
 
             5: begin
@@ -123,15 +123,15 @@ module checker_t (
                 if (debug_flags_out == 8'b0001_0100 && debug_alu_rr == 253 &&
                         debug_alu_rd == 0 && debug_alu_out == 253 &&
                         debug_pipeline_stage == 3)
-                    result <= 1'b1;
+                    result = 1'b1;
                 else if (debug_pipeline_stage != 3)
-                    result <= 1'b1;
+                    result = 1'b1;
                 else
-                    result <= 1'bx;
+                    result = 1'bx;
             end
 
             default:
-                result <= 1'b1;
+                result = 1'b1;
         endcase
     end
 endmodule

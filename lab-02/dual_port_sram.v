@@ -26,8 +26,7 @@ module dual_port_sram #(
     reg [ADDR_WIDTH:0] i;
     initial begin
         for (i = 0; i < (1<<ADDR_WIDTH); i = i + 1)
-            //memory[i] <= 0;
-            memory[i] <= 255 - i;
+            memory[i[ADDR_WIDTH-1:0]] = 255 - {3'd0, i[ADDR_WIDTH-1:0]};
     end
 
     /* Memory Write Block 

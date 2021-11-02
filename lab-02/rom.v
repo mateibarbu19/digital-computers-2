@@ -25,7 +25,8 @@ module rom #(
 				4:		value = 16'b0010000000010010;
 				/*	 or 	r1, r2 		*/
 				5:		value = 16'b0010100000010010;
-				default:		value = 16'b0000000000000000;
+				default:
+                        value = 16'b0000000000000000;
         endcase
     end
 

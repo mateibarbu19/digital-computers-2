@@ -33,8 +33,10 @@ module cpu #(
     wire [INSTR_WIDTH-1:0]  instruction;
     wire [R_ADDR_WIDTH-1:0] rr_addr;
     wire [R_ADDR_WIDTH-1:0] rd_addr;
+    /* verilator lint_off UNUSED */
     wire [DATA_WIDTH-1:0]   rr_data;
     wire [DATA_WIDTH-1:0]   rd_data;
+    /* verilator lint_on UNUSED */
     wire                    rr_cs;
     wire                    rd_cs;
     wire                    rr_we;
