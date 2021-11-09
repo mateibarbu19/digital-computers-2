@@ -22,7 +22,7 @@ module alu #(
      * the ALU doesn't even have a clk input)
      */
 
-    /* TODO: Decode some operations from defines.vh and implement them here
+    /* Decode some operations from defines.vh and implement them here
      * using this instruction set manual:
      * http://ww1.microchip.com/downloads/en/devicedoc/atmel-0856-avr-instruction-set-manual.pdf [1]
      */

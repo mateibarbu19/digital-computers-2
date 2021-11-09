@@ -26,12 +26,12 @@ module reg_file_interface_unit #(
         output wire                     rr_oe,
         output wire                     rd_oe
     );
-    /* All the above assignaments suppose that the current instruction has the
+    /* All the above assignments suppose that the current instruction has the
      * following format: [opcode] Rd Rr. In this case the register file will be
      * accessed twice: once during the instruction decode/register fetch state,
      * in order to read both register values, and the second time during the
      * write-back stage, to store the result (alu_out) in the Rd register.
-     * Obviously, not all intructions have the same format. This will be
+     * Obviously, not all instructions have the same format. This will be
      * modified in the next laboratories.
      */
 

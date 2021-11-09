@@ -1,4 +1,4 @@
-/* Traducerea si adaptarea:
+/* Translated from:
  * http://www.asic-world.com/examples/verilog/ram_dp_sr_sw.html
  */
 `timescale 1ns / 1ps
