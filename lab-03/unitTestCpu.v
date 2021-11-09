@@ -24,6 +24,8 @@ module unitTestCpu;
     always #10 clk = ~clk;
 
     initial begin
+        $dumpfile("waves.vcd");
+        $dumpvars(0, unitTestCpu);
         // Initialize Inputs
         clk = 0;
         reset = 1;
@@ -34,6 +36,7 @@ module unitTestCpu;
         // Add stimulus here
 
         #700;
+        $finish();
     end
       
 endmodule

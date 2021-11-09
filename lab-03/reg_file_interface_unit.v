@@ -38,19 +38,19 @@ module reg_file_interface_unit #(
     assign internal_rd_addr =
             signals[`CONTROL_REG_RD_READ] ?
                 (opcode_type == `TYPE_LD_X || opcode_type == `TYPE_ST_X) ? `XL :
-                (opcode_type == `TYPE_LD_Y || opcode_type == `TYPE_ST_Y) ? `YL :
-                (opcode_type == `TYPE_LD_Z || opcode_type == `TYPE_ST_Z) ? `ZL :
-                opcode_rd :
-            signals[`CONTROL_REG_RD_WRITE] ?
-                opcode_rd :
-            {R_ADDR_WIDTH{1'bx}};
+                    (opcode_type == `TYPE_LD_Y || opcode_type == `TYPE_ST_Y) ? `YL :
+                        (opcode_type == `TYPE_LD_Z || opcode_type == `TYPE_ST_Z) ? `ZL :
+                            opcode_rd :
+                            signals[`CONTROL_REG_RD_WRITE] ?
+                                opcode_rd :
+                                {R_ADDR_WIDTH{1'bx}};
     assign internal_rr_addr =
             signals[`CONTROL_REG_RR_READ] ?
                 (opcode_type == `TYPE_LD_X || opcode_type == `TYPE_ST_X) ? `XH :
-                (opcode_type == `TYPE_LD_Y || opcode_type == `TYPE_ST_Y) ? `YH :
-                (opcode_type == `TYPE_LD_Z || opcode_type == `TYPE_ST_Z) ? `ZH :
-                 opcode_rr :
-            {R_ADDR_WIDTH{1'bx}};
+                    (opcode_type == `TYPE_LD_Y || opcode_type == `TYPE_ST_Y) ? `YH :
+                        (opcode_type == `TYPE_LD_Z || opcode_type == `TYPE_ST_Z) ? `ZH :
+                            opcode_rr :
+                            {R_ADDR_WIDTH{1'bx}};
 
     assign rd_data = signals[`CONTROL_REG_RD_WRITE] ? writeback_value :
                      {DATA_WIDTH{1'bz}};

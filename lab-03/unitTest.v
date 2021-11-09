@@ -6,7 +6,7 @@ module unitTest(
         output reg result
 `ifdef DEBUG
         ,
-        output [`TEST_I_ADDR_WIDTH-1:0] debug_program_counter
+        output wire [`TEST_I_ADDR_WIDTH-1:0] debug_program_counter
 `endif
     );
      
@@ -74,18 +74,18 @@ module unitTest(
                 case (debug_pipeline_stage)
                     `STAGE_IF:  result = 1'b1;
                     `STAGE_ID:  
-                        if(debug_opcode_group[`GROUP_REGISTER]
-                        && debug_opcode_type == `TYPE_LDI 
-                        && debug_opcode_imd == 10)
+                        if (debug_opcode_group[`GROUP_REGISTER]
+                            && debug_opcode_type == `TYPE_LDI 
+                            && debug_opcode_imd == 10)
                             result = 1'b1;
                         else
                             result = 1'bx;
                     `STAGE_EX:  result = 1'b1;
                     `STAGE_MEM: result = 1'b1;
                     `STAGE_WB:	
-                        if(debug_writeback_value == 10 
-                        && debug_signals[`CONTROL_REG_RD_WRITE] 
-                        && debug_rd_addr == 29)
+                        if (debug_writeback_value == 10 
+                            && debug_signals[`CONTROL_REG_RD_WRITE] 
+                            && debug_rd_addr == 29)
                             result = 1'b1;
                         else
                             result = 1'bx;
@@ -95,18 +95,18 @@ module unitTest(
                     `STAGE_IF:  result = 1'b1;
                     `STAGE_ID:
                        // because of how the STS address is defined, we need 
-                        if(debug_opcode_group[`GROUP_STORE_DIRECT] 
-                        && debug_opcode_type == `TYPE_STS 
+                        if (debug_opcode_group[`GROUP_STORE_DIRECT] 
+                            && debug_opcode_type == `TYPE_STS 
                        // because of how the STS address is defined, we need to force the first bit to 1
-                        && debug_opcode_imd == (10 | 128)
-                        && debug_rr_addr == 29)
+                            && debug_opcode_imd == (10 | 128)
+                            && debug_rr_addr == 29)
                             result = 1'b1;
                         else
                             result = 1'bx;
                     `STAGE_EX:  result = 1'b1;
                     `STAGE_MEM: 
                        // we need to set the start of the of the ram too
-                        if(debug_bus_address == (64 | 10))
+                        if (debug_bus_address == (64 | 10))
                             result = 1'b1;
                         else
                             result = 1'bx;
@@ -116,18 +116,18 @@ module unitTest(
                 case (debug_pipeline_stage)
                     `STAGE_IF:  result = 1'b1;
                     `STAGE_ID:  
-                        if(debug_opcode_group[`GROUP_REGISTER]
-                        && debug_opcode_type == `TYPE_LDI 
-                        && debug_opcode_imd == 0)
+                        if (debug_opcode_group[`GROUP_REGISTER]
+                            && debug_opcode_type == `TYPE_LDI
+                            && debug_opcode_imd == 0)
                             result = 1'b1;
                         else
                             result = 1'bx;
                     `STAGE_EX:  result = 1'b1;
                     `STAGE_MEM: result = 1'b1;
                     `STAGE_WB:	
-                        if(debug_writeback_value == 0 
-                        && debug_signals[`CONTROL_REG_RD_WRITE] 
-                        && debug_rd_addr == 29)
+                        if (debug_writeback_value == 0 
+                            && debug_signals[`CONTROL_REG_RD_WRITE] 
+                            && debug_rd_addr == 29)
                             result = 1'b1;
                         else
                             result = 1'bx;
@@ -136,18 +136,18 @@ module unitTest(
                 case (debug_pipeline_stage)
                     `STAGE_IF:  result = 1'b1;
                     `STAGE_ID:  
-                        if(debug_opcode_group[`GROUP_REGISTER]
-                        && debug_opcode_type == `TYPE_LDI 
-                        && debug_opcode_imd == 138)
+                        if (debug_opcode_group[`GROUP_REGISTER]
+                            && debug_opcode_type == `TYPE_LDI 
+                            && debug_opcode_imd == 138)
                             result = 1'b1;
                         else
                             result = 1'bx;
                     `STAGE_EX:  result = 1'b1;
                     `STAGE_MEM: result = 1'b1;
                     `STAGE_WB:	
-                        if(debug_writeback_value == 138
-                        && debug_signals[`CONTROL_REG_RD_WRITE] 
-                        && debug_rd_addr == 28)
+                        if (debug_writeback_value == 138
+                            && debug_signals[`CONTROL_REG_RD_WRITE] 
+                            && debug_rd_addr == 28)
                             result = 1'b1;
                         else
                             result = 1'bx;
@@ -156,26 +156,26 @@ module unitTest(
                 case (debug_pipeline_stage)
                     `STAGE_IF:  result = 1'b1;
                     `STAGE_ID:  
-                        if(debug_opcode_group[`GROUP_LOAD]
-                        && debug_opcode_type == `TYPE_LD_Y)
+                        if (debug_opcode_group[`GROUP_LOAD]
+                            && debug_opcode_type == `TYPE_LD_Y)
                             result = 1'b1;
                         else
                             result = 1'bx;
                     `STAGE_EX:  
-                        if(debug_alu_rr == 0
-                        && debug_alu_rd == 138)
+                        if (debug_alu_rr == 0
+                            && debug_alu_rd == 138)
                             result = 1'b1;
                         else
                             result = 1'bx;
                     `STAGE_MEM:
-                        if(debug_bus_address == (74))
+                        if (debug_bus_address == (74))
                             result = 1'b1;
                         else
                             result = 1'bx;
                     `STAGE_WB:	
-                        if(debug_writeback_value == 10
-                        && debug_signals[`CONTROL_REG_RD_WRITE] 
-                        && debug_rd_addr == 27)
+                        if (debug_writeback_value == 10
+                            && debug_signals[`CONTROL_REG_RD_WRITE] 
+                            && debug_rd_addr == 27)
                             result = 1'b1;
                         else
                             result = 1'bx;
@@ -184,25 +184,25 @@ module unitTest(
                 case (debug_pipeline_stage)
                     `STAGE_IF:  result = 1'b1;
                     `STAGE_ID:
-                       // because of how the STS address is defined, we need 
-                        if(debug_opcode_group[`GROUP_LOAD] 
-                        && debug_opcode_type == `TYPE_LDS 
-                       // because of how the LDS address is defined, we need to force the first bit to 1
-                        && debug_opcode_imd == (10 | 128))
+                        // because of how the STS address is defined, we need 
+                        if (debug_opcode_group[`GROUP_LOAD] 
+                            && debug_opcode_type == `TYPE_LDS 
+                            // because of how the LDS address is defined, we need to force the first bit to 1
+                            && debug_opcode_imd == (10 | 128))
                             result = 1'b1;
                         else
                             result = 1'bx;
                     `STAGE_EX:  result = 1'b1;
                     `STAGE_MEM: 
                        // we need to set the start of the of the ram too
-                        if(debug_bus_address == (64 | 10))
+                        if (debug_bus_address == (64 | 10))
                             result = 1'b1;
                         else
                             result = 1'bx;
                     `STAGE_WB:	
-                        if(debug_writeback_value == 10
-                        && debug_signals[`CONTROL_REG_RD_WRITE] 
-                        && debug_rd_addr == 28)
+                        if (debug_writeback_value == 10
+                            && debug_signals[`CONTROL_REG_RD_WRITE] 
+                            && debug_rd_addr == 28)
                             result = 1'b1;
                         else 
                             result = 1'bx;
@@ -211,19 +211,19 @@ module unitTest(
                 case (debug_pipeline_stage)
                     `STAGE_IF:  result = 1'b1;
                     `STAGE_ID:
-                       // because of how the STS address is defined, we need 
-                        if(debug_opcode_group[`GROUP_REGISTER] 
-                        && debug_opcode_type == `TYPE_MOV 
-                        && debug_rr_addr == 28)
+                        // because of how the STS address is defined, we need 
+                        if (debug_opcode_group[`GROUP_REGISTER] 
+                            && debug_opcode_type == `TYPE_MOV 
+                            && debug_rr_addr == 28)
                             result = 1'b1;
                         else
                             result = 1'bx;
                     `STAGE_EX:  result = 1'b1;
                     `STAGE_MEM: result = 1'b1;
                     `STAGE_WB:	
-                        if(debug_writeback_value == 10
-                        && debug_signals[`CONTROL_REG_RD_WRITE] 
-                        && debug_rd_addr == 27)
+                        if (debug_writeback_value == 10
+                            && debug_signals[`CONTROL_REG_RD_WRITE] 
+                            && debug_rd_addr == 27)
                             result = 1'b1;
                         else 
                             result = 1'bx;

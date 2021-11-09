@@ -72,12 +72,24 @@ Deci opcode = 000111rdxxxxxxxx devifne 00011111xxxxxxxx. (Btw, that's ADD)
                 opcode_rr   = {instruction[9], instruction[3:0]};
             end
 
-              /* TODO 4: STS */
+            16'b1110_????_????_????: begin
+                opcode_type = `TYPE_LDI;
+                opcode_rd   = {1'b1, instruction[7:4]};
+                opcode_rr   = {R_ADDR_WIDTH{1'bx}};
+                opcode_imd  = {4'd0, instruction[11:8], instruction[3:0]};
+            end
+
+            16'b1010_1???_????_????: begin
+                opcode_type = `TYPE_STS;
+                opcode_rd   = {R_ADDR_WIDTH{1'bx}};
+                opcode_rr   = {1'b1, instruction[7:4]};
+                opcode_imd  = {4'd0, ~instruction[8], instruction[8], 
+                               instruction[10], instruction[9],
+                               instruction[3:0]};
+            end
 
             /* TODO 6: LDS */
 
-            /* TODO 3: LDI */
-            
             default: begin
                 opcode_type = `TYPE_UNKNOWN;
                 opcode_rd   = {R_ADDR_WIDTH{1'bx}};
@@ -110,13 +122,13 @@ Deci opcode = 000111rdxxxxxxxx devifne 00011111xxxxxxxx. (Btw, that's ADD)
         0;
 
     assign opcode_group[`GROUP_STORE_DIRECT] =
-        0;
+        (opcode_type == `TYPE_STS);
     assign opcode_group[`GROUP_STORE_INDIRECT] =
         0;
 
     assign opcode_group[`GROUP_REGISTER] =
-        /* TODO 3: LDI */
-        (opcode_type == `TYPE_MOV);
+        (opcode_type == `TYPE_MOV) ||
+        (opcode_type == `TYPE_LDI);
 
     assign opcode_group[`GROUP_LOAD] =
         opcode_group[`GROUP_LOAD_DIRECT] ||

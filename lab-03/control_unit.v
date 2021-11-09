@@ -11,15 +11,15 @@ module control_unit #(
         input  wire                    reset,
         // To/from instruction memory
         output reg  [I_ADDR_WIDTH-1:0] program_counter,
-        input  wire  [INSTR_WIDTH-1:0] instruction,
+        input  wire [INSTR_WIDTH-1:0]  instruction,
         // From FSM
         // TODO move state and add debug state
         output wire [`STAGE_COUNT-1:0] pipeline_stage,
         // To/from register file
         output wire [R_ADDR_WIDTH-1:0] rr_addr,
         output wire [R_ADDR_WIDTH-1:0] rd_addr,
-        inout  wire   [DATA_WIDTH-1:0] rr_data,
-        inout  wire   [DATA_WIDTH-1:0] rd_data,
+        inout  wire [DATA_WIDTH-1:0]   rr_data,
+        inout  wire [DATA_WIDTH-1:0]   rd_data,
         output wire                    rr_cs,
         output wire                    rd_cs,
         output wire                    rr_we,
@@ -28,25 +28,25 @@ module control_unit #(
         output wire                    rd_oe,
         // To/from ALU
         output wire                    alu_enable,
-        output reg    [`OPSEL_COUNT-1:0] alu_opsel,
-        output wire   [DATA_WIDTH-1:0] alu_flags_in,
-        input  wire   [DATA_WIDTH-1:0] alu_flags_out,
-        output reg    [DATA_WIDTH-1:0] alu_rr,
-        output reg    [DATA_WIDTH-1:0] alu_rd,
-        input  wire   [DATA_WIDTH-1:0] alu_out,
+        output reg  [`OPSEL_COUNT-1:0] alu_opsel,
+        output wire [DATA_WIDTH-1:0]   alu_flags_in,
+        input  wire [DATA_WIDTH-1:0]   alu_flags_out,
+        output reg  [DATA_WIDTH-1:0]   alu_rr,
+        output reg  [DATA_WIDTH-1:0]   alu_rd,
+        input  wire [DATA_WIDTH-1:0]   alu_out,
         // To/from bus interface unit
-        output wire   [ADDR_WIDTH-1:0] bus_addr,
-        inout  wire   [DATA_WIDTH-1:0] bus_data,
-        output wire                    mem_cs,
-        output wire                    mem_we,
-        output wire                    mem_oe
+        output wire [ADDR_WIDTH-1:0] bus_addr,
+        inout  wire [DATA_WIDTH-1:0] bus_data,
+        output wire                  mem_cs,
+        output wire                  mem_we,
+        output wire                  mem_oe
 `ifdef DEBUG
-            ,
-            output wire [`OPCODE_COUNT-1:0] debug_opcode_type,
-            output wire [`GROUP_COUNT-1:0] debug_opcode_group,
-            output wire [11:0]  debug_opcode_imd,
-            output wire [DATA_WIDTH-1:0] debug_writeback_value,
-            output wire [`SIGNAL_COUNT-1:0] debug_signals
+        ,
+        output wire [`OPCODE_COUNT-1:0] debug_opcode_type,
+        output wire [`GROUP_COUNT-1:0]  debug_opcode_group,
+        output wire [11:0]              debug_opcode_imd,
+        output wire [DATA_WIDTH-1:0]    debug_writeback_value,
+        output wire [`SIGNAL_COUNT-1:0] debug_signals
 `endif
     );
     // From decode unit
@@ -57,22 +57,22 @@ module control_unit #(
     /* verilator lint_on UNOPTFLAT */
     wire [R_ADDR_WIDTH-1:0] opcode_rd;
     wire [R_ADDR_WIDTH-1:0] opcode_rr;
-    wire              [11:0] opcode_imd;
-    wire               [2:0] opcode_bit;
+    wire [11:0]             opcode_imd;
+    wire [2:0]              opcode_bit;
     // Buffers for various stuff
-    reg    [INSTR_WIDTH-1:0] instr_buffer;
-    reg     [DATA_WIDTH-1:0] alu_out_buffer;
-    reg     [DATA_WIDTH-1:0] writeback_value;
-    wire    [ADDR_WIDTH-1:0] indirect_addr;
-    wire    [DATA_WIDTH-1:0] data_to_store;
-    reg     [DATA_WIDTH-1:0] sreg;
+    reg  [INSTR_WIDTH-1:0] instr_buffer;
+    reg  [DATA_WIDTH-1:0]  alu_out_buffer;
+    reg  [DATA_WIDTH-1:0]  writeback_value;
+    wire [ADDR_WIDTH-1:0]  indirect_addr;
+    wire [DATA_WIDTH-1:0]  data_to_store;
+    reg  [DATA_WIDTH-1:0]  sreg;
 
 `ifdef DEBUG
-            assign debug_opcode_type = opcode_type;
-            assign debug_opcode_group = opcode_group;
-            assign debug_opcode_imd = opcode_imd;
-            assign debug_writeback_value = writeback_value;
-            assign debug_signals = signals;
+    assign debug_opcode_type     = opcode_type;
+    assign debug_opcode_group    = opcode_group;
+    assign debug_opcode_imd      = opcode_imd;
+    assign debug_writeback_value = writeback_value;
+    assign debug_signals         = signals;
 `endif
 
 
@@ -150,10 +150,10 @@ module control_unit #(
             {ADDR_WIDTH{1'bx}};
 
     assign data_to_store =
-            signals[`CONTROL_MEM_WRITE] ?
             /* TODO 4: STS */
-                0  :
-            {DATA_WIDTH{1'bx}};
+            signals[`CONTROL_MEM_WRITE] ?
+                alu_rr :
+                {DATA_WIDTH{1'bx}};
 
     /* Bloc de atribuire al program counter-ului */
     always @(posedge clk, posedge reset) begin
@@ -165,20 +165,23 @@ module control_unit #(
     end
 
     assign alu_flags_in = sreg;
-    /* Bloc de atribuire al sreg-ului */
+    /* Sreg attribution block */
     always @(posedge clk, posedge reset)
         if (reset)
             sreg <= 0;
         else sreg <= alu_flags_out;
 
+    /* Make the connection between the registers and RAM through the control
+    * unit.
+    */
     always @(posedge clk, posedge reset) begin
-     /* TODO : Faceti legatura intre registre si RAM prin unitatea de control. */
-     /* TODO 3: LDI */
-     /* TODO 5,6,7: register writes */
+        /* TODO 5,6,7: register writes */
         if (reset)
             writeback_value <= {DATA_WIDTH{1'b0}};
         else if (opcode_group[`GROUP_ALU])
-                writeback_value <= alu_out_buffer;
+            writeback_value <= alu_out_buffer;
+        else if (opcode_type == `TYPE_LDI)
+            writeback_value <= opcode_imd[7:0];
     end
 
     /* Buffer pentru instructiunea citita */
