@@ -25,6 +25,10 @@ For more information or a syllabus check out the course description
 [page here](https://cs.pub.ro/index.php/education/courses/60-under/an3underg/125-digital-computers-2)
 .
 
+I encourage you to watch the online lectures
+[here](https://www.youtube.com/watch?v=Jj2X13nKH7Y&list=PLwhXkdjzBNZ_2KzgsrSPQ_ZYNhFVFPXWI)
+.
+
 <a name="Requirements"></a>
 ## 2. Requirements
 
@@ -72,6 +76,11 @@ Do note that you will have to install the linter for this:
 sudo apt install verilator
 ```
 
+Note: If you took my advice and installed VSCodium, you'll need to enable the VSCode
+Marketplace using these
+[instructions](https://github.com/VSCodium/vscodium/blob/master/DOCS.md#extensions-marketplace)
+.
+
 <a name="Usage"></a>
 ## Usage
 
@@ -79,11 +88,13 @@ Open the directory corresponding to the laboratory you want to test. Run
 `make build` for compiling, `make run` for simulation, and `gtkwave waves.vcd`
 for viewing the resulting waveforms.
 
-Some laboratories, like `lab-05`, include a synthesis script. If you run
-`make synthesis` in the respective folder, both a `.dot` and `.json` file will
-be generated both containing a logic gate schematic circuit based on the
-Verilog code. The `.dot` is opened and rendered by default when running the
-script.
+Some laboratories, like `lab-01/task4`, include a synthesis script. If
+you run `make synthesis` in the respective folder, both a `.dot` and `.json`
+file will be generated both containing a logic gate schematic circuit based on
+the Verilog code. The `.dot` is opened and rendered by default when running the
+script. I shall warn you that the `.json` schematic description contains
+multiple module implementations, so when using `netlistsvg` just delete from
+the `.json` file the unnecessary ones.
 
 <a name="Other_projects"></a>
 ## 4. Other projects
@@ -94,6 +105,7 @@ Like this repository, it aims to provide a fully open-source alternative to the
 [Open CourseWare](https://ocw.cs.pub.ro/courses/cn2) Digital Computers 1
 Laboratories (PUB).
 
+<a name="Acknowledgments"></a>
 ## 5. Acknowledgments
 
 I would like to thank our teaching assistant

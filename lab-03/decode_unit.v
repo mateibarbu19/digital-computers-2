@@ -5,15 +5,15 @@ module decode_unit #(
         parameter  R_ADDR_WIDTH = 5
 
     )(
-        input  wire  [INSTR_WIDTH-1:0]   instruction,
-        output reg   [`OPCODE_COUNT-1:0] opcode_type,
+        input  wire [INSTR_WIDTH-1:0]   instruction,
+        output reg  [`OPCODE_COUNT-1:0] opcode_type,
         /* verilator lint_off UNOPTFLAT */
-        output wire  [`GROUP_COUNT-1:0]  opcode_group,
+        output wire [`GROUP_COUNT-1:0]  opcode_group,
         /* verilator lint_on UNOPTFLAT */
-        output reg   [R_ADDR_WIDTH-1:0]  opcode_rd,
-        output reg   [R_ADDR_WIDTH-1:0]  opcode_rr,
-        output reg               [11:0]  opcode_imd,
-        output reg                [2:0]  opcode_bit
+        output reg  [R_ADDR_WIDTH-1:0]  opcode_rd,
+        output reg  [R_ADDR_WIDTH-1:0]  opcode_rr,
+        output reg  [11:0]              opcode_imd,
+        output reg  [2:0]               opcode_bit
     );
 
 /*
@@ -46,10 +46,6 @@ Deci opcode = 000111rdxxxxxxxx devifne 00011111xxxxxxxx. (Btw, that's ADD)
                 opcode_rd   = instruction[8:4];
                 opcode_rr   = {R_ADDR_WIDTH{1'bx}};
             end
-
-              /* TODO 5: LD_Y (i) */
-
-            /* TODO 7: MOV */
 
             16'b0010_01??_????_????: begin
                 opcode_type = `TYPE_EOR;
@@ -88,18 +84,32 @@ Deci opcode = 000111rdxxxxxxxx devifne 00011111xxxxxxxx. (Btw, that's ADD)
                                instruction[3:0]};
             end
 
-            /* TODO 6: LDS */
+            16'b1000_000?_????_1000: begin
+                opcode_type = `TYPE_LD_Y;
+                opcode_rd   = {1'b1, instruction[7:4]};
+                opcode_rr   = {R_ADDR_WIDTH{1'bx}};
+            end
+
+            16'b1010_0???_????_????: begin
+                opcode_type = `TYPE_LDS;
+                opcode_rd   = {1'b1, instruction[7:4]};
+                opcode_rr   = {R_ADDR_WIDTH{1'bx}};
+                opcode_imd  = {4'd0, ~instruction[8], instruction[8], 
+                               instruction[10], instruction[9],
+                               instruction[3:0]};
+            end
+
+            16'b0010_11??_????_????: begin
+                opcode_type = `TYPE_MOV;
+                opcode_rd   = {1'b1, instruction[7:4]};
+                opcode_rr   = {1'b1, instruction[3:0]};
+            end
 
             default: begin
                 opcode_type = `TYPE_UNKNOWN;
                 opcode_rd   = {R_ADDR_WIDTH{1'bx}};
                 opcode_rr   = {R_ADDR_WIDTH{1'bx}};
             end
-        /*TODO : completati cu opcodes ale voastre.
-          Where can I find such opcodes? Make them up or read the lab and see
-          they're at http://www.atmel.com/images/Atmel-0856-AVR-Instruction-Set-Manual.pdf  */
-          /* Cand gasiti o instructiune de UAL, setati opcode_type la valoarea corecta */
-          /*  instruction seamana cu un ADD? -> opcode_type = `TYPE_ADD; */
           endcase
     end
 
@@ -117,9 +127,9 @@ Deci opcode = 000111rdxxxxxxxx devifne 00011111xxxxxxxx. (Btw, that's ADD)
         opcode_group[`GROUP_ALU_TWO_OP];
 
     assign opcode_group[`GROUP_LOAD_DIRECT] =
-        0;
+        (opcode_type == `TYPE_LDS);
     assign opcode_group[`GROUP_LOAD_INDIRECT] =
-        0;
+        (opcode_type == `TYPE_LD_Y);
 
     assign opcode_group[`GROUP_STORE_DIRECT] =
         (opcode_type == `TYPE_STS);

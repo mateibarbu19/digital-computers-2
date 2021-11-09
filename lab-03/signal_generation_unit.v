@@ -14,23 +14,29 @@ module signal_generation_unit (
      /* TODO 7: register reads */
      assign signals[`CONTROL_REG_RR_READ] = 
           (pipeline_stage == `STAGE_ID) &&
-          (opcode_group[`GROUP_ALU_TWO_OP] || opcode_group[`GROUP_STORE]);
+          (opcode_group[`GROUP_ALU_TWO_OP]    ||
+           opcode_group[`GROUP_STORE]         ||
+           opcode_group[`GROUP_LOAD_INDIRECT] ||
+           opcode_type == `TYPE_MOV);
      assign signals[`CONTROL_REG_RR_WRITE] = 0;
      assign signals[`CONTROL_REG_RD_READ] =
           (pipeline_stage == `STAGE_ID) &&
-          (opcode_group[`GROUP_ALU] || 
-           opcode_group[`GROUP_STORE]);
+          (opcode_group[`GROUP_ALU]           || 
+           opcode_group[`GROUP_STORE]         ||
+           opcode_group[`GROUP_LOAD_INDIRECT] ||
+           opcode_type == `TYPE_MOV);
      assign signals[`CONTROL_REG_RD_WRITE] = 
           /* TODO 5,6,7: register writes */
           (pipeline_stage == `STAGE_WB) &&
-          (opcode_group[`GROUP_ALU] ||
-           opcode_group[`GROUP_REGISTER]);
+          (opcode_group[`GROUP_ALU]      ||
+           opcode_group[`GROUP_REGISTER] ||
+           opcode_group[`GROUP_LOAD]);
         
      /* Memory interface logic */
      /* TODO 5,6: LOADs */
      assign signals[`CONTROL_MEM_READ] =
           (pipeline_stage == `STAGE_MEM) &&
-          0;
+          (opcode_group[`GROUP_LOAD]);
      /* TODO 4: STS 
          inspectati bus_interface_unit.v */
      assign signals[`CONTROL_MEM_WRITE] =

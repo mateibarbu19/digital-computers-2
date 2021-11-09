@@ -1,5 +1,7 @@
 # Laboratory 2
 
+![cheatsheet](cheatsheet_skel.png)
+
 ## CONTROL UNIT
 
 ### DECODE UNIT

@@ -143,17 +143,16 @@ module control_unit #(
 
      assign indirect_addr =
         (opcode_group[`GROUP_LOAD_INDIRECT] ||
-        opcode_group[`GROUP_STORE_INDIRECT]) ?
+         opcode_group[`GROUP_STORE_INDIRECT]) ?
         // else, indirect to memory => X or Y or Z
-                {alu_rr, alu_rd} :
+                 {alu_rr, alu_rd} :
         // else, not indirect
-            {ADDR_WIDTH{1'bx}};
+                 {ADDR_WIDTH{1'bx}};
 
     assign data_to_store =
-            /* TODO 4: STS */
-            signals[`CONTROL_MEM_WRITE] ?
-                alu_rr :
-                {DATA_WIDTH{1'bx}};
+        signals[`CONTROL_MEM_WRITE] ?
+            alu_rr :
+            {DATA_WIDTH{1'bx}};
 
     /* Bloc de atribuire al program counter-ului */
     always @(posedge clk, posedge reset) begin
@@ -172,16 +171,19 @@ module control_unit #(
         else sreg <= alu_flags_out;
 
     /* Make the connection between the registers and RAM through the control
-    * unit.
-    */
+     * unit.
+     */
     always @(posedge clk, posedge reset) begin
-        /* TODO 5,6,7: register writes */
         if (reset)
             writeback_value <= {DATA_WIDTH{1'b0}};
         else if (opcode_group[`GROUP_ALU])
             writeback_value <= alu_out_buffer;
         else if (opcode_type == `TYPE_LDI)
             writeback_value <= opcode_imd[7:0];
+        else if (opcode_group[`GROUP_LOAD])
+            writeback_value <= bus_data;
+        else if (opcode_type == `TYPE_MOV)
+            writeback_value <= alu_rr;
     end
 
     /* Buffer pentru instructiunea citita */

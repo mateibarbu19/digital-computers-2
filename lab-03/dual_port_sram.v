@@ -24,7 +24,6 @@ module dual_port_sram #(
         output wire [DATA_WIDTH+DATA_WIDTH-1:0] debug_register_Y,
         output wire [DATA_WIDTH+DATA_WIDTH-1:0] debug_register_Z
 `endif
-          
     );
     reg [DATA_WIDTH-1:0] memory[0:(1<<ADDR_WIDTH)-1];
     reg [ADDR_WIDTH-1:0] rr_addr_buf;
