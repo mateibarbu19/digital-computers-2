@@ -12,8 +12,11 @@ build: avr
 avr: $(SOURCES)
 	$(CC) $(FLAGS) -o $@.vvp $^
 
+asm: ../resources/avrasm.jar
+	java -jar $< input.asm output.txt
+
 run: avr
 	$(SIM) $<.vvp
 
 clean:
-	rm -f avr.vvp waves.vcd
+	rm -f avr.vvp waves.vcd output.txt

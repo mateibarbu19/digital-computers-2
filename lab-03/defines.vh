@@ -23,9 +23,11 @@
 /* test values */
 `define TEST_INSTR_WIDTH     16
 `define TEST_DATA_WIDTH      8
+`define TEST_ADDR_WIDTH      16
 `define TEST_I_ADDR_WIDTH    10
 `define TEST_D_ADDR_WIDTH    7
 `define TEST_R_ADDR_WIDTH    5
+`define TEST_IMD_WIDTH       12
 
 /* States for FSM */
 `define STAGE_RESET 0

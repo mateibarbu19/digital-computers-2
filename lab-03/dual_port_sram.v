@@ -20,9 +20,9 @@ module dual_port_sram #(
         input  wire                  rd_oe
 `ifdef DEBUG
         ,
-        output wire [DATA_WIDTH+DATA_WIDTH-1:0]  debug_register_X,
-        output wire [DATA_WIDTH+DATA_WIDTH-1:0]  debug_register_Y,
-        output wire [DATA_WIDTH+DATA_WIDTH-1:0]  debug_register_Z
+        output wire [DATA_WIDTH+DATA_WIDTH-1:0] debug_register_X,
+        output wire [DATA_WIDTH+DATA_WIDTH-1:0] debug_register_Y,
+        output wire [DATA_WIDTH+DATA_WIDTH-1:0] debug_register_Z
 `endif
           
     );

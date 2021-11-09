@@ -8,7 +8,7 @@ module unitTestCpu;
 
     // Outputs
     wire result;
-    wire [`TEST_I_ADDR_WIDTH-1:0] pc;
+    wire [`TEST_I_ADDR_WIDTH-1:0] PC;
 
     // Instantiate the Unit Under Test (UUT)
     unitTest uut (
@@ -17,7 +17,7 @@ module unitTestCpu;
         .result(result)
 `ifdef DEBUG
         ,
-        .debug_program_counter(pc)
+        .debug_program_counter(PC)
 `endif
     );
 
@@ -33,7 +33,7 @@ module unitTestCpu;
           reset = 0;
         // Add stimulus here
 
-
+        #700;
     end
       
 endmodule
