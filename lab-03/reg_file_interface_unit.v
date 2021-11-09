@@ -7,7 +7,7 @@ module reg_file_interface_unit #(
     )(
         input  wire [`OPCODE_COUNT-1:0] opcode_type,
         input  wire    [DATA_WIDTH-1:0] writeback_value,
-		  input  wire  [R_ADDR_WIDTH-1:0] opcode_rd,
+          input  wire  [R_ADDR_WIDTH-1:0] opcode_rd,
         input  wire  [R_ADDR_WIDTH-1:0] opcode_rr,
         input  wire [`SIGNAL_COUNT-1:0] signals,
         output wire  [R_ADDR_WIDTH-1:0] rr_addr,
@@ -30,11 +30,11 @@ module reg_file_interface_unit #(
      * modified in the next laboratories.
      */
 
-	 /* TODO : Modificati flag-urile de lucru cu registrele generale astfel incat noile instructiuni sa se execute corect. */
-	 wire [R_ADDR_WIDTH-1:0] internal_rr_addr;
+     /* TODO : Modificati flag-urile de lucru cu registrele generale astfel incat noile instructiuni sa se execute corect. */
+     wire [R_ADDR_WIDTH-1:0] internal_rr_addr;
     wire [R_ADDR_WIDTH-1:0] internal_rd_addr;
 
-	/* Internal */
+    /* Internal */
     assign internal_rd_addr =
             signals[`CONTROL_REG_RD_READ] ?
                 (opcode_type == `TYPE_LD_X || opcode_type == `TYPE_ST_X) ? `XL :

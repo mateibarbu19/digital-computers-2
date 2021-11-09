@@ -24,7 +24,7 @@ module alu #(
         case (opsel)
         
             `OPSEL_ADD,
-				`OPSEL_ADC:
+                `OPSEL_ADC:
             begin
                {flags_out[`FLAGS_C], out} = rd + rr + ((opsel == `OPSEL_ADC) && flags_in[`FLAGS_C]);
                flags_out[`FLAGS_V] = (rd[7] == 1 && rr[7] == 1 && out[7] == 0) ||
@@ -104,11 +104,11 @@ module alu #(
                 flags_out[`FLAGS_I] = flags_in[`FLAGS_I];
             end
 
-		/*TODO: add your ops here*/
+        /*TODO: add your ops here*/
         default: begin
             out = 8'bx;
-				flags_out = flags_in;
-		  end
+                flags_out = flags_in;
+          end
         endcase
     end
 

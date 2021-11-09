@@ -19,27 +19,27 @@ module dual_port_sram #(
         input  wire                  rr_oe,
         input  wire                  rd_oe
 `ifdef DEBUG
-		,
-		output wire [DATA_WIDTH+DATA_WIDTH-1:0]  debug_register_X,
-		output wire [DATA_WIDTH+DATA_WIDTH-1:0]  debug_register_Y,
-		output wire [DATA_WIDTH+DATA_WIDTH-1:0]  debug_register_Z
+        ,
+        output wire [DATA_WIDTH+DATA_WIDTH-1:0]  debug_register_X,
+        output wire [DATA_WIDTH+DATA_WIDTH-1:0]  debug_register_Y,
+        output wire [DATA_WIDTH+DATA_WIDTH-1:0]  debug_register_Z
 `endif
-		  
+          
     );
-	 reg [DATA_WIDTH-1:0] memory[0:(1<<ADDR_WIDTH)-1];
+    reg [DATA_WIDTH-1:0] memory[0:(1<<ADDR_WIDTH)-1];
     reg [ADDR_WIDTH-1:0] rr_addr_buf;
     reg [ADDR_WIDTH-1:0] rd_addr_buf;
 
 `ifdef DEBUG
     assign debug_register_X = {memory[27], memory[26]};
     assign debug_register_Y = {memory[29], memory[28]};
-	 assign debug_register_Z = {memory[31], memory[30]};
+    assign debug_register_Z = {memory[31], memory[30]};
 `endif
 
     reg [ADDR_WIDTH:0] i;
     initial begin
         for (i = 0; i < (1<<ADDR_WIDTH); i = i + 1) begin
-			memory[i[ADDR_WIDTH-1:0]] = 0;
+            memory[i[ADDR_WIDTH-1:0]] = 0;
         end
     end
 

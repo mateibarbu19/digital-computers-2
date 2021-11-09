@@ -13,7 +13,7 @@ module rom #(
     /* TODO 1: de scris niste instructiuni valide */
     always @* begin
         case (addr)
-		default:		value = 16'b0000000000000000;
+        default:		value = 16'b0000000000000000;
 
         endcase
     end
