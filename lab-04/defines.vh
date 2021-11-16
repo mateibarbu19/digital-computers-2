@@ -1,3 +1,5 @@
+`ifndef DEBUG
+
 `define DEBUG
 /* In order to disable implicit declaration of wires */
 `default_nettype none
@@ -112,3 +114,5 @@
 `define CONTROL_REG_RD_WRITE    5 // semnal activat de instructiunile care pot scrie Rd
 `define CONTROL_STACK_POSTDEC   6 // semnal care va mari stiva (sp-- <=> st.push) - stiva creste in jos 
 `define CONTROL_STACK_PREINC    7 // semnal care va micsora stiva (sp++ <=> st.pop)
+
+`endif

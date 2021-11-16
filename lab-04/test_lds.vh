@@ -1,3 +1,5 @@
+`include "defines.vh"
+
 function TEST_LDS;
 	input [`STAGE_COUNT-1:0]       pipeline_stage;
 	input [`GROUP_COUNT-1:0]       opcode_group;

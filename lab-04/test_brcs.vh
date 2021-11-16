@@ -1,3 +1,5 @@
+`include "defines.vh"
+
 function TEST_BRBC;
 	input [`STAGE_COUNT-1:0]       pipeline_stage;
 	input [`GROUP_COUNT-1:0]       opcode_group;
@@ -31,7 +33,7 @@ function TEST_BRBC;
 				else
 					begin
 						TEST_BRBC = 1'bx;
-						$display("BRBC LABEL - ID: FAILED => OPCODE_TYPE: (%b) vs %(%b), FLAG: (%b) vs %(%b). Check defines.vh.",
+						$display("BRBC LABEL - ID: FAILED => OPCODE_TYPE: (%b) vs (%b), FLAG: (%b) vs (%b). Check defines.vh.",
 									`TYPE_BRBC, opcode_type, address[2:0], opcode_bit);
 					end
 			`STAGE_EX:  TEST_BRBC = 1'b1;

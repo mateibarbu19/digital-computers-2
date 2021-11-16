@@ -23,15 +23,19 @@ module unitTestCpu;
 	always #10 clk = ~clk;
 
 	initial begin
+		$dumpfile("waves.vcd");
+        $dumpvars(0, unitTestCpu);
 		// Initialize Inputs
 		clk = 0;
 		reset = 1;
 
 		// Wait 100 ns for global reset to finish
 		#10;
-      reset = 0;
+      	reset = 0;
 		// Add stimulus here
 
+		#2300;
+        $finish();
 	end
       
 endmodule

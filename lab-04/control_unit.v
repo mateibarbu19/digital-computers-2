@@ -136,9 +136,11 @@ module control_unit #(
 			// TODO 4: next line is a dummy implementation. Fix it.
 			// () ? {8'b0, sp} :
 			// else, indirect to memory => X or Y or Z
-			{alu_rr, alu_rd} :
+			((opcode_group[`GROUP_STACK]) ?
+				{8'd0, sp} :
+				{alu_rr, alu_rd}) :
 		// else, not indirect
-		{ADDR_WIDTH{1'bx}};
+			{ADDR_WIDTH{1'bx}};
 
 	assign data_to_store =
 			signals[`CONTROL_MEM_WRITE] ? 
@@ -156,15 +158,23 @@ module control_unit #(
 				    actualizarea corespunzatoare pentru PC (program counter). Aveti grija la dimensiunea variabilelor. */
 					 
             `TYPE_BRBS: begin
-					next_program_counter <= program_counter; // dummy implementation
+				if (sreg[opcode_bit]) begin
+					next_program_counter <= program_counter + opcode_imd[I_ADDR_WIDTH-1:0];
+				end else begin
+					next_program_counter <= program_counter;
+				end
             end
 				
             `TYPE_BRBC: begin
-					next_program_counter <= program_counter; // dummy implementation
+				if (!sreg[opcode_bit]) begin
+					next_program_counter <= program_counter + opcode_imd[I_ADDR_WIDTH-1:0];
+				end else begin
+					next_program_counter <= program_counter;
+				end
             end
 				
             `TYPE_RJMP: begin
-					 next_program_counter <= program_counter; // dummy implementation
+					 next_program_counter <= program_counter + opcode_imd[I_ADDR_WIDTH-1:0];
             end
 				
 				default: begin
@@ -193,16 +203,22 @@ module control_unit #(
     always @(posedge clk, posedge reset) begin
         if (reset)
             sp <= `STACK_START;
-        else
+        else begin
 				/* TODO 4: Reactualizati stack pointer (daca este cazul).
 					- pentru instructiune PUSH stiva creste (sp scade)					
 							(stack[sp--] = Rr)
 					- pentru instructiune POP stiva scad (sp creste)
 						   (Rd = stack[++sp])
-					Hint: signals[`CONTROL_STACK_POSTDEC], signals[`CONTROL_STACK_PREINC]
+					Hint: , signals[`CONTROL_STACK_PREINC]
 				*/
-
-				sp <= `STACK_START; // dummy implementation
+				if (signals[`CONTROL_STACK_POSTDEC]) begin
+					sp <= sp - 1;
+				end else if (signals[`CONTROL_STACK_PREINC]) begin
+					sp <= sp + 1;
+				end else begin
+					sp <= sp; // dummy implementation
+				end
+		end
     end
 	 
    always @(posedge clk, posedge reset) begin

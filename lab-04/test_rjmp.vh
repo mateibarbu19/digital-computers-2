@@ -1,3 +1,5 @@
+`include "defines.vh"
+
 function TEST_RJMP;
 	input [`STAGE_COUNT-1:0]       pipeline_stage;
 	input [`GROUP_COUNT-1:0]       opcode_group;
@@ -28,7 +30,7 @@ function TEST_RJMP;
 				else
 					begin
 						TEST_RJMP = 1'bx;
-						$display("RJMP LABEL - ID: FAILED => OPCODE_TYPE: (%b) vs %(%b). Check defines.vh.",
+						$display("RJMP LABEL - ID: FAILED => OPCODE_TYPE: (%b) vs (%b). Check defines.vh.",
 									`TYPE_RJMP, opcode_type);
 					end
 			`STAGE_EX:  TEST_RJMP = 1'b1;

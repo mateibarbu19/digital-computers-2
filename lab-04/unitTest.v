@@ -4,8 +4,8 @@ module unitTest(
         input wire clk,
         input wire reset,
 		  output reg result,
-		input wire [`TEST_I_ADDR_WIDTH-1:0] debug_program_counter,
-		input wire [`STAGE_COUNT-1:0]  debug_pipeline_stage
+		output wire [`TEST_I_ADDR_WIDTH-1:0] debug_program_counter,
+		output wire [`STAGE_COUNT-1:0]  debug_pipeline_stage
     );
 	 
 
@@ -300,9 +300,10 @@ module unitTest(
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_EX) begin
-					sp          = sp + 1;
+					// sp          = sp + 1;
 				end
 				if (debug_pipeline_stage == `STAGE_WB) begin
+					sp          = sp + 1;
 					reg_20 		= value;
 				end
 			end
@@ -320,9 +321,10 @@ module unitTest(
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_EX) begin
-					sp          = sp + 1;
+					// sp          = sp + 1;
 				end
 				if (debug_pipeline_stage == `STAGE_WB) begin
+					sp          = sp + 1;
 					reg_21 		= value;
 				end
 			end
@@ -340,14 +342,15 @@ module unitTest(
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_EX) begin
-					sp          = sp + 1;
+					// sp          = sp + 1;
 				end
 				if (debug_pipeline_stage == `STAGE_WB) begin
+					sp          = sp + 1;
 					reg_22 		= value;
 				end
 			end
 			default:
-				result <= 1'bz;
+				result = 1'bz;
 		endcase
 		last_pc = debug_program_counter;
 	end

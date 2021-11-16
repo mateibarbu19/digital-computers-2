@@ -27,7 +27,7 @@ module dual_port_sram #(
 /*
     assign debug_register_X = {memory[27], memory[26]};
     assign debug_register_Y = {memory[29], memory[28]};
-	 assign debug_register_Z = {memory[31], memory[30]};
+	assign debug_register_Z = {memory[31], memory[30]};
 */
 
     reg [ADDR_WIDTH:0] i;

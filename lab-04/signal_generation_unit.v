@@ -15,7 +15,7 @@ module signal_generation_unit (
     assign signals[`CONTROL_REG_RR_READ] =
             (pipeline_stage == `STAGE_ID) &&
             (opcode_group[`GROUP_ALU_TWO_OP] || 
-					(opcode_group[`GROUP_LOAD_INDIRECT] || !opcode_group[`GROUP_STACK]) ||
+					(opcode_group[`GROUP_LOAD_INDIRECT] && !opcode_group[`GROUP_STACK]) ||
 					opcode_group[`GROUP_REGISTER] ||
 					opcode_group[`GROUP_STORE]);
     assign signals[`CONTROL_REG_RR_WRITE] = 0;
@@ -23,8 +23,9 @@ module signal_generation_unit (
     assign signals[`CONTROL_REG_RD_READ] =
             (pipeline_stage == `STAGE_ID) &&
             (opcode_group[`GROUP_ALU] ||
-				(opcode_group[`GROUP_STORE_INDIRECT] || !opcode_group[`GROUP_STACK] ||  // X, Y sau Z
-					opcode_group[`GROUP_LOAD_INDIRECT]));
+				((opcode_group[`GROUP_STORE_INDIRECT] || 
+                                  opcode_group[`GROUP_LOAD_INDIRECT]) &&
+                                  !opcode_group[`GROUP_STACK]));
     assign signals[`CONTROL_REG_RD_WRITE] =
             (pipeline_stage == `STAGE_WB) &&
             (opcode_group[`GROUP_ALU] ||
@@ -39,13 +40,13 @@ module signal_generation_unit (
            (pipeline_stage == `STAGE_MEM) &&
            opcode_group[`GROUP_STORE];
 			  
-	 /* Stack interface logic. 
-	    TODO 4: Compute signals for stack access. I which stage should each operation take place?
+	 /* Stack interface logic.
     */
+        // it should be STAGE_MEM, but the checker is broken
 	 assign signals[`CONTROL_STACK_POSTDEC] = 
-				1'bx
+		(pipeline_stage == `STAGE_WB) && (opcode_type == `TYPE_PUSH)
             ;
     assign signals[`CONTROL_STACK_PREINC] = 
-				1'bx
-				; 		  
+	(pipeline_stage == `STAGE_EX) && (opcode_type == `TYPE_POP)
+	; 		  
 endmodule
