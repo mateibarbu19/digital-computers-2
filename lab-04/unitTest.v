@@ -290,20 +290,19 @@ module unitTest(
 			13: /*	 pop 20 		*/
 			begin
 				// cod executat de procesor
-				address     = sp + 1;
+				address     = sp;
 				rr_addr 		= 32'dX;
 				rd_addr 	   = 32'd20;
-				value       = stack[sp + 1];
+				value       = stack[sp];
 				result = TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_EX) begin
-					// sp          = sp + 1;
+					sp          = sp + 1;
 				end
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					sp          = sp + 1;
 					reg_20 		= value;
 				end
 			end
@@ -311,20 +310,19 @@ module unitTest(
 			14: /*	 pop 21 		*/
 			begin
 				// cod executat de procesor
-				address     = sp + 1;
+				address     = sp;
 				rr_addr 		= 32'dX;
 				rd_addr 	   = 32'd21;
-				value       = stack[sp + 1];
+				value       = stack[sp];
 				result = TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_EX) begin
-					// sp          = sp + 1;
+					sp          = sp + 1;
 				end
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					sp          = sp + 1;
 					reg_21 		= value;
 				end
 			end
@@ -332,20 +330,19 @@ module unitTest(
 			15: /*	 pop 22 		*/
 			begin
 				// cod executat de procesor
-				address     = sp + 1;
+				address     = sp;
 				rr_addr 		= 32'dX;
 				rd_addr 	   = 32'd22;
-				value       = stack[sp + 1];
+				value       = stack[sp];
 				result = TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_EX) begin
-					// sp          = sp + 1;
+					sp          = sp + 1;
 				end
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					sp          = sp + 1;
 					reg_22 		= value;
 				end
 			end
