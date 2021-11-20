@@ -76,104 +76,104 @@ module unitTest(
 			0: /*	 ldi 	r16, 5 		*/
 			begin
 				// cod executat de procesor
-				address     = 32'dX;
-				rr_addr 		= 32'dX;
-				rd_addr 	   = 32'd16;
-				value       = 5;
-				result = TEST_LDI(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address     <= 32'dX;
+				rr_addr 	 <= 32'dX;
+				rd_addr 	   <= 32'd16;
+				value       <= 5;
+				result <= TEST_LDI(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					reg_16 	   = value;
+					reg_16 	   <= value;
 				end
 			end
 			
 			1: /*	 ldi 	r17, 15 		*/
 			begin
 				// cod executat de procesor
-				address     = 32'dX;
-				rr_addr 		= 32'dX;
-				rd_addr 	   = 32'd17;
-				value       = 15;
-				result = TEST_LDI(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address     <= 32'dX;
+				rr_addr 	 <= 32'dX;
+				rd_addr 	   <= 32'd17;
+				value       <= 15;
+				result <= TEST_LDI(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					reg_17 	   = value;
+					reg_17 	   <= value;
 				end
 			end
 			
 			2: /*	 push r16		*/
 			begin
 				// cod executat de procesor
-				address     = sp;
-				rr_addr 		= 32'd16;
-				rd_addr 	   = 32'dX;
-				value       = reg_16;
-				result = TEST_PUSH(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address     <= sp;
+				rr_addr 	 <= 32'd16;
+				rd_addr 	   <= 32'dX;
+				value       <= reg_16;
+				result <= TEST_PUSH(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					stack[sp]   = value;
-					sp          = sp - 1;
+					stack[sp]   <= value;
+					sp          <= sp - 1;
 				end
 			end
 			
 			3: /*	 push r17 		*/
 			begin
 				// cod executat de procesor
-				address     = sp;
-				rr_addr 		= 32'd17;
-				rd_addr 	   = 32'dX;
-				value       = reg_17;
-				result = TEST_PUSH(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address     <= sp;
+				rr_addr 	 <= 32'd17;
+				rd_addr 	   <= 32'dX;
+				value       <= reg_17;
+				result <= TEST_PUSH(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					stack[sp]   = value;
-					sp          = sp - 1;
+					stack[sp]   <= value;
+					sp          <= sp - 1;
 				end
 			end
 			
 			4: /*	 mov 	r30, r16 */
 			begin
 				// cod executat de procesor
-				address     = 32'dX;
-				rr_addr 		= 32'd16;
-				rd_addr 	   = 32'd30;
-				value       = reg_16;
-				result = TEST_MOV(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address     <= 32'dX;
+				rr_addr 	 <= 32'd16;
+				rd_addr 	   <= 32'd30;
+				value       <= reg_16;
+				result <= TEST_MOV(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 			
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					reg_30 	   = value;
+					reg_30 	   <= value;
 				end
 			end
 			
 			5: /*	 sub 	r30, r17  		*/
 			begin
 				// cod executat de procesor
-				address     = 32'dX;
-				rr_addr 		= 32'd17;
-				rd_addr 	   = 32'd30;
-				value       = reg_30 - reg_17;
+				address     <= 32'dX;
+				rr_addr 	 <= 32'd17;
+				rd_addr 	   <= 32'd30;
+				value       <= reg_30 - reg_17;
 				
-				result = TEST_SUB(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				result <= TEST_SUB(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					reg_30 	   = value;
+					reg_30 	   <= value;
 				end
 			end
 			
@@ -182,11 +182,11 @@ module unitTest(
 				// cod pentru debug
 				
 				// cod executat de procesor
-				address     = `FLAGS_Z;
-				rr_addr 		= 32'dX;
-				rd_addr 	   = 32'dX;
-				value       = 32'dX;
-				result = TEST_BRBS(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_opcode_bit, debug_writeback_value, 
+				address     <= `FLAGS_Z;
+				rr_addr 	 <= 32'dX;
+				rd_addr 	   <= 32'dX;
+				value       <= 32'dX;
+				result <= TEST_BRBS(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_opcode_bit, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 			end
@@ -196,11 +196,11 @@ module unitTest(
 				// cod pentru debug
 				
 				// cod executat de procesor
-				address     = `FLAGS_N;
-				rr_addr 		= 32'dX;
-				rd_addr 	   = 32'dX;
-				value       = 32'dX;
-				result = TEST_BRBS(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_opcode_bit, debug_writeback_value, 
+				address     <= `FLAGS_N;
+				rr_addr 	 <= 32'dX;
+				rd_addr 	   <= 32'dX;
+				value       <= 32'dX;
+				result <= TEST_BRBS(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_opcode_bit, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 			end
@@ -209,28 +209,28 @@ module unitTest(
 			begin
 				
 				// cod executat de procesor
-				address     = 32'dX;
-				rr_addr 		= 32'd17;
-				rd_addr 	   = 32'd16;
-				value       = reg_16 - reg_17;
-				result = TEST_SUB(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address     <= 32'dX;
+				rr_addr 	 <= 32'd17;
+				rd_addr 	   <= 32'd16;
+				value       <= reg_16 - reg_17;
+				result <= TEST_SUB(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 				
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					reg_16 	   = value;
+					reg_16 	   <= value;
 				end
 			end
 			
 			9: /*	 rjmp 	main_loop 		*/
 			begin
 				// cod executat de procesor
-				address     = 32'dX;
-				rr_addr 		= 32'dX;
-				rd_addr 	   = 32'dX;
-				value       = 32'dX;
-				result = TEST_RJMP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address     <= 32'dX;
+				rr_addr 	 <= 32'dX;
+				rd_addr 	   <= 32'dX;
+				value       <= 32'dX;
+				result <= TEST_RJMP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 										
@@ -240,29 +240,29 @@ module unitTest(
 			10: /*	 sub 	r17, r16 		*/
 			begin
 				// cod executat de procesor
-				address     = 32'dX;
-				rr_addr 		= 32'd16;
-				rd_addr 	   = 32'd17;
-				value       = reg_17 - reg_16;
+				address     <= 32'dX;
+				rr_addr 	 <= 32'd16;
+				rd_addr 	   <= 32'd17;
+				value       <= reg_17 - reg_16;
 				
-				result = TEST_SUB(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				result <= TEST_SUB(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 										
 				// cod pentru debug	
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					reg_17 	   = value;
+					reg_17 	   <= value;
 				end
 			end
 			
 			11: /*	 rjmp 	main_loop 		*/
 			begin		
 				// cod executat de procesor
-				address     = 32'dX;
-				rr_addr 		= 32'dX;
-				rd_addr 	   = 32'd17;
-				value       = reg_17;
-				result = TEST_RJMP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address     <= 32'dX;
+				rr_addr 	 <= 32'dX;
+				rd_addr 	   <= 32'd17;
+				value       <= reg_17;
+				result <= TEST_RJMP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 										
@@ -272,83 +272,83 @@ module unitTest(
 			12: /*	 push 	r16 		*/
 			begin
 				// cod executat de procesor
-				address     = sp;
-				rr_addr 		= 32'd16;
-				rd_addr 	   = 32'dX;
-				value       = reg_16;
-				result = TEST_PUSH(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address     <= sp;
+				rr_addr 	 <= 32'd16;
+				rd_addr 	   <= 32'dX;
+				value       <= reg_16;
+				result <= TEST_PUSH(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					stack[sp]   = value;
-					sp          = sp - 1;
+					stack[sp]   <= value;
+					sp          <= sp - 1;
 				end
 			end
 			
 			13: /*	 pop 20 		*/
 			begin
 				// cod executat de procesor
-				address     = sp;
-				rr_addr 		= 32'dX;
-				rd_addr 	   = 32'd20;
-				value       = stack[sp];
-				result = TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address     <= sp + 1;
+				rr_addr 	 <= 32'dX;
+				rd_addr 	   <= 32'd20;
+				value       <= stack[sp];
+				result <= TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_EX) begin
-					sp          = sp + 1;
+					sp          <= sp + 1;
 				end
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					reg_20 		= value;
+					reg_20 	 <= value;
 				end
 			end
 
 			14: /*	 pop 21 		*/
 			begin
 				// cod executat de procesor
-				address     = sp;
-				rr_addr 		= 32'dX;
-				rd_addr 	   = 32'd21;
-				value       = stack[sp];
-				result = TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address     <= sp + 1;
+				rr_addr 	 <= 32'dX;
+				rd_addr 	   <= 32'd21;
+				value       <= stack[sp];
+				result <= TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_EX) begin
-					sp          = sp + 1;
+					sp          <= sp + 1;
 				end
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					reg_21 		= value;
+					reg_21 	 <= value;
 				end
 			end
 			
 			15: /*	 pop 22 		*/
 			begin
 				// cod executat de procesor
-				address     = sp;
-				rr_addr 		= 32'dX;
-				rd_addr 	   = 32'd22;
-				value       = stack[sp];
-				result = TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address     <= sp + 1;
+				rr_addr 	 <= 32'dX;
+				rd_addr 	   <= 32'd22;
+				value       <= stack[sp];
+				result <= TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
 				// cod pentru debug
 				if (debug_pipeline_stage == `STAGE_EX) begin
-					sp          = sp + 1;
+					sp          <= sp + 1;
 				end
 				if (debug_pipeline_stage == `STAGE_WB) begin
-					reg_22 		= value;
+					reg_22 	 <= value;
 				end
 			end
 			default:
-				result = 1'bz;
+				result <= 1'bz;
 		endcase
-		last_pc = debug_program_counter;
+		last_pc <= debug_program_counter;
 	end
 endmodule
