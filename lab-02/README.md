@@ -148,10 +148,18 @@ Code source: `sram.v`
 > defined in the machine code.
 
 The generation of the instructions is done starting from the code written in
-assembly using the avrasm utility using the command:
+assembly using the `avrasm` utility using the command:
 
 ```shell
 java -jar avrasm.jar input.txt output.txt
 ```
 
 Code source: `rom.v`
+
+---
+
+## Task 1
+
+> Description:
+
+I did this.

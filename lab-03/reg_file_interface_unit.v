@@ -9,7 +9,9 @@ module reg_file_interface_unit #(
         input  wire    [DATA_WIDTH-1:0] writeback_value,
           input  wire  [R_ADDR_WIDTH-1:0] opcode_rd,
         input  wire  [R_ADDR_WIDTH-1:0] opcode_rr,
+        /* verilator lint_off UNUSED */
         input  wire [`SIGNAL_COUNT-1:0] signals,
+        /* verilator lint_on UNUSED */
         output wire  [R_ADDR_WIDTH-1:0] rr_addr,
         output wire  [R_ADDR_WIDTH-1:0] rd_addr,
         inout  wire    [DATA_WIDTH-1:0] rr_data,
