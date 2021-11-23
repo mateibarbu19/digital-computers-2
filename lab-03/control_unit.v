@@ -58,7 +58,9 @@ module control_unit #(
     wire [R_ADDR_WIDTH-1:0] opcode_rd;
     wire [R_ADDR_WIDTH-1:0] opcode_rr;
     wire [11:0]             opcode_imd;
+    /* verilator lint_off UNUSED */
     wire [2:0]              opcode_bit;
+    /* verilator lint_on UNUSED */
     // Buffers for various stuff
     reg  [INSTR_WIDTH-1:0] instr_buffer;
     reg  [DATA_WIDTH-1:0]  alu_out_buffer;

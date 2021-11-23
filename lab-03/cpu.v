@@ -4,10 +4,14 @@ module cpu #(
         parameter      INSTR_WIDTH  = 16,   // instructions are 16 bits in width
         parameter       DATA_WIDTH  = 8,    // registers are 8 bits in width
         parameter     I_ADDR_WIDTH  = 10,   // 2 * 1024 bytes of flash (or ROM in our case)
+        /* verilator lint_off UNUSED */
         parameter       ADDR_WIDTH  = 16,   // 64KB address space
+        /* verilator lint_on UNUSED */
         parameter     D_ADDR_WIDTH  = 7,    // 128 bytes of SRAM
         parameter     R_ADDR_WIDTH  = 5,    // 32 registers
+        /* verilator lint_off UNUSED */
         parameter RST_ACTIVE_LEVEL  = 1     // level on which reset is active
+        /* verilator lint_on UNUSED */
     )(
         input wire clk,
         input wire reset
@@ -51,8 +55,10 @@ module cpu #(
     wire [INSTR_WIDTH-1:0]  instruction;
     wire [R_ADDR_WIDTH-1:0] rr_addr;
     wire [R_ADDR_WIDTH-1:0] rd_addr;
+    /* verilator lint_off UNUSED */
     wire [DATA_WIDTH-1:0]   rr_data;
     wire [DATA_WIDTH-1:0]   rd_data;
+    /* verilator lint_on UNUSED */
     wire                    rr_cs;
     wire                    rd_cs;
     wire                    rr_we;
@@ -66,7 +72,9 @@ module cpu #(
     wire [DATA_WIDTH-1:0]   alu_out;
     wire [`FLAG_COUNT:0]    alu_flags_in;
     wire [`FLAG_COUNT:0]    alu_flags_out;
+    /* verilator lint_off UNUSED */
     wire [INSTR_WIDTH-1:0]  bus_addr;
+    /* verilator lint_on UNUSED */
     wire [DATA_WIDTH-1:0]   bus_data;
     wire                    mem_cs;
     wire                    mem_we;

@@ -6,9 +6,11 @@ module bus_interface_unit #(
         parameter DATA_WIDTH     = 8,    // registers are 8 bits in width
         parameter ADDR_WIDTH     = 16    // 64KB address space
     )(
+        /* verilator lint_off UNUSED */
         input  wire  [`GROUP_COUNT-1:0] opcode_group,
         input  wire              [11:0] opcode_imd,
         input  wire [`SIGNAL_COUNT-1:0] signals,
+        /* verilator lint_on UNUSED */
         input  wire    [DATA_WIDTH-1:0] data_to_store,
         input  wire    [ADDR_WIDTH-1:0] indirect_addr,
         output wire    [ADDR_WIDTH-1:0] bus_addr,
@@ -19,11 +21,15 @@ module bus_interface_unit #(
     );
 
     wire [ADDR_WIDTH-1:0] internal_mem_addr;
+    /* verilator lint_off UNUSED */
     wire                  mem_access, io_access;
+    /* verilator lint_on UNUSED */
     wire                  mem_addr_is_in_mem;
     wire                  uses_indirect;
     wire                  should_store;
+    /* verilator lint_off UNUSED */
     wire                  should_load;
+    /* verilator lint_on UNUSED */
 
     assign should_load = signals[`CONTROL_MEM_READ];
     assign should_store = signals[`CONTROL_MEM_WRITE];

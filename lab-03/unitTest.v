@@ -11,6 +11,7 @@ module unitTest(
     );
      
 `ifdef DEBUG
+    /* verilator lint_off UNUSED */
     wire [`STAGE_COUNT-1:0]     debug_pipeline_stage;
     wire [`TEST_DATA_WIDTH-1:0] debug_alu_rr;
     wire [`TEST_DATA_WIDTH-1:0] debug_alu_rd;
@@ -30,6 +31,7 @@ module unitTest(
     wire [`GROUP_COUNT-1:0]     debug_opcode_group;
     wire [`TEST_DATA_WIDTH-1:0] debug_writeback_value;
     wire [`SIGNAL_COUNT-1:0]    debug_signals;
+    /* verilator lint_on UNUSED */
 `endif
 
 

@@ -3,7 +3,9 @@
 module signal_generation_unit (
           input  wire [`STAGE_COUNT-1:0]  pipeline_stage,
           input  wire [`OPCODE_COUNT-1:0] opcode_type,
+          /* verilator lint_off UNUSED */
           input  wire [`GROUP_COUNT-1:0]  opcode_group,
+          /* verilator lint_on UNUSED */
           output wire [`SIGNAL_COUNT-1:0] signals
      );
 

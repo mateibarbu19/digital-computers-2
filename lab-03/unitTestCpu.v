@@ -7,8 +7,10 @@ module unitTestCpu;
     reg reset;
 
     // Outputs
+    /* verilator lint_off UNUSED */
     wire result;
     wire [`TEST_I_ADDR_WIDTH-1:0] PC;
+    /* verilator lint_on UNUSED */
 
     // Instantiate the Unit Under Test (UUT)
     unitTest uut (

@@ -4,7 +4,9 @@ module alu #(
         parameter DATA_WIDTH = 8
     )(
         input  wire [`OPSEL_COUNT-1:0] opsel,
+        /* verilator lint_off UNUSED */
         input  wire                    enable,
+        /* verilator lint_on UNUSED */
         input  wire   [DATA_WIDTH-1:0] rd,
         input  wire   [DATA_WIDTH-1:0] rr,
         output reg    [DATA_WIDTH-1:0] out,

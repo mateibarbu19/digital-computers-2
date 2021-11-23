@@ -8,12 +8,16 @@ module decode_unit #(
         input  wire [INSTR_WIDTH-1:0]   instruction,
         output reg  [`OPCODE_COUNT-1:0] opcode_type,
         /* verilator lint_off UNOPTFLAT */
+        /* verilator lint_off UNDRIVEN */
         output wire [`GROUP_COUNT-1:0]  opcode_group,
+        /* verilator lint_on UNDRIVEN */
         /* verilator lint_on UNOPTFLAT */
         output reg  [R_ADDR_WIDTH-1:0]  opcode_rd,
         output reg  [R_ADDR_WIDTH-1:0]  opcode_rr,
         output reg  [11:0]              opcode_imd,
+        /* verilator lint_off UNDRIVEN */
         output reg  [2:0]               opcode_bit
+        /* verilator lint_on UNDRIVEN */
     );
 
 /*

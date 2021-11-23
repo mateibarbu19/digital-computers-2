@@ -2,7 +2,9 @@
 `include "defines.vh"
 
 module reg_file_interface_unit #(
+        /* verilator lint_off UNUSED */
         parameter INSTR_WIDTH  = 16,   // instructions are 16 bits in width
+        /* verilator lint_on UNUSED */
         parameter DATA_WIDTH   = 8,    // registers are 8 bits in width
         parameter R_ADDR_WIDTH = 5     // 32 registers
     )(
