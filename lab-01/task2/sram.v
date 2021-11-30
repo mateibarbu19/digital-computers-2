@@ -8,14 +8,14 @@
  * data_out - 8bit output
  */
 module sram(
-    input       clk,
-    input       reset,
-    input       oe,
-    input       cs,
-    input       we,
-    input [6:0] address,
-    input [7:0] data_in,
-    output[7:0] data_out
+    input        clk,
+    input        reset,
+    input        oe,
+    input        cs,
+    input        we,
+    input  [6:0] address,
+    input  [7:0] data_in,
+    output [7:0] data_out
 );
 
     integer i;
@@ -34,7 +34,7 @@ module sram(
         else if (cs) begin
             if (we && !oe) begin
                 memory[address] <= data_in;
-            end else if (we && !oe) begin
+            end else if (!we && oe) begin
                 buffer <= memory[address];
             end
         end

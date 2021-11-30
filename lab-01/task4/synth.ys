@@ -4,7 +4,7 @@ read_verilog -lib sram.v
 read_verilog fetcher.v
 
 # elaborate design hierarchy
-hierarchy -check
+hierarchy -check -top fetcher
 
 # the high-level stuff
 proc; tribuf; opt; fsm; opt; memory; opt

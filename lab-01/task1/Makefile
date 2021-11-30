@@ -12,5 +12,9 @@ rom: rom.v test_rom.v
 run: rom
 	$(SIM) $<.vvp
 
+synthesis: synth.ys
+	yosys synth.ys
+	rm -f *.pid
+
 clean:
-	rm -rf rom.vvp waves.vcd
+	rm -rf rom.vvp waves.vcd schematic*.dot *.pid *.json

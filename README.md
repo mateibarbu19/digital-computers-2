@@ -1,6 +1,6 @@
 # Digital Computers 2
 
-![alt text](example.svg "Laboratory 1, task 4, fetcher module, synthesized and rendered")
+![sch](lab-01/task4/fetcher.svg "Laboratory 1, task 4, fetcher module, synthesized and rendered")
 
 ## Table of Contents
 
@@ -23,7 +23,7 @@ was born in order to prove a change is possible.
 
 For more information or a syllabus check out the course description
 [page here](https://cs.pub.ro/index.php/education/courses/60-under/an3underg/125-digital-computers-2)
-.
+. This course was taught by Dan-Ștefan Tudose.
 
 I encourage you to watch the online lectures
 [here](https://www.youtube.com/watch?v=Jj2X13nKH7Y&list=PLwhXkdjzBNZ_2KzgsrSPQ_ZYNhFVFPXWI)

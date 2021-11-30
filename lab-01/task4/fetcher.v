@@ -16,9 +16,8 @@ module fetcher (
     localparam TRUE                 = 1'b1,
                FALSE                = 1'b0,
                STATE_IDLE           = 2'd0,
-               STATE_SRAM_READ_INIT = 2'b01,
-               STATE_SRAM_READ      = 2'b10,
-               STATE_SRAM_WRITE     = 2'b11;
+               STATE_SRAM_READ      = 2'b01,
+               STATE_SRAM_WRITE     = 2'b10;
 
     task clear_signals;
         begin
@@ -31,26 +30,21 @@ module fetcher (
     endtask
 
     always @(posedge clk) begin
-        $display("Time %d State %d SBuffer %d CS %d OE %d WE %d CLK %d", $time, state, sram_buffer, cs, oe, we, clk);
         if (rst) begin
             clear_signals;
         end else begin
             case (state)
                 STATE_IDLE: begin
                     we <= FALSE;
-                    if (address != 4'dz) begin
+                    if (address === 4'dz) begin
                         cs    <= FALSE;
                         oe    <= FALSE;
                         state <= STATE_IDLE; 
                     end else begin
                         cs    <= TRUE;
                         oe    <= TRUE;
-                        state <= STATE_SRAM_READ_INIT;
+                        state <= STATE_SRAM_READ;
                     end
-                end
-
-                STATE_SRAM_READ_INIT: begin
-                    state <= STATE_SRAM_READ;
                 end
 
                 STATE_SRAM_READ: begin

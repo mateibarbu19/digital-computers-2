@@ -1,9 +1,9 @@
 module test_fetcher ();
     
     // Inputs
-    reg     clk;
-    reg     rst;
-    integer address;
+    reg       clk;
+    reg       rst;
+    reg [4:0] address;
 
     // Outputs
     /* verilator lint_off UNUSED */
@@ -25,20 +25,19 @@ module test_fetcher ();
         $dumpvars(0, test_fetcher);
 
         // Initialize Inputs
-        clk = 0;
+        clk = 1;
         rst = 1;
-        address = 0;
+        address = 5'bz;
 
-        // Wait 100 ns for global reset to finish
-        #10;
+        // Wait for global reset to finish
+        #20;
 
         // Add stimulus here
         rst = 0;
-        //#10;
 
         for (address = 0; address < 16; address = address + 1) 
         begin
-            #40;
+            #30;
         end
 
         for (address = 0; address < 16; address = address + 1) 

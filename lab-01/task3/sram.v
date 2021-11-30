@@ -21,8 +21,6 @@ module sram(
     reg [7:0] buffer;
     reg [7:0] memory [0:127];
 
-    assign data = (cs && oe && !we && !reset) ? buffer : 8'bz;
-
     always @(posedge clk) begin
         if (reset) begin
             buffer <= 8'bz;
@@ -39,4 +37,6 @@ module sram(
             end
         end
     end
+
+    assign data = (cs && oe && !we && !reset) ? buffer : 8'bz;
 endmodule
