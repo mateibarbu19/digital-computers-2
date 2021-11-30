@@ -19,8 +19,8 @@ module unitTest(
     
     wire [`TEST_R_ADDR_WIDTH-1:0] debug_rr_addr;
     wire [`TEST_R_ADDR_WIDTH-1:0] debug_rd_addr;
-    wire [`FLAG_COUNT-1:0]        debug_flags_out;
-    wire [`TEST_D_ADDR_WIDTH-1:0] debug_bus_address;
+    wire [`FLAG_COUNT:0]          debug_flags_out;
+    wire [`TEST_INSTR_WIDTH-1:0]  debug_bus_address;
     wire [2*`TEST_DATA_WIDTH-1:0] debug_register_X;
     wire [2*`TEST_DATA_WIDTH-1:0] debug_register_Y;
     wire [2*`TEST_DATA_WIDTH-1:0] debug_register_Z;

@@ -32,9 +32,9 @@ module unitTestCpu;
         clk = 0;
         reset = 1;
 
-        // Wait 100 ns for global reset to finish
+        // Wait for global reset to finish
         #10;
-          reset = 0;
+        reset = 0;
         // Add stimulus here
 
         #700;

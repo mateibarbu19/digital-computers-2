@@ -31,16 +31,15 @@ module bus_interface_unit #(
     wire                  should_load;
     /* verilator lint_on UNUSED */
 
-    assign should_load = signals[`CONTROL_MEM_READ];
-    assign should_store = signals[`CONTROL_MEM_WRITE];
-    assign uses_indirect =
-        (opcode_group[`GROUP_LOAD_INDIRECT] ||
-         opcode_group[`GROUP_STORE_INDIRECT]);
-    assign mem_access = signals[`CONTROL_MEM_READ] ||
-                        signals[`CONTROL_MEM_WRITE];
+    assign should_load        = signals[`CONTROL_MEM_READ];
+    assign should_store       = signals[`CONTROL_MEM_WRITE];
+    assign uses_indirect      = opcode_group[`GROUP_LOAD_INDIRECT] ||
+                                opcode_group[`GROUP_STORE_INDIRECT];
+    assign mem_access         = signals[`CONTROL_MEM_READ] ||
+                                signals[`CONTROL_MEM_WRITE];
     assign mem_addr_is_in_mem = mem_access &&
-            (internal_mem_addr >= MEM_START_ADDR &&
-             internal_mem_addr <= MEM_STOP_ADDR);
+                                (internal_mem_addr >= {8'd0, MEM_START_ADDR} &&
+                                internal_mem_addr <= {8'd0, MEM_STOP_ADDR});
 
     assign internal_mem_addr =
         uses_indirect ?
@@ -54,7 +53,7 @@ module bus_interface_unit #(
 
     /* logic for io operations.
      * Hint: check defines.vh */
-    assign bus_addr = mem_cs ? internal_mem_addr - MEM_START_ADDR :
+    assign bus_addr = mem_cs ? internal_mem_addr - {8'd0, MEM_START_ADDR} :
                       {ADDR_WIDTH{1'bx}};
     assign bus_data = should_store ? data_to_store : {DATA_WIDTH{1'bz}};
 
