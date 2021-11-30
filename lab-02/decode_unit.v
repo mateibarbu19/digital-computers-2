@@ -32,7 +32,6 @@ module decode_unit #(
                 opcode_type = `TYPE_NOP;
                 opcode_rd   = {R_ADDR_WIDTH{1'bx}};
                 opcode_rr   = {R_ADDR_WIDTH{1'bx}};
-
             end
 
             // NEG

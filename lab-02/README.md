@@ -158,8 +158,61 @@ Code source: `rom.v`
 
 ---
 
+At each set the information needed to write the code was extracted from the ISA
+[manual](../resources/ATtiny20_Info.md).
+
 ## Task 1
 
-> Description:
+> Description: Implement the `NOP` instruction.
 
-I did this.
+First, I went in [decode_unit.v](decode_unit.v#L30) and set the opcode type, rd
+and rr.
+
+Next, I interpreted the `opcode_type` and set the `alu_opsel` accordingly in
+[control_unit.v](control_unit.v#L153).
+
+Last, I went in [alu.v](alu.v#L45) and simplified the `ADC` [example](alu.v#L31).
+
+## Task 2
+
+> Description: Implement the `NEG` instruction.
+
+First, I went in [decode_unit.v](decode_unit.v#L37) and set the opcode type, rd
+and rr. Still inside the decode module set in the `opcode_group` signal the
+`GROUP_ALU_ONE_OP` bit to one if `opcode_type` is `TYPE_NEG`.
+
+Next, I interpreted the `opcode_type` and set the `alu_opsel` accordingly in
+[control_unit.v](control_unit.v#L156).
+
+Last, I went in [alu.v](alu.v#L50) and followed the `ADC` [example](alu.v#L31).
+
+## Task 3
+
+> Description: Implement the `ADD` instruction.
+
+First, I went in [decode_unit.v](decode_unit.v#L44) and set the opcode type, rd
+and rr. Still inside the decode module set in the `opcode_group` signal the
+`GROUP_ALU_TWO_OP` bit to one if `opcode_type` is `TYPE_ADD`.
+
+Next, I interpreted the `opcode_type` and set the `alu_opsel` accordingly in
+[control_unit.v](control_unit.v#L159).
+
+Last, I went in [alu.v](alu.v#L63) and followed the `ADC` [example](alu.v#L31).
+
+## Task 4
+
+> Description: Implement the `SUB` instruction.
+
+Same steps as the last task.
+
+## Task 5
+
+> Description: Implement the `AND` instruction.
+
+Same steps as the last task.
+
+## Task 6
+
+> Description: Implement the `OR` instruction.
+
+Same steps as the last task.
