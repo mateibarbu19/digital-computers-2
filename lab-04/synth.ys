@@ -1,0 +1,22 @@
+# read design
+read_verilog alu.v
+
+# elaborate design hierarchy
+hierarchy -check -top alu
+
+write_verilog dummy.v
+
+# the high-level stuff
+proc; tribuf; opt; fsm; opt; memory; opt
+
+# mapping to internal cell library
+# this maps the design circuit to one bit gates, do not use this!!!
+# techmap; opt
+
+# cleanup
+clean
+
+write_json connections.json
+
+# view the resulting schematic
+show -colors 1 -stretch -prefix schematic alu
