@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 // Last modified: 21.10.2018 
 // Author: dosarudaniel@gmail.com
 `define DEBUG

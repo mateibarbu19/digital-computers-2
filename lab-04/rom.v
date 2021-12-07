@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 `timescale 1ns / 1ps
 module rom #(
         parameter   DATA_WIDTH = 16,

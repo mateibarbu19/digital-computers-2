@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 `define DEBUG
 /* In order to disable implicit declaration of wires */
 `default_nettype none

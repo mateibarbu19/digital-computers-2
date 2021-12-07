@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 `include "test_base.vh"
 `include "test_ldi.vh"
 `include "test_lds.vh"
