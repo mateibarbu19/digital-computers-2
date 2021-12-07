@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 module fetcher (
     output wire [7:0] data,
     input  wire       clk,     // clock

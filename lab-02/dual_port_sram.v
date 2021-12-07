@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 /* Translated from:
  * http://www.asic-world.com/examples/verilog/ram_dp_sr_sw.html
  */
