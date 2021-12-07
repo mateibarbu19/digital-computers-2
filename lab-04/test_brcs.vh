@@ -16,10 +16,10 @@ function TEST_BRBC;
 	input [`TEST_DATA_WIDTH-1:0]   alu_rr;
 	input [`TEST_DATA_WIDTH-1:0]   alu_rd;
 	input [`TEST_DATA_WIDTH-1:0]   alu_out;
-	input [`TEST_D_ADDR_WIDTH-1:0] bus_address;
+	input [`TEST_INSTR_WIDTH-1:0]  bus_address;
 	input integer address;
-	input integer register_rr;
-	input integer register_rd;
+	input [`TEST_R_ADDR_WIDTH-1:0] register_rr;
+	input [`TEST_R_ADDR_WIDTH-1:0] register_rd;
 	input integer value;
 	begin
 		case (pipeline_stage)

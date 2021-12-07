@@ -6,7 +6,7 @@
 module unitTest(
         input wire clk,
         input wire reset,
-		  output reg result,
+		output reg result,
 		output wire [`TEST_I_ADDR_WIDTH-1:0] debug_program_counter,
 		output wire [`STAGE_COUNT-1:0]  debug_pipeline_stage
     );
@@ -16,10 +16,10 @@ module unitTest(
 	// Instantiate the Unit Under Test (UUT)
 	cpu #(
 		.INSTR_WIDTH     (`TEST_INSTR_WIDTH),
-      .DATA_WIDTH      (`TEST_DATA_WIDTH),
-      .I_ADDR_WIDTH    (`TEST_I_ADDR_WIDTH),
-      .RST_ACTIVE_LEVEL(1)
-		) uut (
+    	.DATA_WIDTH      (`TEST_DATA_WIDTH),
+    	.I_ADDR_WIDTH    (`TEST_I_ADDR_WIDTH),
+    	.RST_ACTIVE_LEVEL(1)
+	) uut (
 		.clk(clk), 
 		.reset(reset)
 	);
@@ -32,11 +32,11 @@ module unitTest(
     
     wire [`TEST_R_ADDR_WIDTH-1:0] debug_rr_addr = uut.rr_addr;
     wire [`TEST_R_ADDR_WIDTH-1:0] debug_rd_addr = uut.rd_addr;
-    wire [`FLAG_COUNT-1:0] debug_flags_out = uut.alu_flags_out;
-    wire [`TEST_D_ADDR_WIDTH-1:0] debug_bus_address = uut.bus_addr;
+    wire [`FLAG_COUNT:0] debug_flags_out = uut.alu_flags_out;
+    wire [`TEST_INSTR_WIDTH-1:0] debug_bus_address = uut.bus_addr;
     wire [`TEST_DATA_WIDTH-1:0] debug_bus_data = uut.bus_data;
     
-    wire [`TEST_D_ADDR_WIDTH-1:0] debug_register_Y = {uut.reg_file.memory[29], uut.reg_file.memory[28]};
+    wire [2*`TEST_DATA_WIDTH-1:0] debug_register_Y = {uut.reg_file.memory[29], uut.reg_file.memory[28]};
     
     wire [11:0] debug_opcode_imd = uut.control.opcode_imd;
     wire [`OPCODE_COUNT-1:0] debug_opcode_type = uut.control.opcode_type;
@@ -53,9 +53,9 @@ module unitTest(
 	integer stack[`STACK_START:0];
 	integer sp;
 	
+	reg [`TEST_R_ADDR_WIDTH-1:0] rr_addr;
+	reg [`TEST_R_ADDR_WIDTH-1:0] rd_addr;
 	integer address;
-	integer rr_addr;
-	integer rd_addr;
 	integer value;
 	
 	
@@ -66,12 +66,12 @@ module unitTest(
 		reg_17 = 32'dX;
 		reg_22 = 32'dX;
 		
-		sp = `STACK_START;
-		
+		sp = {24'd0, `STACK_START};
+
 		address = 32'dX;
-		rr_addr = 32'dX;
-		rd_addr = 32'dX;
-		value = 32'dX;
+		rr_addr = `TEST_R_ADDR_WIDTH'dX;
+		rd_addr = `TEST_R_ADDR_WIDTH'dX;
+		value   = 32'dX;
 	end
 	
 	always @(posedge clk) begin
@@ -79,11 +79,11 @@ module unitTest(
 			0: /*	 ldi 	r16, 5 		*/
 			begin
 				// cod executat de procesor
-				address     <= 32'dX;
-				rr_addr 	 <= 32'dX;
-				rd_addr 	   <= 32'd16;
-				value       <= 5;
-				result <= TEST_LDI(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address <= 32'dX;
+				rr_addr <= `TEST_R_ADDR_WIDTH'dX;
+				rd_addr <= `TEST_R_ADDR_WIDTH'd16;
+				value   <= 5;
+				result  <= TEST_LDI(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 				// cod pentru debug
@@ -95,11 +95,11 @@ module unitTest(
 			1: /*	 ldi 	r17, 15 		*/
 			begin
 				// cod executat de procesor
-				address     <= 32'dX;
-				rr_addr 	 <= 32'dX;
-				rd_addr 	   <= 32'd17;
-				value       <= 15;
-				result <= TEST_LDI(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address <= 32'dX;
+				rr_addr <= `TEST_R_ADDR_WIDTH'dX;
+				rd_addr <= `TEST_R_ADDR_WIDTH'd17;
+				value   <= 15;
+				result  <= TEST_LDI(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 										
@@ -112,11 +112,11 @@ module unitTest(
 			2: /*	 push r16		*/
 			begin
 				// cod executat de procesor
-				address     <= sp;
-				rr_addr 	 <= 32'd16;
-				rd_addr 	   <= 32'dX;
-				value       <= reg_16;
-				result <= TEST_PUSH(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address <= sp;
+				rr_addr <= `TEST_R_ADDR_WIDTH'd16;
+				rd_addr <= `TEST_R_ADDR_WIDTH'dX;
+				value   <= reg_16;
+				result  <= TEST_PUSH(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
@@ -130,11 +130,11 @@ module unitTest(
 			3: /*	 push r17 		*/
 			begin
 				// cod executat de procesor
-				address     <= sp;
-				rr_addr 	 <= 32'd17;
-				rd_addr 	   <= 32'dX;
-				value       <= reg_17;
-				result <= TEST_PUSH(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address <= sp;
+				rr_addr <= `TEST_R_ADDR_WIDTH'd17;
+				rd_addr <= `TEST_R_ADDR_WIDTH'dX;
+				value   <= reg_17;
+				result  <= TEST_PUSH(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
@@ -148,11 +148,11 @@ module unitTest(
 			4: /*	 mov 	r30, r16 */
 			begin
 				// cod executat de procesor
-				address     <= 32'dX;
-				rr_addr 	 <= 32'd16;
-				rd_addr 	   <= 32'd30;
-				value       <= reg_16;
-				result <= TEST_MOV(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address <= 32'dX;
+				rr_addr <= `TEST_R_ADDR_WIDTH'd16;
+				rd_addr <= `TEST_R_ADDR_WIDTH'd30;
+				value   <= reg_16;
+				result  <= TEST_MOV(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 			
@@ -165,12 +165,11 @@ module unitTest(
 			5: /*	 sub 	r30, r17  		*/
 			begin
 				// cod executat de procesor
-				address     <= 32'dX;
-				rr_addr 	 <= 32'd17;
-				rd_addr 	   <= 32'd30;
-				value       <= reg_30 - reg_17;
-				
-				result <= TEST_SUB(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address <= 32'dX;
+				rr_addr <= `TEST_R_ADDR_WIDTH'd17;
+				rd_addr <= `TEST_R_ADDR_WIDTH'd30;
+				value   <= reg_30 - reg_17;
+				result  <= TEST_SUB(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 										
@@ -185,10 +184,10 @@ module unitTest(
 				// cod pentru debug
 				
 				// cod executat de procesor
-				address     <= `FLAGS_Z;
-				rr_addr 	 <= 32'dX;
-				rd_addr 	   <= 32'dX;
-				value       <= 32'dX;
+				address <= {29'd0, `FLAGS_Z};
+				rr_addr <= `TEST_R_ADDR_WIDTH'dX;
+				rd_addr <= `TEST_R_ADDR_WIDTH'dX;
+				value   <= 32'dX;
 				result <= TEST_BRBS(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_opcode_bit, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
@@ -199,11 +198,11 @@ module unitTest(
 				// cod pentru debug
 				
 				// cod executat de procesor
-				address     <= `FLAGS_N;
-				rr_addr 	 <= 32'dX;
-				rd_addr 	   <= 32'dX;
-				value       <= 32'dX;
-				result <= TEST_BRBS(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_opcode_bit, debug_writeback_value, 
+				address <= {29'd0, `FLAGS_N};
+				rr_addr <= `TEST_R_ADDR_WIDTH'dX;
+				rd_addr <= `TEST_R_ADDR_WIDTH'dX;
+				value   <= 32'dX;
+				result  <= TEST_BRBS(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_opcode_bit, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 			end
@@ -212,11 +211,11 @@ module unitTest(
 			begin
 				
 				// cod executat de procesor
-				address     <= 32'dX;
-				rr_addr 	 <= 32'd17;
-				rd_addr 	   <= 32'd16;
-				value       <= reg_16 - reg_17;
-				result <= TEST_SUB(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address <= 32'dX;
+				rr_addr <= `TEST_R_ADDR_WIDTH'd17;
+				rd_addr <= `TEST_R_ADDR_WIDTH'd16;
+				value   <= reg_16 - reg_17;
+				result  <= TEST_SUB(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 				
@@ -229,11 +228,11 @@ module unitTest(
 			9: /*	 rjmp 	main_loop 		*/
 			begin
 				// cod executat de procesor
-				address     <= 32'dX;
-				rr_addr 	 <= 32'dX;
-				rd_addr 	   <= 32'dX;
-				value       <= 32'dX;
-				result <= TEST_RJMP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address <= 32'dX;
+				rr_addr <= `TEST_R_ADDR_WIDTH'dX;
+				rd_addr <= `TEST_R_ADDR_WIDTH'dX;
+				value   <= 32'dX;
+				result  <= TEST_RJMP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 										
@@ -243,10 +242,10 @@ module unitTest(
 			10: /*	 sub 	r17, r16 		*/
 			begin
 				// cod executat de procesor
-				address     <= 32'dX;
-				rr_addr 	 <= 32'd16;
-				rd_addr 	   <= 32'd17;
-				value       <= reg_17 - reg_16;
+				address <= 32'dX;
+				rr_addr <= `TEST_R_ADDR_WIDTH'd16;
+				rd_addr <= `TEST_R_ADDR_WIDTH'd17;
+				value   <= reg_17 - reg_16;
 				
 				result <= TEST_SUB(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
@@ -261,11 +260,11 @@ module unitTest(
 			11: /*	 rjmp 	main_loop 		*/
 			begin		
 				// cod executat de procesor
-				address     <= 32'dX;
-				rr_addr 	 <= 32'dX;
-				rd_addr 	   <= 32'd17;
-				value       <= reg_17;
-				result <= TEST_RJMP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address <= 32'dX;
+				rr_addr <= `TEST_R_ADDR_WIDTH'dX;
+				rd_addr <= `TEST_R_ADDR_WIDTH'd17;
+				value   <= reg_17;
+				result  <= TEST_RJMP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										address, rr_addr, rd_addr, value);
 										
@@ -275,11 +274,11 @@ module unitTest(
 			12: /*	 push 	r16 		*/
 			begin
 				// cod executat de procesor
-				address     <= sp;
-				rr_addr 	 <= 32'd16;
-				rd_addr 	   <= 32'dX;
-				value       <= reg_16;
-				result <= TEST_PUSH(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address <= sp;
+				rr_addr <= `TEST_R_ADDR_WIDTH'd16;
+				rd_addr <= `TEST_R_ADDR_WIDTH'dX;
+				value   <= reg_16;
+				result  <= TEST_PUSH(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
@@ -293,11 +292,11 @@ module unitTest(
 			13: /*	 pop 20 		*/
 			begin
 				// cod executat de procesor
-				address     <= sp + 1;
-				rr_addr 	 <= 32'dX;
-				rd_addr 	   <= 32'd20;
-				value       <= stack[sp];
-				result <= TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address <= sp + 1;
+				rr_addr <= `TEST_R_ADDR_WIDTH'dX;
+				rd_addr <= `TEST_R_ADDR_WIDTH'd20;
+				value   <= stack[sp];
+				result  <= TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
@@ -313,11 +312,11 @@ module unitTest(
 			14: /*	 pop 21 		*/
 			begin
 				// cod executat de procesor
-				address     <= sp + 1;
-				rr_addr 	 <= 32'dX;
-				rd_addr 	   <= 32'd21;
-				value       <= stack[sp];
-				result <= TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address <= sp + 1;
+				rr_addr <= `TEST_R_ADDR_WIDTH'dX;
+				rd_addr <= `TEST_R_ADDR_WIDTH'd21;
+				value   <= stack[sp];
+				result  <= TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										
@@ -333,11 +332,11 @@ module unitTest(
 			15: /*	 pop 22 		*/
 			begin
 				// cod executat de procesor
-				address     <= sp + 1;
-				rr_addr 	 <= 32'dX;
-				rd_addr 	   <= 32'd22;
-				value       <= stack[sp];
-				result <= TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
+				address <= sp + 1;
+				rr_addr <= `TEST_R_ADDR_WIDTH'dX;
+				rd_addr <= `TEST_R_ADDR_WIDTH'd22;
+				value   <= stack[sp];
+				result  <= TEST_POP(debug_pipeline_stage, debug_opcode_group, debug_opcode_type, debug_opcode_imd, debug_writeback_value, 
 										debug_signals, debug_rr_addr, debug_rd_addr, debug_alu_rr, debug_alu_rd, debug_alu_out, debug_bus_address,
 										debug_sp, address, rr_addr, rd_addr, value, sp);
 										

@@ -10,7 +10,7 @@ module reg_file_interface_unit #(
     )(
         input  wire [`OPCODE_COUNT-1:0] opcode_type,
         input  wire    [DATA_WIDTH-1:0] writeback_value,
-		  input  wire  [R_ADDR_WIDTH-1:0] opcode_rd,
+		input  wire  [R_ADDR_WIDTH-1:0] opcode_rd,
         input  wire  [R_ADDR_WIDTH-1:0] opcode_rr,
         input  wire [`SIGNAL_COUNT-1:0] signals,
         output wire  [R_ADDR_WIDTH-1:0] rr_addr,

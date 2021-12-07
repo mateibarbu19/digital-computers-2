@@ -15,10 +15,10 @@ function TEST_MOV;
 	input [`TEST_DATA_WIDTH-1:0]   alu_rr;
 	input [`TEST_DATA_WIDTH-1:0]   alu_rd;
 	input [`TEST_DATA_WIDTH-1:0]   alu_out;
-	input [`TEST_D_ADDR_WIDTH-1:0] bus_address;
+	input [`TEST_INSTR_WIDTH-1:0]  bus_address;
 	input integer address;
-	input integer register_rr;
-	input integer register_rd;
+	input [`TEST_R_ADDR_WIDTH-1:0] register_rr;
+	input [`TEST_R_ADDR_WIDTH-1:0] register_rd;
 	input integer value;
 	begin
 		case (pipeline_stage)
@@ -40,7 +40,7 @@ function TEST_MOV;
 			`STAGE_EX:  TEST_MOV = 1'b1;
 			`STAGE_MEM: TEST_MOV = 1'b1;
 			`STAGE_WB:
-				if(writeback_value == value
+				if(writeback_value == value[`TEST_DATA_WIDTH-1:0]
 				&& signals[`CONTROL_REG_RD_WRITE]
 				&& rd_addr == register_rd)
 					begin

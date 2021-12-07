@@ -20,8 +20,8 @@ module sram #(
     
     reg [ADDR_WIDTH:0] i;
     initial begin
-        for (i = 0; i < (1<<ADDR_WIDTH); i = i + 1) begin
-            memory[i] <= 0;
+        for (i = 0; i < (1 << ADDR_WIDTH); i = i + 1) begin
+            memory[i[ADDR_WIDTH-1:0]] = 0;
         end
     end
 

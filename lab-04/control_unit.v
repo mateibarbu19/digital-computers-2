@@ -30,7 +30,7 @@ module control_unit #(
 		output wire                    rd_oe,
 		// To/from ALU
 		output wire                    alu_enable,
-		output reg    [`OPSEL_COUNT-1:0] alu_opsel,
+		output reg  [`OPSEL_COUNT-1:0] alu_opsel,
 		output wire   [DATA_WIDTH-1:0] alu_flags_in,
 		input  wire   [DATA_WIDTH-1:0] alu_flags_out,
 		output reg    [DATA_WIDTH-1:0] alu_rr,
@@ -46,9 +46,9 @@ module control_unit #(
 	// From decode unit
 	wire [`SIGNAL_COUNT-1:0] signals;
 	wire [`OPCODE_COUNT-1:0] opcode_type;
-	wire [`GROUP_COUNT-1:0] opcode_group;
-	wire [R_ADDR_WIDTH-1:0] opcode_rd;
-	wire [R_ADDR_WIDTH-1:0] opcode_rr;
+	wire  [`GROUP_COUNT-1:0] opcode_group;
+	wire  [R_ADDR_WIDTH-1:0] opcode_rd;
+	wire  [R_ADDR_WIDTH-1:0] opcode_rr;
 	wire              [11:0] opcode_imd;
 	wire               [2:0] opcode_bit;
 	// Buffers for various stuff
@@ -61,10 +61,10 @@ module control_unit #(
 	reg     [DATA_WIDTH-1:0]     sp;  // stack pointer
 	reg     [I_ADDR_WIDTH-1:0]   next_program_counter;
 
- state_machine fsm (
-		.pipeline_stage       (pipeline_stage),
-		.clk         (clk),
-		.reset       (reset)
+ 	state_machine fsm (
+		.pipeline_stage(pipeline_stage),
+		.clk           (clk),
+		.reset         (reset)
 	);
 
 	decode_unit #(
@@ -74,9 +74,9 @@ module control_unit #(
 		.opcode_type (opcode_type),
 		.opcode_group(opcode_group),
 		.opcode_imd  (opcode_imd),
-		.opcode_rd(opcode_rd),
-		.opcode_rr(opcode_rr),
-		.opcode_bit(opcode_bit)
+		.opcode_rd   (opcode_rd),
+		.opcode_rr   (opcode_rr),
+		.opcode_bit  (opcode_bit)
 	);
 
 	signal_generation_unit sig (
@@ -109,8 +109,8 @@ module control_unit #(
 	);
 
 	bus_interface_unit #(
-		.MEM_START_ADDR(8'h40),
-		.MEM_STOP_ADDR (8'hBF),
+		.MEM_START_ADDR(16'h40),
+		.MEM_STOP_ADDR (16'hBF),
 		.DATA_WIDTH    (DATA_WIDTH),
 		.ADDR_WIDTH    (ADDR_WIDTH)
 	) bus_int (

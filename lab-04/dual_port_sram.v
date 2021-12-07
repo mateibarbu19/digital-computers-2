@@ -23,7 +23,7 @@ module dual_port_sram #(
         input  wire                  rd_oe
 		  
     );
-	 reg [DATA_WIDTH-1:0] memory[0:(1<<ADDR_WIDTH)-1];
+	reg [DATA_WIDTH-1:0] memory[0:(1<<ADDR_WIDTH)-1];
     reg [ADDR_WIDTH-1:0] rr_addr_buf;
     reg [ADDR_WIDTH-1:0] rd_addr_buf;
 
@@ -36,7 +36,7 @@ module dual_port_sram #(
     reg [ADDR_WIDTH:0] i;
     initial begin
         for (i = 0; i < (1<<ADDR_WIDTH); i = i + 1)
-				memory[i] <= 0;
+			memory[i[ADDR_WIDTH-1:0]] = 0;
 				
     end
 

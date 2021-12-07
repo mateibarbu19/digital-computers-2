@@ -38,6 +38,7 @@
 `define TEST_I_ADDR_WIDTH    10
 `define TEST_D_ADDR_WIDTH    7
 `define TEST_R_ADDR_WIDTH    5
+`define TEST_R_ADDR_WIDTH    5
 
 /* States for FSM */
 `define STAGE_RESET 0

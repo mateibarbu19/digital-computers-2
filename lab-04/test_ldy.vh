@@ -15,10 +15,10 @@ function TEST_LD;
 	input [`TEST_DATA_WIDTH-1:0]   alu_rr;
 	input [`TEST_DATA_WIDTH-1:0]   alu_rd;
 	input [`TEST_DATA_WIDTH-1:0]   alu_out;
-	input [`TEST_D_ADDR_WIDTH-1:0] bus_address;
+	input [`TEST_INSTR_WIDTH-1:0]  bus_address;
 	input integer address;
-	input integer register_rr;
-	input integer register_rd;
+	input [`TEST_R_ADDR_WIDTH-1:0] register_rr;
+	input [`TEST_R_ADDR_WIDTH-1:0] register_rd;
 	input integer value;
 	begin
 		case (pipeline_stage)
@@ -30,18 +30,18 @@ function TEST_LD;
 				else
 					TEST_LD = 1'bx	;
 			`STAGE_EX:
-				if(alu_rr == ((address + 64) >>8)
-				&& alu_rd == (address + 64))
+				if(alu_rr == ((address[`TEST_DATA_WIDTH-1:0] + 64) >>8)
+				&& alu_rd == (address[`TEST_DATA_WIDTH-1:0] + 64))
 					TEST_LD = 1'b1;
 				else
 					TEST_LD = 1'bx;
 			`STAGE_MEM:
-				if(bus_address == address)
+				if(bus_address == address[`TEST_INSTR_WIDTH-1:0])
 					TEST_LD = 1'b1;
 				else
 					TEST_LD = 1'bx;
 			`STAGE_WB:
-				if(writeback_value == value
+				if(writeback_value == value[`TEST_DATA_WIDTH-1:0]
 				&& signals[`CONTROL_REG_RD_WRITE]
 				&& rd_addr == register_rd)
 					TEST_LD = 1'b1;

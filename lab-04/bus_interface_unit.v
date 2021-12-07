@@ -4,8 +4,8 @@
 `timescale 1ns / 1ps
 `include "defines.vh"
 module bus_interface_unit #(
-		parameter MEM_START_ADDR = 8'h40,
-		parameter MEM_STOP_ADDR  = 8'hBF,
+		parameter MEM_START_ADDR = 16'h40,
+		parameter MEM_STOP_ADDR  = 16'hBF,
 		parameter DATA_WIDTH     = 8,    // registers are 8 bits in width
 		parameter ADDR_WIDTH     = 16    // 64KB address space
 	)(

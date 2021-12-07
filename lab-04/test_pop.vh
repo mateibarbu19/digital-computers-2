@@ -15,11 +15,11 @@ function TEST_POP;
 	input [`TEST_DATA_WIDTH-1:0]   alu_rr;
 	input [`TEST_DATA_WIDTH-1:0]   alu_rd;
 	input [`TEST_DATA_WIDTH-1:0]   alu_out;
-	input [`TEST_D_ADDR_WIDTH-1:0] bus_address;
-	input [`TEST_DATA_WIDTH-1:0] sp;
+	input [`TEST_INSTR_WIDTH-1:0] bus_address;
+	input [`TEST_DATA_WIDTH-1:0]   sp;
 	input integer address;
-	input integer register_rr;
-	input integer register_rd;
+	input [`TEST_R_ADDR_WIDTH-1:0] register_rr;
+	input [`TEST_R_ADDR_WIDTH-1:0] register_rd;
 	input integer value;
 	input integer stack_pointer;
 	begin
@@ -47,7 +47,7 @@ function TEST_POP;
 			`STAGE_MEM:
 				if (opcode_group[`GROUP_STACK] &&
 				    opcode_type == `TYPE_POP &&
-					 bus_address == address[7:0] - 8'h40)
+					 bus_address == {8'd0, address[7:0] - 8'h40})
 				begin
 						TEST_POP = 1'b1;
 						$display("POP R%2d - MEM: OK (bus_addr = %2H)", register_rd,  bus_address);
@@ -60,7 +60,7 @@ function TEST_POP;
 			`STAGE_WB:
 				if (opcode_group[`GROUP_STACK] &&
 				    opcode_type == `TYPE_POP &&
-					 writeback_value == value)
+					 writeback_value == value[`TEST_DATA_WIDTH-1:0])
 				begin
 						TEST_POP = 1'b1;
 						$display("POP R%2d - WB: OK (R%2d = %3d)", register_rd, register_rd, value);
