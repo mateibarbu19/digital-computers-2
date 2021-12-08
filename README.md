@@ -30,7 +30,8 @@ Here is the list of the improvements I brought:
 - Verilator for linting with all warnings managed
     - Some of the members of the PUB team felt like not all Verilator warnings
     were relevant, for example `WIDTH` ones in test benches, but I would like to
-    cite other guidelines from [Cornell] University
+    cite other guidelines from [Cornell](https://people.ece.cornell.edu/land/courses/ece5760/Verilog/Verilog_index.html)
+    University
         > It is a very good idea to control width. [...] Pay attention to
         > warnings
 - Correct use of both nonblocking and blocking assignments
@@ -40,8 +41,6 @@ Here is the list of the improvements I brought:
     purposes only
 - Provided information about open-source tools
 - Synthesis script (only for some laboratory tasks)
-
-[Cornell]: (https://people.ece.cornell.edu/land/courses/ece5760/Verilog/Verilog_index.html)
 
 For more information or a syllabus check out the course description
 [page here](https://cs.pub.ro/index.php/education/courses/60-under/an3underg/125-digital-computers-2)
