@@ -7,16 +7,18 @@ SOURCES = alu.v bus_interface_unit.v control_unit.v cpu.v decode_unit.v \
 
 .PHONY: build clean
 
-build: avr
+build: avr.vvp
 
-avr: $(SOURCES)
-	$(CC) $(FLAGS) -o $@.vvp $^
+avr.vvp: $(SOURCES)
+	$(CC) $(FLAGS) -o $@ $^
 
 asm: ../resources/avrasm.jar
 	java -jar $< input.asm output.txt
 
-run: avr
-	$(SIM) $<.vvp
+waves.vcd: avr.vvp
+	$(SIM) $<
+
+run: waves.vcd
 
 clean:
 	rm -f avr.vvp waves.vcd output.txt

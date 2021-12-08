@@ -2,7 +2,7 @@
 read_verilog rom.v
 
 # elaborate design hierarchy
-hierarchy -check
+hierarchy -check -top rom
 
 # the high-level stuff
 proc; tribuf; opt; fsm; opt; memory; opt;

@@ -4,17 +4,21 @@ SIM = vvp
 
 .PHONY: build clean
 
-build: rom
+build: rom.vvp
 
-rom: rom.v test_rom.v
-	$(CC) $(FLAGS) -o $@.vvp $^
+rom.vvp: rom.v test_rom.v
+	$(CC) $(FLAGS) -o $@ $^
 
-run: rom
-	$(SIM) $<.vvp
+waves.vcd: rom.vvp
+	$(SIM) $<
 
-synthesis: synth.ys
+run: waves.vcd
+
+connections.json: synth.ys rom.v
 	yosys synth.ys
 	rm -f *.pid
+
+synthesis: connections.json
 
 clean:
 	rm -rf rom.vvp waves.vcd schematic*.dot *.pid *.json

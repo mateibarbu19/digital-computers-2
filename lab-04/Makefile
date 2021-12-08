@@ -8,16 +8,18 @@ SCHEMATIC = connections.json
 
 .PHONY: build clean
 
-build: avr
+build: avr.vvp
 
-avr: $(SOURCES)
-	$(CC) $(FLAGS) -o $@.vvp $^
+avr.vvp: $(SOURCES)
+	$(CC) $(FLAGS) -o $@ $^
 
 asm: ../resources/avrasm.jar
 	java -jar $< input.asm output.txt
 
-run: avr
-	$(SIM) $<.vvp
+waves.vcd: avr.vvp
+	$(SIM) $<
+
+run: waves.vcd
 
 $(SCHEMATIC): synth.ys alu.v
 	yosys synth.ys

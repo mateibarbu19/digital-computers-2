@@ -6,15 +6,19 @@ SIM = vvp
 
 build: fetcher
 
-fetcher: test_fetcher.v fetcher.v rom.v sram.v
-	$(CC) $(FLAGS) -o $@.vvp $^
+fetcher.vvp: test_fetcher.v fetcher.v rom.v sram.v
+	$(CC) $(FLAGS) -o $@ $^
 
-synthesis: synth.ys
+connections.json: synth.ys fetcher.v
 	yosys synth.ys
 	rm -f *.pid
 
-run: fetcher
-	$(SIM) $<.vvp
+synthesis: connections.json
+
+waves.vcd: fetcher.vvp
+	$(SIM) $<
+
+run: waves.vcd
 
 clean:
 	rm -rf fetcher.vvp waves.vcd schematic*.dot *.pid *.json

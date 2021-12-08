@@ -4,13 +4,15 @@ SIM = vvp
 
 .PHONY: build clean
 
-build: sram
+build: sram.vvp
 
-sram: sram.v test_sram.v
-	$(CC) $(FLAGS) -o $@.vvp $^
+sram.vvp: sram.v test_sram.v
+	$(CC) $(FLAGS) -o $@ $^
 
-run: sram
-	$(SIM) $<.vvp
+waves.vcd: sram.vvp
+	$(SIM) $<
+
+run: waves.vcd
 
 clean:
 	rm -rf sram.vvp waves.vcd

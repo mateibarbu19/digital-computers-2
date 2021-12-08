@@ -7,13 +7,15 @@ SOURCES = alu.v control_unit.v dual_port_sram.v state_machine.v checker_t.v \
 
 .PHONY: build clean
 
-build: avr
+build: avr.vvp
 
-avr: $(SOURCES)
-	$(CC) $(FLAGS) -o $@.vvp $^
+avr.vvp: $(SOURCES)
+	$(CC) $(FLAGS) -o $@ $^
 
-run: avr
-	$(SIM) $<.vvp
+waves.vcd: avr.vvp
+	$(SIM) $<
+
+run: waves.vcd
 
 clean:
 	rm -f avr.vvp waves.vcd
