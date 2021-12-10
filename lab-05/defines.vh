@@ -1,7 +1,9 @@
 /* verilator lint_off UNUSED */
 /* verilator lint_off UNDRIVEN */
 /* verilator lint_off UNOPTFLAT */
-`ifndef DEBUG
+`ifndef DEFINES
+
+`define DEFINES
 
 `define DEBUG
 /* In order to disable implicit declaration of wires */

@@ -1,6 +1,10 @@
 /* verilator lint_off UNUSED */
 /* verilator lint_off UNDRIVEN */
 /* verilator lint_off UNOPTFLAT */
+`ifndef DEFINES
+
+`define DEFINES
+
 `define DEBUG
 /* In order to disable implicit declaration of wires */
 `default_nettype none
@@ -100,3 +104,5 @@
 `define CONTROL_REG_RR_WRITE    3
 `define CONTROL_REG_RD_READ     4
 `define CONTROL_REG_RD_WRITE    5
+
+`endif

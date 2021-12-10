@@ -3,6 +3,10 @@
 /* verilator lint_off UNOPTFLAT */
 // Last modified: 21.10.2018 
 // Author: dosarudaniel@gmail.com
+`ifndef DEFINES
+
+`define DEFINES
+
 `define DEBUG
 /* In order to disable implicit declaration of wires */
 `default_nettype none
@@ -72,3 +76,5 @@
 `define CONTROL_REG_RR_WRITE    3
 `define CONTROL_REG_RD_READ     4
 `define CONTROL_REG_RD_WRITE    5
+
+`endif
