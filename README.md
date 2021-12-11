@@ -1,6 +1,6 @@
 # Digital Computers 2
 
-<img align="center" src="https://raw.githubusercontent.com/mateibarbu19/digital-computers-1/73168ffd1eea131ee1536fcd04e088269665fe9d/resources/non-blocking/res/counter.svg">
+<img align="center" src="resources/counter.svg">
 
 Table of Contents
 =================
