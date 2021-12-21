@@ -15,18 +15,18 @@ module signal_generation_unit (
     /* Control signals */
     /*
     ID:
-    CONTROL_REG_RR_READ cite?te valoarea lui rr ?
-    CONTROL_REG_RD_READ cite?te valoarea lui rd ?
+    CONTROL_REG_RR_READ do we read the value of rr ?
+    CONTROL_REG_RD_READ do we read the value of rd ?
     EX:
-    CONTROL_STACK_PREINC când citim din stiva o incrementam înainte
+    CONTROL_STACK_PREINC before reading from the stack, increment sp first
     MEM:
-    CONTROL_STACK_PREINC daca e o operatie cu mai multe etape de memorie ?
-    CONTROL_STACK_POSTDEC decrementam stiva dupa ce scriem
-    CONTROL_MEM_READ trebuie sa citeasca din memorie ?
-    CONTROL_MEM_WRITE trebuie sa scrie în memorie ?
+    CONTROL_STACK_PREINC is it a op. with multiple memory stages?
+    CONTROL_STACK_POSTDEC do we decrement sp after writing?
+    CONTROL_MEM_READ do we read from the memory?
+    CONTROL_MEM_WRITE do we write to the memory?
     WB:
-    CONTROL_REG_RR_WRITE scrie în rr ?
-    CONTROL_REG_RD_WRITE scrie în rd ?
+    CONTROL_REG_RR_WRITE writes in rr ?
+    CONTROL_REG_RD_WRITE writes in rd ?
     */
 
     /* Register interface logic */
@@ -58,29 +58,28 @@ module signal_generation_unit (
             opcode_group[`GROUP_STORE];
 
     /*
-    TODO 1: RCALL trebuie sa scrie date pe stiva, deci SP trebuie decrementat
-    pentru aceasta operatie. Problema este ca RCALL dace doua scrieri. Asigurati-va
-    ca SP este decrementat dupa ambele.
+    DONE 1: RCALL must push to the stack, so SP must be decremented for this op.
+    Notice that RCALL makes two pushes. Make sure SP is decremented after both
+    of them.
     */
     assign signals[`CONTROL_STACK_POSTDEC] =
         (pipeline_stage == `STAGE_MEM) &&
-            ((opcode_type == `TYPE_PUSH))
-                ;
+            ((opcode_type == `TYPE_PUSH) ||
+                (opcode_type == `TYPE_RCALL));
     /*
-    TODO 2: RET trebuie sa citeasca date de pe stiva, deci SP trebuie
-    incrementat inainte de aceasta operatie. Problema este ca RET face doua
-    citiri, deci SP trebuie incrementat inainte de ambele. Cele doua citiri se
-    fac in stagiile STAGE_MEM (cycle_count == 0) si
-    STAGE_MEM (cycle_count == 1). Ce stagii vin inainte de acestea doua?
+    DONE 2: RET must first read from the stack, so SP must be pre-incremented
+    for this op. Notice that RET does two pops, so SP must be incremented before
+    both. These read occur at STAGE_MEM (cycle_count == 0) and STAGE_MEM
+    (cycle_count == 1). What stages come beforehand?
 
-    Hint: FSM-ul cicleaza prin stagii astfel:
+    Hint: FSM-ul cycles in this way:
     ... -> STAGE_IF -> STAGE_ID -> STAGE_EX ->
     STAGE_MEM (cycle_count == 0) -> STAGE_MEM (cycle_count == 1) ->
     STAGE_WB -> STAGE_IF -> ...
     */
     assign signals[`CONTROL_STACK_PREINC] =
-        ((pipeline_stage == `STAGE_EX) && (opcode_type == `TYPE_POP)) ||
-            ((pipeline_stage == `STAGE_MEM && cycle_count == 0))
-                ;
+        ((pipeline_stage == `STAGE_EX) &&
+            ((opcode_type == `TYPE_POP) || (opcode_type == `TYPE_RET))) ||
+        (pipeline_stage == `STAGE_MEM && (opcode_type == `TYPE_RET) && cycle_count == 0);
 
 endmodule

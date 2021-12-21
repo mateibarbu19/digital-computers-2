@@ -64,17 +64,14 @@ module control_unit #(
     reg  [ DATA_WIDTH-1:0] sp             ;
 
     /*
-    TODO 1, 2: Hint: saved_pc este un buffer de ADDR_WIDTH biti care ajuta la
-    stocarea PC pe stiva si la citirea lui de pe stiva.
-
-    NU aveti nevoie sa modificati nimic aici.
+    DONE 1, 2: Hint: saved_pc is a ADDR_WIDTH-bit buffer that helps with pushing
+    or poping the PC to/from the stack.
+    Do not change anything here.
     */
     reg [  ADDR_WIDTH-1:0] saved_pc            ;
     reg [I_ADDR_WIDTH-1:0] next_program_counter;
 
-    /*
-    Tranzitiile intre etapele procesorului
-    */
+    /* Transitions between processor stages */
     state_machine fsm (
         .pipeline_stage(pipeline_stage),
         .clk           (clk           ),
@@ -82,7 +79,7 @@ module control_unit #(
         .cycle_count   (cycle_count   ),
         .opcode_group  (opcode_group  )
     );
-    /* ID: decodificarea instructiunilor */
+    /* ID: instruction decode */
     decode_unit #(.INSTR_WIDTH(INSTR_WIDTH)) decode (
         .instruction (instr_buffer),
         .opcode_type (opcode_type ),
@@ -92,9 +89,7 @@ module control_unit #(
         .opcode_rr   (opcode_rr   ),
         .opcode_bit  (opcode_bit  )
     );
-    /*
-    Activarea semnalelor pentru fiecare etapa
-    */
+    /* Signal activation for each stage */
     signal_generation_unit sig (
         .pipeline_stage(pipeline_stage),
         .cycle_count   (cycle_count   ),
@@ -103,9 +98,7 @@ module control_unit #(
         .opcode_group  (opcode_group  )
     );
 
-    /*
-    Interfata de control pentru registre
-    */
+    /* Registor control interface */
     reg_file_interface_unit #(
         .DATA_WIDTH  (DATA_WIDTH  ),
         .INSTR_WIDTH (INSTR_WIDTH ),
@@ -128,12 +121,10 @@ module control_unit #(
         .opcode_rr      (opcode_rr      )
     );
 
-    /*
-    Interfata de control cu memoria
-    */
+    /* Memory control interface */
     bus_interface_unit #(
-        .MEM_START_ADDR(8'h40     ),
-        .MEM_STOP_ADDR (8'hBF     ),
+        .MEM_START_ADDR(16'h40    ),
+        .MEM_STOP_ADDR (16'hBF    ),
         .DATA_WIDTH    (DATA_WIDTH),
         .ADDR_WIDTH    (ADDR_WIDTH)
     ) bus_int (
@@ -150,9 +141,7 @@ module control_unit #(
     );
 
 
-    /*
-    IF: Punerea instructiunii din memoria rom intr-un buffer
-    */
+    /* IF: Buffering of the instruction fetched from rom */
     always @(posedge clk, posedge reset)
         if (reset)
             instr_buffer <= 0;
@@ -163,9 +152,7 @@ module control_unit #(
             end
         end
 
-    /*
-    ID : Tipul operatiei executate de ALU
-    */
+    /* ID : The type of operation executed by the ALU */
     always @* begin
         if (alu_enable == 0)
             alu_opsel = `OPSEL_COUNT'bx;
@@ -191,9 +178,7 @@ module control_unit #(
         end
     end
 
-    /*
-    ID: Buffere pentru rd_data si rr_data
-    */
+    /* ID: Buffering of rd_data si rr_data */
     always @(posedge clk, posedge reset)
         if (reset) begin
             alu_rd <= 0;
@@ -204,7 +189,7 @@ module control_unit #(
         end
 
 
-    /* Bloc de atribuire al sreg-ului */
+    /* sreg attribution block */
     assign alu_flags_in = sreg;
     always @(posedge clk, posedge reset)
         if (reset)
@@ -212,9 +197,7 @@ module control_unit #(
         else
             sreg <= alu_flags_out;
 
-    /*
-    EX: Buffer pentru output-ul UAL-ului
-    */
+    /* EX: buffering of the ALU output */
     always @(posedge clk, posedge reset)
         if (reset)
             alu_out_buffer <= 0;
@@ -223,13 +206,10 @@ module control_unit #(
 
     assign alu_enable = (pipeline_stage == `STAGE_EX);
 
-    /*
-    MEM:
-    */
-    /* Adresare indirecta a memoriei, care momentan poate fi facuta
-    prin insructiunile:
-    - din grupurile opcode_group[`GROUP_LOAD_INDIRECT] || opcode_group[`GROUP_STORE_INDIRECT]
-    - instructiunile care vor folosi stack pointerul (sp)
+    /* MEM:
+    Indirect memory addressing, that could be, for now, done by these instr.:
+    - in opcode_group[`GROUP_LOAD_INDIRECT] or opcode_group[`GROUP_STORE_INDIRECT]
+    - which use the stack pointer (sp)
     */
     assign indirect_addr =
         // if indirect access
@@ -243,31 +223,23 @@ module control_unit #(
         {ADDR_WIDTH{1'bx}};
 
     /*
-    Ce date vor merge in memorie:
+    What data goes to the memory.
 
-    TODO 1: Hint: RCALL va trebui sa stocheze PC pe stiva in cei doi cicli din
-    etapa de memorie pe care ii are la dispozitie
+    DONE 1: Hint: RCALL will push PC on the stack during two clock cycles in the
+    memory stage.
     */
     assign data_to_store =
         signals[`CONTROL_MEM_WRITE] ?
         (opcode_type == `TYPE_RCALL) ?
         (cycle_count == 0) ?
-        /*
-        TODO 1: Stocati prima parte a adresei de intoarcere. Hint:
-        Vedeti liniile 65 si 295.
-        */
-        {DATA_WIDTH{1'bx}} : // Change this
-        /*
-        TODO 1: Stocati restul adresei de intoarcere.
-        */
-        {DATA_WIDTH{1'bx}} : // Change this
+        /* DONE 1: Store the first part of the return address. */
+        saved_pc[DATA_WIDTH-1:0] :
+        /* DONE 1: Store the rest of the return address. */
+        saved_pc[ADDR_WIDTH-1:DATA_WIDTH] :
         alu_rr:
         {DATA_WIDTH{1'bx}};
 
-    /*
-    WB:
-    Valoarea care va fi pusa in RD.
-    */
+    /* WB: The value to be stored in RD. */
     always @(posedge clk, posedge reset) begin
         if (reset)
             writeback_value <= {DATA_WIDTH{1'b0}};
@@ -281,10 +253,7 @@ module control_unit #(
             writeback_value <= alu_rr;
     end
 
-    /*
-    ID + MEM:
-    Controlul cu bufferul pentru program counter folosit pentru RCALL si RET
-    */
+    /* ID + MEM: Program counter buffer control for RCALL and RET. */
     always @(posedge clk, posedge reset) begin
         if (reset)
             saved_pc <= 0;
@@ -292,33 +261,30 @@ module control_unit #(
             if (pipeline_stage == `STAGE_ID) begin
                 if (opcode_type == `TYPE_RCALL) begin
                     /*
-                    TODO 1: Salvati in registru adresa de intoarcere din functie.
-                    Atentie, aceasta nu este egala cu program_counter. Care este relatia
-                    dintre cele doua valori?
+                    TODO 1: Save in the register the return address for the
+                    function call. Pay attention, for it is not the program
+                    counter!
                     */
-                    saved_pc <= {ADDR_WIDTH{1'bx}};
+                    saved_pc[I_ADDR_WIDTH-1:0] <= program_counter + {I_ADDR_WIDTH{1'b1}};
                 end
             end
         else if (pipeline_stage == `STAGE_MEM && opcode_type == `TYPE_RET)
             begin
                 if (cycle_count == 0) begin
                     /*
-                    TODO 2: Restaurati prima parte a adresei de intoarcere. Aceasta adresa
-                    a fost salvata pe stiva, care este o regiune de memorie. Prin ce
-                    magistrala vin datele de la memorie?
+                    DONE 2: Restore the second part of the return address. This
+                    value was previously saved on the stack. On which bus does
+                    the memory read data arrive?
                     */
-                    saved_pc <= {ADDR_WIDTH{1'bx}};
+                    saved_pc <= {bus_data, 8'd0};
                 end else begin
-                    /*
-                    TODO 2: Restaurati restul adresei de intoarcere.
-                    */
-                    saved_pc <= {ADDR_WIDTH{1'bx}};
+                    /* DONE 2: Restore the rest of the return address. */
+                    saved_pc[DATA_WIDTH-1:0] <= bus_data;
                 end
             end
     end
-    /*
-    Bloc de atribuire calculare al urmatorului program counter
-    */
+
+    /* Program counter attribution and computation block */
     always @(posedge clk, posedge reset) begin
         if (reset) begin
             program_counter <= 0;
@@ -340,12 +306,10 @@ module control_unit #(
                     next_program_counter <= program_counter + opcode_imd[9:0] + 1;
                 end
                 `TYPE_RCALL : begin
-                    /*
-                    TODO 1: Implementati saltul la adresa functiei. Hint: este un
-                    salt relativ. PC ← PC + k + 1
-                    */
+                    /* DONE 1: Implement the jump to the address of the
+                    function. Hint: it'a relative jump. PC <= PC + k + 1. */
 
-                    next_program_counter <= program_counter + 1;
+                    next_program_counter <= program_counter + opcode_imd[I_ADDR_WIDTH-1:0] + 1;
                 end
                 default : begin
                     next_program_counter <= program_counter + 1;
@@ -353,11 +317,9 @@ module control_unit #(
             endcase
         end else if (pipeline_stage == `STAGE_WB) begin
             if (opcode_type == `TYPE_RET) begin
-                /*
-                TODO 2: Implementati intoarcerea din functie.
-                PC ← return address (de pe stivă)
-                */
-                program_counter <= next_program_counter;
+                /* DONE 2: Implement the return from the function call.
+                PC <= return address (from the stack) */
+                program_counter <= saved_pc[I_ADDR_WIDTH-1:0];
             end else begin
                 program_counter <= next_program_counter;
             end
@@ -365,16 +327,12 @@ module control_unit #(
     end
 
 
-    /*
-    EX si MEM
-    Bloc de atribuire al sp-ului
-    */
+    /* EX + MEM: SP attribution block */
     always @(posedge clk, posedge reset) begin
         if (reset)
             sp <= `STACK_START;
-        else
-            if (signals[`CONTROL_STACK_POSTDEC])
-                sp <= sp - 8'b1;
+        else if (signals[`CONTROL_STACK_POSTDEC])
+            sp <= sp - 8'b1;
         else if (signals[`CONTROL_STACK_PREINC])
             sp <= sp + 8'b1;
     end

@@ -5,15 +5,15 @@
 `include "defines.vh"
 
 module cpu #(
-    parameter INSTR_WIDTH = 16, // instructions are 16 bits in width
-    parameter DATA_WIDTH = 8, // registers are 8 bits in width
-    parameter I_ADDR_WIDTH = 10, // 2 * 1024 bytes of flash (or ROM in our case)
-    parameter ADDR_WIDTH = 16, // 64KB address space
-    parameter D_ADDR_WIDTH = 7, // 128 bytes of SRAM
-    parameter R_ADDR_WIDTH = 5, // 32 registers
-    parameter RST_ACTIVE_LEVEL = 1 // level on which reset is active
-)(
-    input wire clk,
+    parameter INSTR_WIDTH      = 16, // instructions are 16 bits in width
+    parameter DATA_WIDTH       = 8 , // registers are 8 bits in width
+    parameter I_ADDR_WIDTH     = 10, // 2 * 1024 bytes of flash (or ROM in our case)
+    parameter ADDR_WIDTH       = 16, // 64KB address space
+    parameter D_ADDR_WIDTH     = 7 , // 128 bytes of SRAM
+    parameter R_ADDR_WIDTH     = 5 , // 32 registers
+    parameter RST_ACTIVE_LEVEL = 1   // level on which reset is active
+) (
+    input wire clk  ,
     input wire reset
 );
 

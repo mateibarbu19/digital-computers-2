@@ -1,3 +1,4 @@
+/* verilator lint_off WIDTH */
 /* verilator lint_off UNUSED */
 /* verilator lint_off UNDRIVEN */
 /* verilator lint_off UNOPTFLAT */

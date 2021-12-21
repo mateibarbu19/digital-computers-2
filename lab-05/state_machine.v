@@ -23,29 +23,23 @@ module state_machine (
         else
             pipeline_stage <= next_stage;
 
-    /*
-    Numararea ciclilor cand avem operatiuni care vor trebui sa stea
-    mai multi cicli intr-o etapa
-    */
+    /* Counting cycles when operations have multiple cycles in one stage */
     always @(posedge clk, posedge reset) begin
         if (reset)
             cycle_count <= 0;
         /*
-        TODO 1,2: Cititi explicatia de mai jos.
-        NU aveti nevoie sa modificati nimic aici.
+        Done: 1, 2. Read this note. Do not modify anything.
 
-        Daca suntem in etapa de memorie si o operatie care sta doi cicli in aceasta
-        etapa. Modifica cyc_count pentru a sti in care ciclu suntem
-        0 - primul ciclu
-        1 - al doilea ciclu
+        If we are in the memory stage and we have a operation that needs two
+        cycles. We change cycle_count to signal in which step we are.
+        0 - first cycle
+        1 - second cycle
         */
         else if (pipeline_stage == `STAGE_MEM && opcode_group[`GROUP_TWO_CYCLE_MEM])
             cycle_count <= ~cycle_count;
     end
 
-    /*
-    Calcularea urmatoarei etape pe procesor
-    */
+    /* Select the next stage */
     always @* begin
         case (pipeline_stage)
             `STAGE_RESET:
@@ -57,15 +51,12 @@ module state_machine (
             `STAGE_EX:
             next_stage = `STAGE_MEM;
             /*
-            TODO 1,2: Cititi explicatia de mai jos.
-            NU aveti nevoie sa modificati nimic aici.
+            Done: 1, 2. Read this note. Do not modify anything.
 
-            În cazul operatiilor RCALL si RET va trebuie sa accesam de doua ori
-            memoria pentru a putea salva porgram counter-ul pe stiva, respectiv
-            sa încarcam program counter-ul de pe stiva.
-            Deci daca avem o opera?ie din grupul opera?iilor ce stau 2 cicli
-            în etapa de memorie va trebui ca urmatoarea etapaa dupa primul ciclu
-            de memorie sa fie tot etapa de memorie nu cea de writeback
+            In the case of RCALL and RET operations we will need to access twice
+            the memory twice to save the PC on the stack, or to pop it off.
+            So, if we have a operation in the `GROUP_TWO_CYCLE_MEM, the next
+            stage is also a memory one if we were in the first cycle of the two.
             */
             `STAGE_MEM:
             if (opcode_group[`GROUP_TWO_CYCLE_MEM] && cycle_count == 0)
