@@ -18,7 +18,8 @@ Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 
 This project aims to provide a fully open-source alternative to the
 [Open CourseWare](https://ocw.cs.pub.ro/courses/cn1) Digital Computers 2
-Laboratories taught at [Politehnica University of Bucharest](upb.ro).
+Laboratories taught at [Politehnica University of Bucharest](upb.ro), during the
+first semester of the university year 2021-2022.
 
 The official guideline recommends using either the Xilinx ISE or Vivado. Since,
 both of them are memory heavy (tens of Gb) and closed-source, this repository
@@ -34,6 +35,8 @@ Here is the list of the improvements I brought:
     University
         > It is a very good idea to control width. [...] Pay attention to
         > warnings
+        - But from `lab-05` and up I chose to invest my time in better
+            activities than fixing `WIDTH` warnings
 - Correct use of both nonblocking and blocking assignments
 - Coding style (as best as I could)
 - Improved checkers
@@ -100,6 +103,19 @@ Note: If you took my advice and installed VSCodium, you'll need to enable the VS
 Marketplace using these
 [instructions](https://github.com/VSCodium/vscodium/blob/master/DOCS.md#extensions-marketplace)
 .
+
+If you are interested in a open-source auto-formatter them I found this Sublime
+[System Verilog](https://sv-doc.readthedocs.io/) plugin. Just place your cursor
+on the `endmodule` keyword, press `Ctrl` + `Shift` + `P` and type `Alignment`. I
+will note that before this I usually run this command:
+
+```bash
+for i in *.v; do
+    expand -t 4 "$i" | tr -s " " > tmp
+    cp tmp $i
+done
+rm tmp
+```
 
 ## 3. Usage
 
