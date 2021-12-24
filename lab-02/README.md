@@ -2,6 +2,33 @@
 
 ![cheatsheet](cheatsheet_skel.png)
 
+Table of Contents
+=================
+
+* [Laboratory 2](#laboratory-2)
+* [CPU](#cpu)
+   * [Control Unit](#control-unit)
+      * [Finite State Machine](#finite-state-machine)
+      * [Decode Unit](#decode-unit)
+      * [Signals](#signals)
+      * [Registers Interface Unit](#registers-interface-unit)
+      * [Bus Interface Unit](#bus-interface-unit)
+   * [ALU](#alu)
+   * [Defines](#defines)
+   * [Registers](#registers)
+   * [SRAM](#sram)
+   * [ROM](#rom)
+* [Implementation](#implementation)
+   * [General steps](#general-steps)
+   * [Task 1](#task-1)
+   * [Task 2](#task-2)
+   * [Task 3](#task-3)
+   * [Task 4](#task-4)
+   * [Task 5](#task-5)
+   * [Task 6](#task-6)
+
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+
 ---
 
 # CPU
@@ -21,7 +48,8 @@ contain any procedural blocks.
 
 ## Control Unit
 
-The "brains of this implementation, is responsible for making the connections in the `CPU` module transfer information in a organized fashion.
+The "brains of this implementation, is responsible for making the connections in
+the `CPU` module transfer information in a organized fashion.
 
 First of all, it manages the program counter, we will see in the next
 laboratories why this is necessary (hint: when we have branches and jumps the
@@ -34,7 +62,8 @@ It then uses the control signals (which will be explained in a next section) to
 make some decisions about when and in what conditions, a write value, for
 examples, should be used.
 
-Inside this module, we hold the `SREG` register, the functionality of which is explained in the ISA manual.
+Inside this module, we hold the `SREG` register, the functionality of which is
+explained in the ISA manual.
 
 This module also buffers and connects values needed by sub and upper modules,
 based on which pipeline stage the CPU is at.
@@ -51,7 +80,8 @@ Submodules:
 
 > Description: simulates the pipeline.
 
-It is responsible for the transition between the stages of the pipeline. (It is probably the simplest Verilog file in this folder.)
+It is responsible for the transition between the stages of the pipeline. (It is
+probably the simplest Verilog file in this folder.)
 
 Code source: `state_machine.v`
 
@@ -96,7 +126,8 @@ Code source: `reg_file_interface.v`
 
 ### Bus Interface Unit
 
-> Description: establishes a communication channel between the `control_unit` and `sram` modules. 
+> Description: establishes a communication channel between the `control_unit`
+> and `sram` modules. 
 
 It consists of:
 
@@ -140,7 +171,7 @@ Because our implementation is microcontroller has a Harvard architecture, the
 working memory, stored in the `sram` module, is separated from the instruction
 memory, stored in the `rom` module.
 
-Code source: `sram.v`
+Code source: `sram.v`, will be present in the next lab
 
 ## ROM
 
@@ -158,7 +189,29 @@ Code source: `rom.v`
 
 ---
 
-At each set the information needed to write the code was extracted from the ISA
+# Implementation
+
+## General steps
+
+Think about how a modern CPU is designed. The main idea that pops into my head
+is pipelining. So in our ATtiny implementation, our solutions will generally
+implement the following the pipeline stages (hopefully in order):
+
+- `IF`: this is taken care of when instantiating the `rom`
+- `ID`: check out `decode_unit`
+- `EX`: for this one, we have to step outside the `control_unit` into the `alu`
+- `MEM`: we tweak the interaction between the `sram` and `cpu` (using the
+    `bus_interface`)
+- `WB`: after the data is gathered from either the `alu`, or the `sram`, or from
+    a immediate value, or from a register, ..., we describe the write back
+    conditions in the `control_unit`
+
+It is important to mention that the `signal_generation` unit will affect *all*
+pipeline stages, so modifying will require a holistic view. Because most at
+lab the work is divided in tasks, modifying any stage will not be done only
+once.
+
+At each task the information needed to write the code was extracted from the ISA
 [manual](../resources/ATtiny20_Info.md).
 
 ## Task 1
