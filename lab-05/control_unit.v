@@ -261,11 +261,11 @@ module control_unit #(
             if (pipeline_stage == `STAGE_ID) begin
                 if (opcode_type == `TYPE_RCALL) begin
                     /*
-                    TODO 1: Save in the register the return address for the
+                    DONE 1: Save in the register the return address for the
                     function call. Pay attention, for it is not the program
                     counter!
                     */
-                    saved_pc[I_ADDR_WIDTH-1:0] <= program_counter + {I_ADDR_WIDTH{1'b1}};
+                    saved_pc[I_ADDR_WIDTH-1:0] <= program_counter + 1;
                 end
             end
         else if (pipeline_stage == `STAGE_MEM && opcode_type == `TYPE_RET)

@@ -1,0 +1,27 @@
+# read design
+read_verilog -lib state_machine.v
+read_verilog -lib decode_unit.v
+read_verilog -lib signal_generation_unit.v
+read_verilog -lib reg_file_interface_unit.v
+read_verilog -lib bus_interface_unit.v
+read_verilog control_unit.v
+
+prep -top control_unit -flatten
+
+# # elaborate design hierarchy
+# hierarchy -check -top control_unit
+
+# # the high-level stuff
+# proc; tribuf; opt; fsm; opt; memory; opt
+
+# # mapping to internal cell library
+# # this maps the design circuit to one bit gates, do not use this!!!
+# # techmap; opt
+
+# # cleanup
+# clean
+
+write_json connections.json
+
+# view the resulting schematic
+show -colors 1 -stretch -prefix schematic control_unit

@@ -41,7 +41,7 @@ function TEST_RCALL;
 				
 			`STAGE_EX:
 				if (!(uut.control.saved_pc === saved_pc)) begin  // saved_pc is updated in ID using `<=`, it will be visible here in EX
-					$display("RCALL FUNCTION - ID: FAILED saved_pc => %d vs %d", saved_pc, uut.control.saved_pc);
+					$display("RCALL FUNCTION - EX: FAILED saved_pc => %d vs %d", saved_pc, uut.control.saved_pc);
 					TEST_RCALL = 1'bx;
 				end
 				else begin

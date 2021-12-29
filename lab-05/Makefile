@@ -21,11 +21,11 @@ waves.vcd: avr.vvp
 
 run: waves.vcd
 
-$(SCHEMATIC): synth.ys alu.v
+$(SCHEMATIC): synth.ys control_unit.v
 	yosys synth.ys
 	rm -f *.pid
 
-synthesis: $(SCHEMATIC)
+synthesis: $(SCHEMATICS)
 
 clean:
-	rm -f avr.vvp waves.vcd output.txt
+	rm -f avr.vvp waves.vcd output.txt schematic*.dot *.pid *.json
