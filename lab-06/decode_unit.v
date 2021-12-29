@@ -1,6 +1,7 @@
 /* verilator lint_off UNUSED */
 /* verilator lint_off UNDRIVEN */
 /* verilator lint_off UNOPTFLAT */
+/* verilator lint_off CASEOVERLAP */
 `include "defines.vh"
 module decode_unit #(
     parameter INSTR_WIDTH  = 16, // instructions are 16 bits in width
@@ -93,7 +94,7 @@ Deci opcode = 000111rdxxxxxxxx devine 00011111xxxxxxxx. (Btw, that's ADD)
                 opcode_rr   = {R_ADDR_WIDTH{1'bx}};
                 opcode_bit  = 3'bx;
                 // info extracted from the datasheet
-                opcode_imd  = {~instruction[8], instruction[8],
+                opcode_imd  = {4'd0, ~instruction[8], instruction[8],
                     instruction[10:9], instruction[3:0]};
             end
             16'b1000_000?_????_1000 : begin
@@ -109,7 +110,7 @@ Deci opcode = 000111rdxxxxxxxx devine 00011111xxxxxxxx. (Btw, that's ADD)
                 opcode_rr   = {1'b1, instruction[7:4]};
                 opcode_bit  = 3'bx;
                 // info extracted from the datasheet
-                opcode_imd  = {~instruction[8], instruction[8],
+                opcode_imd  = {4'd0, ~instruction[8], instruction[8],
                     instruction[10:9], instruction[3:0]};
             end
             16'b0010_11??_????_???? : begin
@@ -178,7 +179,7 @@ Deci opcode = 000111rdxxxxxxxx devine 00011111xxxxxxxx. (Btw, that's ADD)
                 // extend sign bit
                 opcode_imd  = {{5{instruction[9]}}, instruction[9:3]};
             end
-            16'b1111_00??_????_???? : begin
+            16'b1111_01??_????_???? : begin
                 opcode_type = `TYPE_BRBC;
                 opcode_rd   = {R_ADDR_WIDTH{1'bx}};
                 opcode_rr   = {R_ADDR_WIDTH{1'bx}};

@@ -105,19 +105,19 @@ module unitTest (
 
     initial begin
         $display("Init regs..");
-        reg_19 = 8'dX;
-        reg_20 = 8'dX;
-        reg_28 = 8'dX;
-        reg_17 = 8'dX;
-        reg_16 = 8'dX;
+        reg_19 = 32'dx;
+        reg_20 = 32'dx;
+        reg_28 = 32'dx;
+        reg_17 = 32'dx;
+        reg_16 = 32'dx;
 
-        address = 16'dX;
-        io_addr = 5'dX;
-        rr_addr = 5'dX;
-        rd_addr = 5'dX;
-        bit_val = 3'bX;
-        value = 8'dX;
-        result = 0;
+        address = 32'dx;
+        io_addr = 32'dx;
+        rr_addr = 32'dx;
+        rd_addr = 32'dx;
+        bit_val = 32'dx;
+        value   = 32'dx;
+        result  = 0;
     end
 
     always @(posedge clk) begin
@@ -125,31 +125,31 @@ module unitTest (
             0 : /* ldi R16, 1 */
                 begin
                     // cod executat de procesor
-                    rd_addr = 5'd16;
-                    value   = 1;
-                    result  = TEST_LDI(rd_addr, value);
+                    rd_addr <= 16;
+                    value   <= 1;
+                    result  <= TEST_LDI(rd_addr, value);
                     // cod pentru debug
                     if (debug_pipeline_stage == `STAGE_WB) begin
-                        reg_16 = value;
+                        reg_16 <= value;
                     end
                 end
 
             1 : /* out 0x01, R16 */
                 begin
                     // cod executat de procesor
-                    io_addr = 5'd1;
-                    rr_addr = 5'd16;
-                    result  = TEST_OUT(io_addr, rr_addr, reg_28);
+                    io_addr <= 1;
+                    rr_addr <= 16;
+                    result  <= TEST_OUT(io_addr, rr_addr, reg_28);
 
                 end
 
             2 : /* sbi 0x01, 1 */
                 begin
                     // cod executat de procesor
-                    bit_val = 3'b1;
-                    io_addr = 5'd1;
+                    bit_val <= 1;
+                    io_addr <= 1;
 
-                    result = TEST_SBI(io_addr, bit_val);
+                    result <= TEST_SBI(io_addr, bit_val);
 
                     // cod pentru debug
                     // if (debug_pipeline_stage == `STAGE_WB) begin
@@ -159,24 +159,24 @@ module unitTest (
 
             3 : /* cbi 0x01, 0 */
                 begin
-                    bit_val = 3'b0;
-                    io_addr = 5'd1;
+                    bit_val <= 0;
+                    io_addr <= 1;
 
-                    result = TEST_CBI(io_addr, bit_val);
+                    result <= TEST_CBI(io_addr, bit_val);
 
                 end
 
             4 : /* in r17, 0x01 */
                 begin
-                    rd_addr = 17;
-                    io_addr = 5'd1;
-                    result  = TEST_IN(io_addr, rd_addr);
+                    rd_addr <= 17;
+                    io_addr <= 1;
+                    result  <= TEST_IN(io_addr, rd_addr);
                 end
 
             default :
-                result = 1'bz;
+                result <= 1'bz;
         endcase
-        last_pc = debug_program_counter;
+        last_pc <= debug_program_counter;
     end
 
 endmodule

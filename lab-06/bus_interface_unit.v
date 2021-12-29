@@ -3,10 +3,10 @@
 /* verilator lint_off UNOPTFLAT */
 `include "defines.vh"
 module bus_interface_unit #(
-    parameter IO_START_ADDR  = 8'h00,
-    parameter IO_STOP_ADDR   = 8'h3F,
-    parameter MEM_START_ADDR = 8'h40,
-    parameter MEM_STOP_ADDR  = 8'hBF,
+    parameter IO_START_ADDR  = 16'h00,
+    parameter IO_STOP_ADDR   = 16'h3F,
+    parameter MEM_START_ADDR = 16'h40,
+    parameter MEM_STOP_ADDR  = 16'hBF,
     parameter DATA_WIDTH     = 8    , // registers are 8 bits in width
     parameter ADDR_WIDTH     = 16     // 64KB address space
 ) (
@@ -59,8 +59,9 @@ module bus_interface_unit #(
     assign mem_oe = (mem_cs && should_load) ? 1'b1 : 1'bx;
 
     /* logic for generating io_cs, io_we and io_oe.*/
-    assign io_cs = (internal_mem_addr >= IO_START_ADDR &&
-        internal_mem_addr <= IO_STOP_ADDR);
+    // assign io_cs = (internal_mem_addr >= IO_START_ADDR &&
+    //     internal_mem_addr <= IO_STOP_ADDR);
+    assign io_cs = internal_mem_addr <= IO_STOP_ADDR;
     assign io_we = (io_cs && should_store) ? 1'b1 :
         (io_cs && should_load) ? 1'b0 : 1'bx;
     assign io_oe = (io_cs && should_load) ? 1'b1 : 1'bx;
@@ -73,9 +74,9 @@ module bus_interface_unit #(
     */
     always @(*) begin
         if(mem_cs) begin
-            bus_addr <= internal_mem_addr - MEM_START_ADDR;
+            bus_addr = internal_mem_addr - MEM_START_ADDR;
         end else if (io_cs)
-        bus_addr <= {ADDR_WIDTH{1'bx}};
+        bus_addr = {ADDR_WIDTH{1'bx}};
     end
     assign bus_data = should_store ? data_to_store : {DATA_WIDTH{1'bz}};
 

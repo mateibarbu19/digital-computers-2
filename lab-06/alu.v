@@ -23,7 +23,7 @@ module alu #(parameter DATA_WIDTH = 8) (
             `OPSEL_ADD,
             `OPSEL_ADC :
             begin
-                {flags_out[`FLAGS_C], out} = rd + rr + ((opsel == `OPSEL_ADC) && flags_in[`FLAGS_C]);
+                {flags_out[`FLAGS_C], out} = rd + rr + {8'd0, (opsel == `OPSEL_ADC) && flags_in[`FLAGS_C]};
                 flags_out[`FLAGS_V] = (rd[7] == 1 && rr[7] == 1 && out[7] == 0) ||
                     (rd[7] == 0 && rr[7] == 0 && out[7] == 1);
                 flags_out[`FLAGS_Z] = (out == 0);
@@ -37,7 +37,7 @@ module alu #(parameter DATA_WIDTH = 8) (
 
             `OPSEL_SUB :
             begin
-                {flags_out[`FLAGS_C], out} = rd - rr - flags_in[`FLAGS_C];
+                {flags_out[`FLAGS_C], out} = rd - rr - {8'd0, flags_in[`FLAGS_C]};
                 flags_out[`FLAGS_V] = (rd[7] == 1 && rr[7] == 1 && out[7] == 0) ||
                     (rd[7] == 0 && rr[7] == 0 && out[7] == 1);
                 flags_out[`FLAGS_Z] = (out == 0);

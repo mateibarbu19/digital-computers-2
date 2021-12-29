@@ -27,11 +27,11 @@ module gpio_sram #(
     reg  [DATA_WIDTH-1:0] pb_buf                       ; // buffer pentru PORTB
     reg  [  ADDR_WIDTH:0] i                            ;
 
-    always @(negedge clk) // posedge
+    always @(negedge clk, posedge reset) // posedge
         begin
             if (reset) begin
                 for (i = 0; i < (1<<ADDR_WIDTH); i = i + 1) begin
-                    memory[i] <= 0;
+                    memory[i[ADDR_WIDTH-1:0]] <= 0;
                 end
             end
             else if (cs) begin

@@ -123,8 +123,8 @@ module control_unit #(
     );
 
     bus_interface_unit #(
-        .MEM_START_ADDR(8'h40     ),
-        .MEM_STOP_ADDR (8'hBF     ),
+        .MEM_START_ADDR(16'h40    ),
+        .MEM_STOP_ADDR (16'hBF    ),
         .DATA_WIDTH    (DATA_WIDTH),
         .ADDR_WIDTH    (ADDR_WIDTH)
     ) bus_int (
@@ -192,12 +192,12 @@ module control_unit #(
                 end
                 `TYPE_BRBS : begin
                     if (sreg[opcode_imd[2:0]] == 1) begin
-                        program_counter <= program_counter + opcode_imd[9:3];
+                        program_counter <= program_counter + {3'd0, opcode_imd[9:3]};
                     end
                 end
                 `TYPE_BRBC : begin
                     if (sreg[opcode_imd[2:0]] == 0) begin
-                        program_counter <= program_counter + opcode_imd[9:3];
+                        program_counter <= program_counter + {3'd0, opcode_imd[9:3]};
                     end
                 end
             endcase
@@ -221,7 +221,7 @@ module control_unit #(
         else sreg <= alu_flags_out;
 
     /* Bloc de atribuire al sp-ului */
-    always @(posedge clk) begin
+    always @(posedge clk, posedge reset) begin
         if (reset)
             sp <= 0;
         else if (signals[`CONTROL_IO_READ] && opcode_group[`GROUP_STACK])
@@ -234,19 +234,17 @@ module control_unit #(
     end
 
 
-    always @(posedge clk) begin
+    always @(posedge clk, posedge reset) begin
         if (reset)
             saved_pc <= 0;
-        else if (pipeline_stage == `STAGE_ID &&
-            opcode_type == `TYPE_RCALL)
-        saved_pc <= {6'b0, program_counter} + 12'b1;
-        else if (pipeline_stage == `STAGE_MEM &&
-            opcode_type == `TYPE_RET)
-        if (cycle_count == 0) begin
-            saved_pc[7:0] <= bus_data;
-        end else begin
-            saved_pc[15:8] <= bus_data;
-        end
+        else if (pipeline_stage == `STAGE_ID && opcode_type == `TYPE_RCALL)
+            saved_pc <= {6'b0, program_counter} + 16'd1;
+        else if (pipeline_stage == `STAGE_MEM && opcode_type == `TYPE_RET)
+            if (cycle_count == 0) begin
+                saved_pc[7:0] <= bus_data;
+            end else begin
+                saved_pc[15:8] <= bus_data;
+            end
     end
 
     always @(posedge clk, posedge reset) begin
