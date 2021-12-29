@@ -17,14 +17,14 @@ module rom #(
     always @* begin
         case (addr)
 		  
-		  /* ATENTIE! La exercitiile 1,2,3 si 4 pentru a beneficia de mesajele de debug puse in checker
-			  va trebuie sa lasati ROM neschimbat!
+		  	/* Attention! For exercices 1, 2, 3 and 4 leave the ROM unchanged to
+			  benefit from debug messages.
 
-			  P.S. Puteti adauga la sfarsit, incepand cu adresa 16.
+			  P.S. You can add instr. starting with address 16.
 			*/
 			
-		  /* TODO 5 : Inlocuiti instructiunile din cu cele oferite in enunt. Utilizati avrasm.jar pentru
-				a converti din cod assembly in cod Verilog (care contine cod masina).
+		  	/* DONE 5: Change the ROM with the instr. in the description. Use
+			  avrasm.jar to convert assembly to machine code.
 			*/		
 		
 		/*	 ldi 	r16, 5 		*/

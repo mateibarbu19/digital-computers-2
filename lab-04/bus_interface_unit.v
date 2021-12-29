@@ -53,7 +53,7 @@ module bus_interface_unit #(
 
 	/* logic for io operations.
 	 * Hint: check defines.vh */
-	/* TODO: Cititi si intelegeti cum sunt setate bus_addr si bus_data */
+	/* DONE: Read and understand how bus_addr and bus_data are set */
 	assign bus_addr = mem_cs ? internal_mem_addr - MEM_START_ADDR :
 					  {ADDR_WIDTH{1'bx}};
 

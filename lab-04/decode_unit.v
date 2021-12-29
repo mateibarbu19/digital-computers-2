@@ -110,13 +110,13 @@ module decode_unit #(
 							  instruction[10:9], instruction[3:0]};
 			end
 			
-		   /* TODO 1: Adaugati decodificare pentru RJMP*/
+		   /* DONE 1: Decode RJMP*/
 			
-			/* TODO 2: Adaugati decodificare pentru BRBS*/
+			/* DONE 2: Decode BRBS*/
 			
-			/* TODO 3: Adaugati decodificare pentru BRBC*/
+			/* DONE 3: Decode BRBC*/
 			
-			/* TODO 4: Adaugati decodificare pentru PUSH si POP*/
+			/* DONE 4: Decode PUSH si POP*/
 			16'b1001_001?_????_1111: begin
 				opcode_type = `TYPE_PUSH;
 				opcode_rd   = {R_ADDR_WIDTH{1'bx}};
@@ -190,7 +190,7 @@ module decode_unit #(
 	assign opcode_group[`GROUP_LOAD_DIRECT] =
 		(opcode_type == `TYPE_LDS);
 	
-	/* TODO 4: Adaugati POP in grupul LOAD_INDIRECT. Verificati defines.vh. */
+	/* DONE 4: Add POP in the LOAD_INDIRECT group. Check defines.vh. */
 	assign opcode_group[`GROUP_LOAD_INDIRECT] =
 		(opcode_type == `TYPE_LD_Y) ||
 		(opcode_type == `TYPE_POP);
@@ -198,7 +198,7 @@ module decode_unit #(
 		(opcode_type == `TYPE_STS)
 		;
 		
-	/* TODO 4: Adaugati PUSH in grupul STORE_INDIRECT. Verificati defines.vh. */
+	/* DONE 4: Add PUSH in the STORE_INDIRECT group. Check defines.vh. */
 	assign opcode_group[`GROUP_STORE_INDIRECT] = 
 		(opcode_type == `TYPE_PUSH); 
 
@@ -208,7 +208,7 @@ module decode_unit #(
 		(opcode_type == `TYPE_MOV)
 		;
   
-    /* TODO 1,2,3: Adaugati instructiunile de control GROUP_CONTROL_FLOW. Verificati defines.vh. */
+    /* DONE 1,2,3: Add control instr. to the GROUP_CONTROL_FLOW group. */
     assign opcode_group[`GROUP_CONTROL_FLOW] = 
 		(opcode_type == `TYPE_RJMP) ||
 		(opcode_type == `TYPE_BRBS) ||
@@ -224,7 +224,7 @@ module decode_unit #(
 		opcode_group[`GROUP_STORE_DIRECT] ||
 		opcode_group[`GROUP_STORE_INDIRECT];
 	
-	/* TODO 4: Actualizati semnalul GROUP_STACK. Verificati defines.vh. */
+	/* DONE 4: Set the GROUP_STACK signal. Check defines.vh. */
 	assign opcode_group[`GROUP_STACK]  = 
 		(opcode_type == `TYPE_PUSH) ||
 		(opcode_type == `TYPE_POP);

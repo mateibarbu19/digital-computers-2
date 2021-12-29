@@ -12,9 +12,9 @@ module signal_generation_unit (
     /* Control signals */
 
     /* Register interface logic
-		TODO 4: STACK operations are INDIRECT but they don't read from registers.
-		        This todo is already solved. Just understand how things work.
-	 */
+        DONE 4: STACK operations are INDIRECT but they don't read from registers.
+	This is already solved. Just understand how things work.
+        */
     assign signals[`CONTROL_REG_RR_READ] =
             (pipeline_stage == `STAGE_ID) &&
             (opcode_group[`GROUP_ALU_TWO_OP] || 

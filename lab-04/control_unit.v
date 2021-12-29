@@ -126,17 +126,17 @@ module control_unit #(
 		.data_to_store(data_to_store)
 	);
 
-	 /* 
-	 TODO 4: Adresare indirecta a memoriei, care momentan poate fi facuta
-		prin insructiunile:
-			- din grupurile opcode_group[`GROUP_LOAD_INDIRECT] || opcode_group[`GROUP_STORE_INDIRECT]
-			- instructiunile PUSH si POP, care vor folosi stack pointerul (sp)
+	/* 
+	DONE 4: Indirect memory addressing, which can be done, for the moment, only
+		by these instructions:
+			- for the groups GROUP_LOAD_INDIRECT or GROUP_STORE_INDIRECT
+			- PUSH and POP, which will use the stack pointer (sp)
 	 */
 	 assign indirect_addr =
 		// if indirect access
 		(opcode_group[`GROUP_LOAD_INDIRECT] || opcode_group[`GROUP_STORE_INDIRECT]) ?
 			// if indirect to stack
-			// TODO 4: next line is a dummy implementation. Fix it.
+			// DONE 4: next line is a dummy implementation. Fix it.
 			// () ? {8'b0, sp} :
 			// else, indirect to memory => X or Y or Z
 			((opcode_group[`GROUP_STACK]) ?
@@ -157,8 +157,8 @@ module control_unit #(
 			$display("\nPC => %3d", 0);
 		end else if (pipeline_stage == `STAGE_EX) begin
 			case (opcode_type)
-			    /* TODO 1,2,3: Pentru instructinile BRBS, BRBC, RJMP implementati
-				    actualizarea corespunzatoare pentru PC (program counter). Aveti grija la dimensiunea variabilelor. */
+			    /* DONE 1,2,3: For BRBS, BRBC, RJMP implement the program
+				counter actuating. */
 					 
             `TYPE_BRBS: begin
 				if (sreg[opcode_bit]) begin
@@ -207,12 +207,12 @@ module control_unit #(
         if (reset)
             sp <= `STACK_START;
         else begin
-				/* TODO 4: Reactualizati stack pointer (daca este cazul).
-					- pentru instructiune PUSH stiva creste (sp scade)					
+				/* DONE 4: Update the stack pointer if necessary.
+					// - for PUSH the stack increases (sp decreases)					
 							(stack[sp--] = Rr)
-					- pentru instructiune POP stiva scad (sp creste)
+					- for POP the stack decreases (sp increases)
 						   (Rd = stack[++sp])
-					Hint: , signals[`CONTROL_STACK_PREINC]
+					Hint: CONTROL_STACK_PREINC and CONTROL_STACK_POSTDEC
 				*/
 				if (signals[`CONTROL_STACK_POSTDEC]) begin
 					sp <= sp - 1;
@@ -225,9 +225,9 @@ module control_unit #(
     end
 	 
    always @(posedge clk, posedge reset) begin
-	 /* Legatura intre registre si RAM prin unitatea de control.
-		 !!! PUSH si POP folosesc CONTROL_MEM_READ
-	 */
+		/* The link between the registers and RAM through the control unit.
+			Attention: PUSH and POP use CONTROL_MEM_READ
+		*/
 		if (reset)
 			writeback_value <= {DATA_WIDTH{1'b0}};
 		else if (opcode_group[`GROUP_ALU])
