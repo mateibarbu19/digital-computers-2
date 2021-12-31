@@ -14,31 +14,35 @@ module signal_generation_unit (
 
     /* Register interface logic */
 
-    /* TODO 3 & 4: Activati semnalele de lucru cu registrii pentru noile operații
-    * Ce grup folosește RR? Cum îl folosește?
-    * Ce grup folosește RD? Cum îl folosește?
+    /* DONE 3 & 4: Activate the signals to be able to work with register in the new instr.
+    * What group uses RR? How does it use it?
+    * What group uses RD? How does it use it?
     */
 
     assign signals[`CONTROL_REG_RR_READ] =
-        (pipeline_stage == `STAGE_ID) && (opcode_group[`GROUP_ALU_TWO_OP]
+        (pipeline_stage == `STAGE_ID) &&
+        (opcode_group[`GROUP_ALU_TWO_OP]
             || opcode_group[`GROUP_LOAD_INDIRECT]
             || opcode_group[`GROUP_REGISTER]
             || opcode_group[`GROUP_STORE]
             || opcode_type == `TYPE_MOV
+            || opcode_type == `TYPE_OUT
         );
     assign signals[`CONTROL_REG_RR_WRITE] = 0;
     assign signals[`CONTROL_REG_RD_READ]  =
         (pipeline_stage == `STAGE_ID)
             && (opcode_group[`GROUP_ALU] ||
                 opcode_group[`GROUP_ALU_IMD] ||
-                ((opcode_group[`GROUP_STORE_INDIRECT] || // X, Y sau Z
+                ((opcode_group[`GROUP_STORE_INDIRECT] || // X, Y or Z
                         opcode_group[`GROUP_LOAD_INDIRECT])
                     && !opcode_group[`GROUP_STACK]));
     assign signals[`CONTROL_REG_RD_WRITE] =
-        (pipeline_stage == `STAGE_WB) && (opcode_group[`GROUP_ALU]
-            || opcode_group[`GROUP_REGISTER]
-            || (opcode_group[`GROUP_LOAD] && opcode_type != `TYPE_RET)
-        );
+        (pipeline_stage == `STAGE_WB) &&
+            (opcode_group[`GROUP_ALU]
+                || opcode_group[`GROUP_REGISTER]
+                || (opcode_group[`GROUP_LOAD] && opcode_type != `TYPE_RET)
+                || opcode_type == `TYPE_IN
+            );
 
     /* Memory interface logic */
     assign signals[`CONTROL_MEM_READ] =
@@ -48,23 +52,25 @@ module signal_generation_unit (
         (pipeline_stage == `STAGE_MEM) &&
             opcode_group[`GROUP_STORE];
 
-    // TODO 3 & 4: Activați semnalele de control pentru spațiul de adrese I/O
+    // DONE 3 & 4: Activate the control signals for addressing the I/O space
 
-    /* TODO 4:
-    * Pentru grupul GROUP_ALU_AUX, semnalul apare in EX (dupa ce obtinem rezultatul de la ALU).
-    * Atentie! Daca apare in EX, nu va mai aparea in WB!
-    * Altfel spus,
-    * Activati semnalul CONTROL_IO_WRITE si pentru GROUP_ALU_AUX in stagiul EX
-    * Dezactivati semnalul pentru GROUP_ALU_AUX in stagiul WB
+    /* DONE 4:
+    * For the GROUP_ALU_AUX group, the signal appears in the in EX stage (after
+    * we have the ALU result).
+    * Attention! If it appears in the EX stage, it doesn't in WB stage!
+    * In other words, activate the CONTROL_IO_WRITE signal for the GROUP_ALU_AUX
+    * group during the EX stage. Deactivate it afterwards.
     */
 
     /* IO interface logic */
     assign signals[`CONTROL_IO_READ] =
-        0 // Change this
-            ;
+        (pipeline_stage == `STAGE_ID) &&
+            (opcode_group[`GROUP_IO_READ]);
     assign signals[`CONTROL_IO_WRITE] =
-        0 // Change this
-            ;
+        (pipeline_stage == `STAGE_WB &&
+            opcode_group[`GROUP_IO_WRITE] && !opcode_group[`GROUP_ALU_AUX]) ||
+        (pipeline_stage == `STAGE_EX &&
+            opcode_group[`GROUP_IO_WRITE] && opcode_group[`GROUP_ALU_AUX]);
 
     assign signals[`CONTROL_POSTDEC] =
         (opcode_type == `TYPE_PUSH || opcode_type == `TYPE_RCALL) &&

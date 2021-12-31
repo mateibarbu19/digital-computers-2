@@ -31,11 +31,11 @@ module bus_interface_unit #(
     wire                  should_store     ;
     wire                  should_load      ;
 
-    // TODO 1, actualizati should_* pentru a include si operatiile IO
+    // DONE 1: update should_* to include the IO operations.
     assign should_load = signals[`CONTROL_MEM_READ]
-        || 0;
+        || signals[`CONTROL_IO_READ];
     assign should_store = signals[`CONTROL_MEM_WRITE]
-        || 0;
+        || signals[`CONTROL_IO_WRITE];
 
     assign uses_indirect =
         (opcode_group[`GROUP_LOAD_INDIRECT] ||
@@ -43,10 +43,11 @@ module bus_interface_unit #(
     assign mem_access = signals[`CONTROL_MEM_READ] ||
         signals[`CONTROL_MEM_WRITE];
 
-    /* TODO 1, activati io_access pentru instructiunile care
-    * acceseaza spatiul de adrese I/O
-    */
-    assign io_access         = 0;
+    /* DONE 1: activate io_access for the instructions who have the right and
+     * want to access the I/O address space
+     */
+    assign io_access = signals[`CONTROL_IO_READ] &&
+        signals[`CONTROL_IO_WRITE];
     assign internal_mem_addr =
         uses_indirect ?
         indirect_addr :
@@ -59,24 +60,23 @@ module bus_interface_unit #(
     assign mem_oe = (mem_cs && should_load) ? 1'b1 : 1'bx;
 
     /* logic for generating io_cs, io_we and io_oe.*/
-    // assign io_cs = (internal_mem_addr >= IO_START_ADDR &&
-    //     internal_mem_addr <= IO_STOP_ADDR);
-    assign io_cs = internal_mem_addr <= IO_STOP_ADDR;
+    assign io_cs = internal_mem_addr <= IO_STOP_ADDR; // redundant internal_mem_addr >= IO_START_ADDR
     assign io_we = (io_cs && should_store) ? 1'b1 :
         (io_cs && should_load) ? 1'b0 : 1'bx;
     assign io_oe = (io_cs && should_load) ? 1'b1 : 1'bx;
 
     /* logic for bus operations.
-    * TODO 1, Adaugati un caz pentru a pune pe bus adresa din memoria IO atunci
-    * cand acesta este selectat. Folositi cazul memoriei ca exemplu.
-    * De unde isi iau instructiunile IN, OUT adresa?
-    * Priviti interfata acestui modulul, ce informatii avem la dispozitie?
+    * DONE 1: Add a case in which to put the IO memory address on the bus.atunci
+    * Use the memory case as an example. From where do the IN and OUT instr. get
+    * their address? Look at these modules ports. What information do we have in
+    * hand?
     */
     always @(*) begin
         if(mem_cs) begin
             bus_addr = internal_mem_addr - MEM_START_ADDR;
-        end else if (io_cs)
-        bus_addr = {ADDR_WIDTH{1'bx}};
+        end else if (io_cs) begin
+            bus_addr = internal_mem_addr - IO_START_ADDR;
+        end
     end
     assign bus_data = should_store ? data_to_store : {DATA_WIDTH{1'bz}};
 

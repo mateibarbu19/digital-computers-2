@@ -152,21 +152,24 @@ module control_unit #(
         {ADDR_WIDTH{1'bx}};
 
 
-    /* TODO 3 & 4: Stocati valoarea necesara instructiunilor SBI & CBI & OUT
-    * Ce modul intoarce valoarea?
-    * Cum functionează cele 2 instructiuni?
+    /* DONE 3 & 4: Store the value needed by the SBI & CBI & OUT instr.
+    * What module returns that value? How to the instr. work?
     */
     assign data_to_store =
         signals[`CONTROL_MEM_WRITE] ?
-        opcode_type == `TYPE_RCALL ?
-        cycle_count ? saved_pc[7:0] :
-        saved_pc[15:8] :
-        alu_rr :
-        signals[`CONTROL_IO_WRITE] ?
-        opcode_group[`GROUP_STACK] ? sp :
-        opcode_group[`GROUP_ALU] ? sreg :
-        {DATA_WIDTH{1'bx}} :
-        {DATA_WIDTH{1'bx}};
+            (opcode_type == `TYPE_RCALL ?
+                (cycle_count ? saved_pc[7:0] : saved_pc[15:8]) : alu_rr) :
+            signals[`CONTROL_IO_WRITE] ?
+                opcode_group[`GROUP_STACK] ?
+                    sp :
+                    opcode_group[`GROUP_ALU] ?
+                        sreg : 
+                        opcode_type == `TYPE_OUT ?
+                            alu_rr :
+                            opcode_group[`GROUP_ALU_AUX] ?
+                                alu_out :
+                                {DATA_WIDTH{1'bx}} :
+                {DATA_WIDTH{1'bx}};
 
     /* Bloc de atribuire al program counter-ului */
     always @(posedge clk, posedge reset) begin
@@ -258,13 +261,12 @@ module control_unit #(
             writeback_value <= alu_out_buffer;
         else if (opcode_type == `TYPE_MOV)
             writeback_value <= alu_rr;
-        // TODO 3: Care dintre operatiile IO scrie intr-un registru prin
-        // intermediul buffer-ului writeback_value?
-        // De unde ia datele pentru a le pune in writeback_value?
+        /* DONE 3: Which IO op. writes to a register using writeback_value?
+         * From which module do we take that value? */
+        else if (opcode_type == `TYPE_OUT)
+            writeback_value <= bus_data;
         else
             writeback_value <= 0;
-
-
     end
 
     /* Buffer pentru instructiunea citita */
@@ -286,11 +288,10 @@ module control_unit #(
             alu_out_buffer <= alu_out;
 
 
-    /* TODO 4: instructiunile CBI si SBI lucrează cu UAL,
-    * deci trebuie sa trimiteti doi operanzi dupa modelul de mai jos:
-    * 1. un operand va fi o masca pe biti
-    * 2. celalalt va fi valoarea ce trebuie modificata
-    * (a carui bit este (re)setat)
+    /* DONE 4: CBI and SBI use the ALU, so we must send two operands like the
+    * model below:
+    * 1. one operand is be a bit mask
+    * 2. the other is be the value to be modified, either by setting or clearing
     */
 
     /* Buffer pentru rd_data si rr_data */
@@ -300,26 +301,25 @@ module control_unit #(
             alu_rr <= 0;
         end else if (pipeline_stage == `STAGE_ID) begin
             if (opcode_type == `TYPE_CBI) begin
-                alu_rd <= 0; // TODO: mask
-                alu_rr <= 0; // TODO: valoarea ce trebuie modificata
+                alu_rd <= ~(1 << opcode_bit); // the mask
+                alu_rr <= bus_data; // the value
             end else if (opcode_type == `TYPE_SBI) begin
-
+                alu_rd <= (1 << opcode_bit); // the mask
+                alu_rr <= bus_data; // the value
             end else begin
-                // Pentru celelalte instructiuni ce lucreaza cu alu
+                // For all the other instr. which use the ALU
                 alu_rd <= rd_data;
                 alu_rr <= rr_data;
             end
         end
 
 
-    // TODO 4: ALU trebuie sa fie activ si in cazul instructiunilor CBI si SBI.
+    // DONE 4: The ALU must be also active for the CBI and SBI instr.
     assign alu_enable = (pipeline_stage == `STAGE_EX) &&
-        (opcode_group[`GROUP_ALU]);
+        (opcode_group[`GROUP_ALU] || opcode_group[`GROUP_ALU_AUX]);
 
-
-    /* TODO 4: Definiti opsel-ul operatie corespunzatoare instructiunilor
-    * SBI si CBI.
-    * Ce operații execută fiecare?
+    /* DONE 4: Define the opsel for the operation corresponding to the SBI and
+    * SBI instr. What operations does each execute?
     */
 
     /* Set alu_opsel to appropriate operation,
@@ -345,6 +345,10 @@ module control_unit #(
                 alu_opsel = `OPSEL_NEG;
                 `TYPE_CP  :
                 alu_opsel = `OPSEL_CP;
+                `TYPE_CBI :
+                alu_opsel = `OPSEL_AND;
+                `TYPE_SBI :
+                alu_opsel = `OPSEL_OR;
                 default   :
                     alu_opsel = `OPSEL_NONE;
             endcase

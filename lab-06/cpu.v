@@ -183,7 +183,7 @@ module cpu #(
         .data   (bus_data                  )
     );
 
-    gpio_sram #(
+    io_sram #(
         .ADDR_WIDTH(IO_ADDR_WIDTH),
         .DATA_WIDTH(DATA_WIDTH   )
     ) io (

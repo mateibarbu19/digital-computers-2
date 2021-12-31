@@ -194,7 +194,35 @@ Deci opcode = 000111rdxxxxxxxx devine 00011111xxxxxxxx. (Btw, that's ADD)
                 opcode_imd  = 12'bx;
             end
 
-            // TODO 3 & 4: Decodificati IN, OUT, SBI, CBI
+            // DONE 3 & 4: Decode IN, OUT, SBI, CBI
+            16'b1011_0???_????_???? : begin
+                opcode_type = `TYPE_IN;
+                opcode_rd   = instruction[8:4];
+                opcode_rr   = {R_ADDR_WIDTH{1'bx}};
+                opcode_bit  = 3'bx;
+                opcode_imd  = {6'd0, instruction[10:9], instruction[3:0]};
+            end
+            16'b1011_1???_????_???? : begin
+                opcode_type = `TYPE_OUT;
+                opcode_rd   = {R_ADDR_WIDTH{1'bx}};
+                opcode_rr   = instruction[8:4];
+                opcode_bit  = 3'bx;
+                opcode_imd  = {6'd0, instruction[10:9], instruction[3:0]};
+            end
+            16'b1001_1010_????_???? : begin
+                opcode_type = `TYPE_SBI;
+                opcode_rd   = {R_ADDR_WIDTH{1'bx}};
+                opcode_rr   = {R_ADDR_WIDTH{1'bx}};
+                opcode_bit  = instruction[2:0];
+                opcode_imd  = {7'd0, instruction[7:3]};
+            end
+            16'b1001_1000_????_???? : begin
+                opcode_type = `TYPE_CBI;
+                opcode_rd   = {R_ADDR_WIDTH{1'bx}};
+                opcode_rr   = {R_ADDR_WIDTH{1'bx}};
+                opcode_bit  = instruction[2:0];
+                opcode_imd  = {7'd0, instruction[7:3]};
+            end
 
             default : begin
                 opcode_type = `TYPE_UNKNOWN;
@@ -205,9 +233,9 @@ Deci opcode = 000111rdxxxxxxxx devine 00011111xxxxxxxx. (Btw, that's ADD)
     end
 
 
-    /* TODO 3 & 4: Adaugati instructiunile implementate in grupurile corespunzatoare.
-    * Hint: nu este o greseala ca o instructiune sa faca parte din mai multe grupuri.
-    * Hint: SBI si CBI trebuie si sa scrie, si sa citeasca din memorie.
+    /* DONE 3 & 4: Add the decoded instr. in their corresponding groups.
+    * Hint: A instruction may belong several groups.
+    * Hint: SBI and CBI need to read/write from memory.
     */
 
     assign opcode_group[`GROUP_ALU_ONE_OP] =
@@ -271,17 +299,19 @@ Deci opcode = 000111rdxxxxxxxx devine 00011111xxxxxxxx. (Btw, that's ADD)
             (opcode_type == `TYPE_RET);
 
     assign opcode_group[`GROUP_IO_READ] =
-        (opcode_type == `TYPE_ADC) // access SREG
-            || (opcode_group[`GROUP_STACK])
-                || 0
-                    ;
+        (opcode_type == `TYPE_ADC) || // access SREG
+            (opcode_group[`GROUP_STACK]) ||
+                (opcode_type == `TYPE_IN) ||
+                    (opcode_type == `TYPE_SBI) ||
+                        (opcode_type == `TYPE_CBI);
     assign opcode_group[`GROUP_IO_WRITE] =
-        (opcode_group[`GROUP_ALU]) // access SREG
-            || (opcode_group[`GROUP_STACK])
-                || 0
-                    ;
+        (opcode_group[`GROUP_ALU]) || // SREG access
+            (opcode_group[`GROUP_STACK]) || 
+                (opcode_type == `TYPE_OUT) ||
+                    (opcode_type == `TYPE_SBI) ||
+                        (opcode_type == `TYPE_CBI);
     assign opcode_group[`GROUP_ALU_AUX] =
-        0
-            ;
+        (opcode_type == `TYPE_SBI) ||
+            (opcode_type == `TYPE_CBI);
 
 endmodule
