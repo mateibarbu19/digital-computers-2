@@ -36,12 +36,17 @@ module cpu_test;
 
     always #5 clk = ~clk;
     initial begin
+        $dumpfile("waves.vcd");
+        $dumpvars(0, cpu_test);
         // Initialize Inputs
         clk = 1;
         reset = 1;
-        // Wait 10 ns for global reset to finish
+        // Wait for global reset to finish
         #10;
         reset = 0;
+
+        #(4000 - 10);
+        $finish();
     end
 
 endmodule

@@ -57,16 +57,17 @@ module signal_generation_unit (
         (state == `STATE_WB) &&
         opcode_group[`GROUP_IO_WRITE];
 
-    /* TODO 3: Activate the SP post-decremental and pre-incremental signal when
-     * necessary. HINT: With what instr. are CALL_ISR and RET alike? */
+    /* DONE 3: Activate the SP post-decremental and pre-incremental signal when
+     * necessary. HINT: With what instr. are CALL_ISR and RETI alike? */
     assign signals[`CONTROL_POSTDEC] =
             (opcode_type == `TYPE_PUSH  ||
-             opcode_type == `TYPE_RCALL) &&
+             opcode_type == `TYPE_RCALL ||
+             opcode_type == `TYPE_CALL_ISR) &&
             (state == `STATE_MEM);
     assign signals[`CONTROL_PREINC] =
             (opcode_type == `TYPE_POP) ?
                 (state == `STATE_EX) :
-            (opcode_type == `TYPE_RET) &&
+            (opcode_type == `TYPE_RET || opcode_type == `TYPE_RETI) &&
                 (state == `STATE_EX || (state == `STATE_MEM && cycle_count == 0));
 
 endmodule

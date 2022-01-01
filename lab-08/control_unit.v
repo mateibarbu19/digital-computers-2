@@ -227,12 +227,13 @@ module control_unit #(
                 program_counter <= program_counter + opcode_imd[9:0]; //truncated from 12
             end
             `TYPE_CALL_ISR: begin
-                /* TODO 3: Compute the next instr. address for CALL_ISR.
+                /* DONE 3: Compute the next instr. address for CALL_ISR.
                  * HINT: Interrupt vector table.
                  * HINT: What information does the interrupt_controller provide?
-                 * HINT: Don't forget PC incrementation in the WB stage. */
+                 * HINT: Don't forget PC incrementation in the WB stage,.which
+                 * takes two clock cycles. */
 
-                program_counter <= 10'd0; //???
+                program_counter <= vector - 2;
             end
             endcase
         end else if (state == `STATE_WB) begin
@@ -252,21 +253,27 @@ module control_unit #(
             if (opcode_type == `TYPE_RCALL) begin
                 saved_pc <= {6'b0, program_counter} + 1;
             end else if (opcode_type == `TYPE_CALL_ISR) begin
-                /* TODO 3: Save the return address PC-ul for the interrupt
+                /* DONE 3: Save the return address PC-ul for the interrupt
                  * request.
                  * HINT: Unlike RCALL, we execute CALL_ISR instead of the return
                  * instr., not before it. So, what address should we save? */
 
-                saved_pc <= 16'd0; //???
+                saved_pc <= {6'd0, program_counter};
             end
         end
         else if (state == `STATE_MEM &&
                 (opcode_type == `TYPE_RET || opcode_type == `TYPE_RETI))
         begin
             if (cycle_count == 0) begin
+                $display("Aici1 %t %d", $time, bus_data);
                 saved_pc[7:0]  <= bus_data;
+                $strobe("saved_pc %d", saved_pc);
+                $strobe("bus_data %d", bus_data);
             end else begin
+                $display("Aici2 %t %d", $time, bus_data);
                 saved_pc[15:8] <= bus_data;
+                $strobe("saved_pc %d", saved_pc);
+                $strobe("bus_data %d", bus_data);
             end
         end
     end
@@ -301,11 +308,12 @@ module control_unit #(
             alu_out_buffer <= alu_out;
         end
 
-    /* TODO 2: SEI and CLI behave like SBI and CBI.
-     * TODO 3: CALL_ISR and RETI must do a arithmetic operations using SREG.
+    /* DONE 2: SEI and CLI behave like SBI and CBI.
+     * DONE 3: CALL_ISR and RETI must do a arithmetic operations using SREG.
      * What are their two operands?
      * HINT: In the case of CALL_ISR, the FLAGS_I bit must be 0 in SREG.
      * HINT: In the case of RETI, the FLAGS_I bit must be 1 in SREG. */
+    // TODO
 
     /* Buffer pentru rd_data si rr_data */
     always @(posedge clk, posedge reset)
@@ -313,14 +321,22 @@ module control_unit #(
             alu_rd <= 0;
             alu_rr <= 0;
         end else if (state == `STATE_ID) begin
-            if (opcode_type == `TYPE_SBI)
+            if (opcode_type == `TYPE_SBI || opcode_type == `TYPE_SEI)
             begin
                 alu_rd <= bus_data;
                 alu_rr <= (8'b1 << opcode_bit);
-            end else if (opcode_type == `TYPE_CBI)
+            end else if (opcode_type == `TYPE_CBI || opcode_type == `TYPE_CLI)
             begin
                 alu_rd <= bus_data;
                 alu_rr <= ~(8'b1 << opcode_bit);
+            end else if (opcode_type == `TYPE_RETI)
+            begin
+                alu_rd <= sreg;
+                alu_rr <= (8'b1 << `FLAGS_I);
+            end else if (opcode_type == `TYPE_CALL_ISR)
+            begin
+                alu_rd <= sreg;
+                alu_rr <= ~(8'b1 << `FLAGS_I);
             end else if (opcode_type == `TYPE_INC ||
                          opcode_type == `TYPE_DEC)
             begin
@@ -336,7 +352,7 @@ module control_unit #(
             end
         end
 
-    /* TODO 2, 3: Same explanation as the last TODO. */
+    /* DONE 2, 3: Same explanation as the last one. */
 
     /* Set alu_opsel to appropriate operation,
      * according to opcode_type and alu_enable */
@@ -349,11 +365,11 @@ module control_unit #(
                 alu_opsel = `OPSEL_ADD;
             `TYPE_SUB, `TYPE_DEC:
                 alu_opsel = `OPSEL_SUB;
-            `TYPE_AND, `TYPE_CBI:
+            `TYPE_AND, `TYPE_CBI, `TYPE_CLI, `TYPE_CALL_ISR:
                 alu_opsel = `OPSEL_AND;
             `TYPE_EOR:
                 alu_opsel = `OPSEL_XOR;
-            `TYPE_OR, `TYPE_SBI:
+            `TYPE_OR, `TYPE_SBI, `TYPE_SEI, `TYPE_RETI:
                 alu_opsel = `OPSEL_OR;
             `TYPE_NEG:
                 alu_opsel = `OPSEL_NEG;

@@ -2,7 +2,7 @@ CC = iverilog
 FLAGS = -Wall -Winfloop
 SIM = vvp
 SOURCES = alu.v bus_interface_unit.v control_unit.v cpu_test.v cpu.v \
- 	decode_unit.v dual_port_sram.v gpio_unit.v gpio_sram.v \
+ 	decode_unit.v dual_port_sram.v gpio_unit.v interrupt_controller.v io_sram.v \
 	reg_file_interface_unit.v rom.v signal_generation_unit.v sram.v \
 	state_machine.v timer_unit.v
 

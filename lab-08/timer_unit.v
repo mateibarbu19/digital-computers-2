@@ -104,6 +104,7 @@ module timer_unit #(
         end else begin
             tifr <= mem_tifr;
 
+            // Warning, does not support multiple sets
             if (mem_tcnt0 == top && (timer_mode != `CTC || mem_tcnt0 == 8'hFF)) begin
                 tifr  <= mem_tifr | (1 << `TOV0);
             end

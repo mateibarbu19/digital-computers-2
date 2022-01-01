@@ -17,11 +17,16 @@ module decode_unit #(
     );
 
     always @* begin
-        /* TODO 3: If we have a interrupt request, we must execute a virtual instruction
+        /* DONE 3: If we have a interrupt request, we must execute a virtual instruction
          * instruction instead of decode one.
          * HINT: What signal indicates a interrupt request?
          * HINT: The virtual instruction CALL_ISR only needs a opcode_type. */
-        if (0) begin //???
+        if (irq) begin
+            opcode_type = `TYPE_CALL_ISR;
+            opcode_rd   = {R_ADDR_WIDTH{1'bx}};
+            opcode_rr   = {R_ADDR_WIDTH{1'bx}};
+            opcode_bit  = 3'dx;
+            opcode_imd  = 12'dx;
         end else begin
             casez (instruction)
                 16'b0000_11??_????_????: begin
@@ -66,8 +71,15 @@ module decode_unit #(
                     opcode_bit  = instruction[2:0];
                     opcode_imd  = {7'b0, instruction[7:3]};
                 end
-                /* TODO 2: Decode CLI. (HINT: It behaves like CBI with a hard
+                /* DONE 2: Decode CLI. (HINT: It behaves like CBI with a hard
                  * coded operand, which is?) */
+                16'b1001_0100_1111_1000: begin
+                    opcode_type = `TYPE_CLI;
+                    opcode_rd   = {R_ADDR_WIDTH{1'bx}};
+                    opcode_rr   = {R_ADDR_WIDTH{1'bx}};
+                    opcode_bit  = `FLAGS_I;
+                    opcode_imd  = {6'd0, `SREG};
+                end
                 16'b0001_01??_????_????: begin
                     opcode_type = `TYPE_CP;
                     opcode_rd   = instruction[8:4];
@@ -189,7 +201,14 @@ module decode_unit #(
                     opcode_bit  = 3'bx;
                     opcode_imd  = 12'bx;
                 end
-                // TODO 3: Decode RETI. (HINT: It behaves like RET.)
+                // DONE 3: Decode RETI. (HINT: It behaves like RET.)
+                16'b1001_0101_0001_1000: begin
+                    opcode_type = `TYPE_RETI;
+                    opcode_rd   = {R_ADDR_WIDTH{1'bx}};
+                    opcode_rr   = {R_ADDR_WIDTH{1'bx}};
+                    opcode_bit  = 3'bx;
+                    opcode_imd  = 12'bx;
+                end
                 16'b1100_????_????_????: begin
                     opcode_type = `TYPE_RJMP;
                     opcode_rd   = {R_ADDR_WIDTH{1'bx}};
@@ -204,8 +223,15 @@ module decode_unit #(
                     opcode_bit  = instruction[2:0];
                     opcode_imd  = {7'b0, instruction[7:3]};
                 end
-                /* TODO 2: Decode SEI. (HINT: It behaves like SBI with a
+                /* DONE 2: Decode SEI. (HINT: It behaves like SBI with a
                  * hard coded operand. What value must this operand take?) */
+                16'b1001_0100_0111_1000: begin
+                    opcode_type = `TYPE_SEI;
+                    opcode_rd   = {R_ADDR_WIDTH{1'bx}};
+                    opcode_rr   = {R_ADDR_WIDTH{1'bx}};
+                    opcode_bit  = `FLAGS_I;
+                    opcode_imd  = {6'd0, `SREG};
+                end
                 16'b0001_10??_????_????: begin
                     opcode_type = `TYPE_SUB;
                     opcode_rd   = instruction[8:4];
@@ -240,18 +266,22 @@ module decode_unit #(
         end
     end
 
-    /* TODO 2: Add SEI and CLI in their groups.
+    /* DONE 2: Add SEI and CLI in their groups.
      * HINT: SEI behaves like SBI.
      * HINT: CLI behaves like CBI. */
 
-    /* TODO 3: Add CALL_ISR in their groups.
+    /* DONE 3: Add CALL_ISR in their groups.
      * HINT: CALL_ISR behaves like a RCALL + CLI.
      * HINT: RETI behaves like a RET + SEI. */
 
     /* Opcode groups */
     assign opcode_group[`GROUP_ALU_AUX] =
         (opcode_type == `TYPE_SBI) ||
-        (opcode_type == `TYPE_CBI);
+        (opcode_type == `TYPE_CBI) ||
+        (opcode_type == `TYPE_SEI) ||
+        (opcode_type == `TYPE_CLI) ||
+        (opcode_type == `TYPE_CALL_ISR) ||
+        (opcode_type == `TYPE_RETI);
     assign opcode_group[`GROUP_ALU_IMD] =
         (opcode_type == `TYPE_INC) ||
         (opcode_type == `TYPE_DEC) ||
@@ -275,8 +305,9 @@ module decode_unit #(
 
     assign opcode_group[`GROUP_LOAD_INDIRECT] =
         (opcode_type == `TYPE_LD_Y) ||
-        (opcode_type == `TYPE_POP) ||
-        (opcode_type == `TYPE_RET);
+        (opcode_type == `TYPE_POP)  ||
+        (opcode_type == `TYPE_RET)  ||
+        (opcode_type == `TYPE_RETI);
     assign opcode_group[`GROUP_LOAD] =
         opcode_group[`GROUP_LOAD_DIRECT] ||
         opcode_group[`GROUP_LOAD_INDIRECT];
@@ -286,7 +317,8 @@ module decode_unit #(
 
     assign opcode_group[`GROUP_STORE_INDIRECT] =
         (opcode_type == `TYPE_PUSH)  ||
-        (opcode_type == `TYPE_RCALL);
+        (opcode_type == `TYPE_RCALL) ||
+        (opcode_type == `TYPE_CALL_ISR);
     assign opcode_group[`GROUP_STORE] =
         opcode_group[`GROUP_STORE_DIRECT] ||
         opcode_group[`GROUP_STORE_INDIRECT];
@@ -295,7 +327,9 @@ module decode_unit #(
         (opcode_type == `TYPE_PUSH)     ||
         (opcode_type == `TYPE_POP)      ||
         (opcode_type == `TYPE_RCALL)    ||
-        (opcode_type == `TYPE_RET);
+        (opcode_type == `TYPE_RET)      ||
+        (opcode_type == `TYPE_CALL_ISR) ||
+        (opcode_type == `TYPE_RETI);
 
     assign opcode_group[`GROUP_MEMORY] =
         (opcode_group[`GROUP_LOAD] ||
@@ -306,11 +340,13 @@ module decode_unit #(
         (opcode_type == `TYPE_MOV);
 
     assign opcode_group[`GROUP_CONTROL_FLOW] =
-        (opcode_type == `TYPE_BRBS)  ||
-        (opcode_type == `TYPE_BRBC)  ||
-        (opcode_type == `TYPE_RJMP)  ||
-        (opcode_type == `TYPE_RCALL) ||
-        (opcode_type == `TYPE_RET);
+        (opcode_type == `TYPE_BRBS)     ||
+        (opcode_type == `TYPE_BRBC)     ||
+        (opcode_type == `TYPE_RJMP)     ||
+        (opcode_type == `TYPE_RCALL)    ||
+        (opcode_type == `TYPE_RET)      ||
+        (opcode_type == `TYPE_CALL_ISR) ||
+        (opcode_type == `TYPE_RETI);
 
     assign opcode_group[`GROUP_IO_READ] =
         (opcode_type  == `TYPE_IN)  ||   // access any I/O address
@@ -326,7 +362,9 @@ module decode_unit #(
     // must read/write a 10-bit program counter from stack
     assign opcode_group[`GROUP_TWO_CYCLE_MEM] =
         (opcode_type == `TYPE_RCALL)    ||
-        (opcode_type == `TYPE_RET);
+        (opcode_type == `TYPE_RET)      ||
+        (opcode_type == `TYPE_CALL_ISR) ||
+        (opcode_type == `TYPE_RETI);
 
     // must write SPL and SREG to I/O space
     assign opcode_group[`GROUP_TWO_CYCLE_WB] =

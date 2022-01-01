@@ -15,12 +15,18 @@ module interrupt_controller #(
         output reg [I_ADDR_WIDTH-1:0] vector
     );
 
+    wire [DATA_WIDTH-1:0] if_ext;
+    wire [DATA_WIDTH-1:0] int_src;
+
+    assign if_ext  = {DATA_WIDTH{mem_sreg[`FLAGS_I]}};
+    assign int_src = mem_tifr & mem_timsk & if_ext;
+
     always @(posedge clk) begin
         if (reset) begin
             irq    <= 0;
             vector <= 0;
         end else begin
-            /* TODO 1: Replace the ? in the code below
+            /* DONE 1: Replace the ? in the code below
              * First determine if we will generate an interrupt request or not. 
              *
              * E.g.: To generate a interrupt request for TIM0_OVF, three
@@ -39,24 +45,20 @@ module interrupt_controller #(
              * The same logic applies for both TIM0_COMPA and TIM0_COMPB.
              */
 
-            // dummy implementation, erase it
-            irq    <= 0;
-            vector <= 0;
-
-            // if (?) begin
-            //     irq    <= ?;
-            //     vector <= ?;
-            // end else if (?) begin
-            //     irq    <= ?;
-            //     vector <= ?;
-            // end else if (?) begin
-            //     irq    <= ?;
-            //     vector <= ?;
-            // end else begin
-            //     irq    <= 0;
-            //     // Trebuie sa lasam variabila vector la valoarea anterioara
-            //     // pentru a putea sti la ce intrerupere facem ACK.
-            // end
+            if (int_src[`OCF0B]) begin
+                irq    <= 1;
+                vector <= `TIM0_COMPB_ISR;
+            end else if (int_src[`OCF0A]) begin
+                irq    <= 1;
+                vector <= `TIM0_COMPA_ISR;
+            end else if (int_src[`TOV0]) begin
+                irq    <= 1;
+                vector <= `TIM0_OVF_ISR;
+            end else begin
+                irq    <= 0;
+                // Let the vector register unchanged vector in order to know
+                // which interrupt to acknowledge.
+            end
         end
     end
 endmodule
