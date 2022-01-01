@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 `include "defines.vh"
 // `timescale 1ns / 1ps
 module cpu_test ();
@@ -42,7 +45,8 @@ module cpu_test ();
         #10;
         reset = 0;
 
-        #500;
+        #300;
+        #100;
         $finish();
     end
 

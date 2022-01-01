@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 `include "defines.vh"
 module control_unit #(
     parameter INSTR_WIDTH  = 16, // instructions are 16 bits in width
@@ -116,10 +119,10 @@ module control_unit #(
     );
 
     bus_interface_unit #(
-        .MEM_START_ADDR(8'h40     ),
-        .MEM_STOP_ADDR (8'hBF     ),
-        .IO_START_ADDR (8'h00     ),
-        .IO_STOP_ADDR  (8'h3F     ),
+        .MEM_START_ADDR(16'h40    ),
+        .MEM_STOP_ADDR (16'hBF    ),
+        .IO_START_ADDR (16'h00    ),
+        .IO_STOP_ADDR  (16'h3F    ),
         .DATA_WIDTH    (DATA_WIDTH),
         .ADDR_WIDTH    (ADDR_WIDTH)
     ) bus_int (
@@ -176,7 +179,7 @@ module control_unit #(
     always @(posedge clk, posedge reset)
         if (reset)
             sreg <= 0;
-        else if (bus_addr == `SREG)
+        else if (bus_addr == {10'd0, `SREG})
             sreg <= bus_data;
         else if (alu_enable && alu_save_flags)
             sreg <= alu_flags_out;
@@ -187,7 +190,7 @@ module control_unit #(
     always @(posedge clk, posedge reset) begin
         if (reset)
             sp <= 0;
-        else if (bus_addr == `SPL)
+        else if (bus_addr == {10'd0, `SPL})
             sp <= bus_data;
         else
             if (signals[`CONTROL_POSTDEC])
@@ -235,7 +238,7 @@ module control_unit #(
             begin
                 // save _next_ PC before call
                 if (opcode_type == `TYPE_RCALL)
-                    saved_pc <= {6'b0, program_counter} + 12'b1;
+                    saved_pc <= {6'b0, program_counter} + 1;
             end
         else if (state == `STATE_MEM &&
             (opcode_type == `TYPE_RET))
@@ -300,7 +303,7 @@ module control_unit #(
             end else if (opcode_group[`GROUP_ALU_IMD])
             begin
                 alu_rd <= rd_data;
-                alu_rr <= opcode_imd;
+                alu_rr <= opcode_imd[DATA_WIDTH-1:0];
             end else begin
                 alu_rd <= rd_data;
                 alu_rr <= rr_data;

@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 `include "defines.vh"
 module signal_generation_unit (
     input  wire [ `STATE_COUNT-1:0] state       ,

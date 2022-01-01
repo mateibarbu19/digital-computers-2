@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 `include "defines.vh"
 module decode_unit #(
     parameter INSTR_WIDTH  = 16, // instructions are 16 bits in width
@@ -82,7 +85,7 @@ module decode_unit #(
                 opcode_rd   = instruction[8:4];
                 opcode_rr   = {R_ADDR_WIDTH{1'bx}};
                 opcode_bit  = 3'bx;
-                opcode_imd  = {instruction[10:9], instruction[3:0]};
+                opcode_imd  = {6'd0, instruction[10:9], instruction[3:0]};
             end
             16'b1001_010?_????_0011 : begin
                 opcode_type = `TYPE_INC;
@@ -111,7 +114,7 @@ module decode_unit #(
                 opcode_rr   = {R_ADDR_WIDTH{1'bx}};
                 opcode_bit  = 3'bx;
                 // info extracted from the datasheet
-                opcode_imd  = {~instruction[8], instruction[8],
+                opcode_imd  = {4'd0, ~instruction[8], instruction[8],
                     instruction[10:9], instruction[3:0]};
             end
             16'b0010_11??_????_???? : begin
@@ -147,7 +150,7 @@ module decode_unit #(
                 opcode_rd   = {R_ADDR_WIDTH{1'bx}};
                 opcode_rr   = instruction[8:4];
                 opcode_bit  = 3'bx;
-                opcode_imd  = {instruction[10:9], instruction[3:0]};
+                opcode_imd  = {6'd0, instruction[10:9], instruction[3:0]};
             end
             16'b1001_000?_????_1111 : begin
                 opcode_type = `TYPE_POP;
@@ -211,7 +214,7 @@ module decode_unit #(
                 opcode_rr   = {1'b1, instruction[7:4]};
                 opcode_bit  = 3'bx;
                 // info extracted from the datasheet
-                opcode_imd  = {~instruction[8], instruction[8],
+                opcode_imd  = {4'd0, ~instruction[8], instruction[8],
                     instruction[10:9], instruction[3:0]};
             end
             default : begin

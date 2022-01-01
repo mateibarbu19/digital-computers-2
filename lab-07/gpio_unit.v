@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 `include "defines.vh"
 module gpio_unit #(parameter DATA_WIDTH = 8) (
     // host interface
@@ -20,9 +23,9 @@ module gpio_unit #(parameter DATA_WIDTH = 8) (
                 pb_buf <= 0;
             end
         else
-            for (i = 0; i < DATA_WIDTH; i = i + 1) begin : gen_ports
-                pa_buf[i] <= mem_ddra[i]?mem_porta[i] : 1'bz;
-                pb_buf[i] <= mem_ddrb[i]?mem_portb[i] : 1'bz;
+            for (i = 0; i < DATA_WIDTH; i = i + 1) begin
+                pa_buf[i[2:0]] <= mem_ddra[i[2:0]] ? mem_porta[i[2:0]] : 1'bz;
+                pb_buf[i[2:0]] <= mem_ddrb[i[2:0]] ? mem_portb[i[2:0]] : 1'bz;
             end
     end
 

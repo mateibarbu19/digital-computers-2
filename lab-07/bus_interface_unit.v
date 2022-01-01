@@ -1,9 +1,12 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 `include "defines.vh"
 module bus_interface_unit #(
-    parameter MEM_START_ADDR = 8'h40,
-    parameter MEM_STOP_ADDR  = 8'hBF,
-    parameter IO_START_ADDR  = 8'h00,
-    parameter IO_STOP_ADDR   = 8'h3F,
+    parameter MEM_START_ADDR = 16'h40,
+    parameter MEM_STOP_ADDR  = 16'hBF,
+    parameter IO_START_ADDR  = 16'h00,
+    parameter IO_STOP_ADDR   = 16'h3F,
     parameter DATA_WIDTH     = 8    , // registers are 8 bits in width
     parameter ADDR_WIDTH     = 16     // 64KB address space
 ) (
@@ -46,14 +49,16 @@ module bus_interface_unit #(
     assign mem_addr_is_in_mem = mem_access &&
         (internal_mem_addr >= MEM_START_ADDR &&
             internal_mem_addr <= MEM_STOP_ADDR);
+    /* verilator lint_off UNSIGNED*/
     assign mem_addr_is_in_io = mem_access &&
         (internal_mem_addr >= IO_START_ADDR &&
             internal_mem_addr <= IO_STOP_ADDR);
+    /* verilator lint_on UNSIGNED*/
 
     assign internal_io_addr =
         io_access ?
-        opcode_group[`GROUP_STACK] ? `SPL :
-        opcode_group[`GROUP_ALU] ? `SREG :
+        opcode_group[`GROUP_STACK] ? {10'd0, `SPL} :
+        opcode_group[`GROUP_ALU] ? {10'd0, `SREG} :
         {4'b0, opcode_imd} :
         mem_addr_is_in_io ?
         internal_mem_addr :

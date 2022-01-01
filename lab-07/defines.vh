@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 /* In order to disable implicit declaration of wires */
 `ifndef DEFINES
 
@@ -49,11 +52,11 @@
 `define TOV0 3'd0
 
 /* Timer modes */
-`define INVALID 3'd0
-`define NORMAL 3'd1
-`define CTC 3'd2
-`define FAST_PWM_MAX 3'd3
-`define FAST_PWM_OCR 3'd4
+`define INVALID      6'd0
+`define NORMAL       6'd1
+`define CTC          6'd2
+`define FAST_PWM_MAX 6'd3
+`define FAST_PWM_OCR 6'd4
 
 /* Interrupt vectors for ISRs */
 `define TIM0_COMPA_ISR 10'h09

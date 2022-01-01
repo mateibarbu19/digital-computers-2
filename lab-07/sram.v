@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 `include "defines.vh"
 module sram #(
     parameter DATA_WIDTH = 8,
@@ -17,7 +20,7 @@ module sram #(
     reg [ADDR_WIDTH:0] i;
     initial begin
         for (i = 0; i < (1<<ADDR_WIDTH); i = i + 1) begin
-            memory[i] <= 0;
+            memory[i[ADDR_WIDTH-1:0]] = 0;
         end
     end
 

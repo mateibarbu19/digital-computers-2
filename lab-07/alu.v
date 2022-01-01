@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 `include "defines.vh"
 module alu #(parameter DATA_WIDTH = 8) (
     input  wire     [`OPSEL_COUNT-1:0] opsel    ,
@@ -22,9 +25,9 @@ module alu #(parameter DATA_WIDTH = 8) (
                 `OPSEL_ADD :
                 begin
                     if (cout_en) begin
-                        {flags_out[`FLAGS_C], out} = rd + rr + cin_en & flags_in[`FLAGS_C];
+                        {flags_out[`FLAGS_C], out} = rd + rr + {8'd0, cin_en & flags_in[`FLAGS_C]};
                     end else begin
-                        out                 = rd + rr + cin_en & flags_in[`FLAGS_C];
+                        out                 = rd + rr + {7'd0, cin_en & flags_in[`FLAGS_C]};
                         flags_out[`FLAGS_C] = flags_in[`FLAGS_C];
                     end
                     flags_out[`FLAGS_V] = (rd[7] == 1 && rr[7] == 1 && out[7] == 0) ||
@@ -41,9 +44,9 @@ module alu #(parameter DATA_WIDTH = 8) (
                 `OPSEL_SUB :
                 begin
                     if (cout_en) begin
-                        {flags_out[`FLAGS_C], out} = rd - rr - cin_en & flags_in[`FLAGS_C];
+                        {flags_out[`FLAGS_C], out} = rd - rr - {8'd0, cin_en & flags_in[`FLAGS_C]};
                     end else begin
-                        out                 = rd - rr - cin_en & flags_in[`FLAGS_C];
+                        out                 = rd - rr - {7'd0, cin_en & flags_in[`FLAGS_C]};
                         flags_out[`FLAGS_C] = flags_in[`FLAGS_C];
                     end
                     flags_out[`FLAGS_V] = (rd[7] == 1 && rr[7] == 1 && out[7] == 0) ||

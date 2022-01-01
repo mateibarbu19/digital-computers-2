@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 module rom #(
     parameter DATA_WIDTH = 16,
     parameter ADDR_WIDTH = 8   // 2 * 1024 bytes of ROM

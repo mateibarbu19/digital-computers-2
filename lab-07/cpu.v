@@ -1,3 +1,6 @@
+/* verilator lint_off UNUSED */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNOPTFLAT */
 `include "defines.vh"
 module cpu #(
     parameter INSTR_WIDTH      = 16, // instructions are 16 bits in width
