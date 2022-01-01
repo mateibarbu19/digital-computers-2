@@ -91,7 +91,7 @@ If you are a beginner, the [Verilator](https://www.veripool.org/verilator/)
 linter will provide more educational warnings. I configured it with the
 following flags in the extension.
 
-```-Wall -Wno-STMTDLY --bbox-unsup```
+```-Wall -Wno-STMTDLY --bbox-unsup --bbox-sys```
 
 Do note that you will have to install the linter for this:
 
