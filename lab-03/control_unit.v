@@ -16,7 +16,7 @@ module control_unit #(
         output reg  [I_ADDR_WIDTH-1:0] program_counter,
         input  wire [INSTR_WIDTH-1:0]  instruction,
         // From FSM
-        // TODO move state and add debug state
+        // move state and add debug state
         output wire [`STAGE_COUNT-1:0] pipeline_stage,
         // To/from register file
         output wire [R_ADDR_WIDTH-1:0] rr_addr,
@@ -159,7 +159,7 @@ module control_unit #(
             alu_rr :
             {DATA_WIDTH{1'bx}};
 
-    /* Bloc de atribuire al program counter-ului */
+    /* Program counter attribution and computation block */
     always @(posedge clk, posedge reset) begin
         if (reset) begin
             program_counter <= 0;
@@ -191,21 +191,21 @@ module control_unit #(
             writeback_value <= alu_rr;
     end
 
-    /* Buffer pentru instructiunea citita */
+    /* Read instruction buffer */
     always @(posedge clk, posedge reset)
         if (reset)
             instr_buffer <= 0;
         else if (pipeline_stage == `STAGE_IF)
              instr_buffer <= instruction;
 
-     /* Buffer pentru output-ul UAL-ului */
+     /* ALU output buffer */
     always @(posedge clk, posedge reset)
         if (reset)
             alu_out_buffer <= 0;
         else if (pipeline_stage == `STAGE_EX)
              alu_out_buffer <= alu_out;
 
-    /* Buffer pentru rd_data si rr_data */
+    /* rd_data and rr_data buffer */
     always @(posedge clk, posedge reset)
         if (reset) begin
             alu_rd <= 0;

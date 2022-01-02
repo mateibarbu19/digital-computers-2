@@ -27,7 +27,7 @@ module signal_generation_unit (
         (state == `STATE_ID) &&// || state == `STATE_EX) &&
             (opcode_group[`GROUP_ALU] ||
                 opcode_group[`GROUP_ALU_IMD] ||
-                ((opcode_group[`GROUP_STORE_INDIRECT] || // X, Y sau Z
+                ((opcode_group[`GROUP_STORE_INDIRECT] || // X, Y or Z
                         opcode_group[`GROUP_LOAD_INDIRECT]) &&
                     !opcode_group[`GROUP_STACK]));
     assign signals[`CONTROL_REG_RD_WRITE] =

@@ -13,7 +13,7 @@ module rom #(
 
     reg [DATA_WIDTH-1:0] value;
 
-    /* TODO 1: de scris niste instructiuni valide */
+    /* DONE 1: write valid instructions */
     always @* begin
         case (addr)
         /*	 ldi 	r29, 10 		*/

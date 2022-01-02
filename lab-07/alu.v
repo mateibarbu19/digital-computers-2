@@ -14,10 +14,10 @@ module alu #(parameter DATA_WIDTH = 8) (
     input  wire                        cout_en    // carry_out_enable
 );
 
-    /* flags_out a fost transformat in reg, pentru a putea
-    * fi atribuit in interiorul unui bloc always, insa va fi
-    * sintetizat tot combinational (UAL-ul nici macar nu are clk
-    * drept input) */
+    /* flags_out was transformed to reg, so it could be attributed inside
+     * always block, though it will be synthesized using combinational logic,
+     * because UAL has no input clk
+     */
     always @* begin
         if (enable)
             case (opsel)
@@ -117,9 +117,9 @@ module alu #(parameter DATA_WIDTH = 8) (
                     flags_out = flags_in;
                 end
 
-                /* Pentru a evita generarea unui latch, flags_out
-                * trebuie sa ia o valoare si aici. Este de datoria noastra
-                * sa nu salvam aceasta valoare in control_unit */
+                /* To avoid a latch synthesis, flags_out must be assigned here
+                * also. It is our duty to not store this value in control_unit.
+                */
                 default :
                     begin
                         out       = {DATA_WIDTH{1'bx}};

@@ -183,7 +183,7 @@ module control_unit #(
                          opcode_group[`GROUP_ALU_AUX]);
 
     assign alu_flags_in = sreg;
-    /* Bloc de atribuire al sreg-ului */
+    /* sreg attribution block */
     always @(posedge clk, posedge reset)
         if (reset)
             sreg <= 0;
@@ -194,7 +194,7 @@ module control_unit #(
         else if (state == `STATE_EX && (opcode_type == `TYPE_CALL_ISR || opcode_type == `TYPE_RETI))
             sreg <= alu_out;
 
-    /* Bloc de atribuire al sp-ului */
+    /* sp attribution block */
     always @(posedge clk, posedge reset) begin
         if (reset)
             sp <= 8'hBF;
@@ -207,7 +207,7 @@ module control_unit #(
                 sp <= sp + 8'b1;
     end
 
-    /* Bloc de atribuire al program counter-ului */
+    /* Program counter attribution and computation block */
     always @(posedge clk, posedge reset) begin
         if (reset) begin
             program_counter <= 0;
@@ -287,7 +287,7 @@ module control_unit #(
             writeback_value <= alu_rr;
     end
 
-    /* Buffer pentru instructiunea citita */
+    /* Read instruction buffer */
     always @(posedge clk, posedge reset)
         if (reset) begin
             instr_buffer <= 0;
@@ -295,7 +295,7 @@ module control_unit #(
             instr_buffer <= instruction;
         end
 
-    /* Buffer pentru output-ul UAL-ului */
+    /* ALU output buffer */
     always @(posedge clk, posedge reset)
         if (reset) begin
             alu_out_buffer <= 0;
@@ -308,9 +308,8 @@ module control_unit #(
      * What are their two operands?
      * HINT: In the case of CALL_ISR, the FLAGS_I bit must be 0 in SREG.
      * HINT: In the case of RETI, the FLAGS_I bit must be 1 in SREG. */
-    // TODO
 
-    /* Buffer pentru rd_data si rr_data */
+    /* rd_data and rr_data buffer */
     always @(posedge clk, posedge reset)
         if (reset) begin
             alu_rd <= 0;

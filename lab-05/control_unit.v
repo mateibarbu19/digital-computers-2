@@ -178,7 +178,7 @@ module control_unit #(
         end
     end
 
-    /* ID: Buffering of rd_data si rr_data */
+    /* ID: Buffering of rd_data and rr_data */
     always @(posedge clk, posedge reset)
         if (reset) begin
             alu_rd <= 0;

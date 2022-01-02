@@ -22,8 +22,8 @@ module alu #(
      * because UAL has no input clk
      */
 
-    /* TODO: De codificat cateva operatii
-     * in defines.vh si de implementat aici 
+    /* DONE: Decode the operations defined in defines.vh. Remember to update the
+     * flags.
      */
     always @* begin
         case (opsel)
@@ -109,7 +109,7 @@ module alu #(
                 flags_out[`FLAGS_I] = flags_in[`FLAGS_I];
             end
 
-        /*TODO: add your ops here*/
+        /* DONE: add your ops here*/
         default: begin
             out = 8'bx;
                 flags_out = flags_in;

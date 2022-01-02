@@ -23,17 +23,17 @@ module reg_file_interface_unit #(
     output wire                     rr_oe          ,
     output wire                     rd_oe
 );
-    /* Toate asignarile de mai jos presupun ca instructiunea
-    * curenta (instruction) este de tipul:
-    * [opcode] Rd Rr,
-    * caz in care va accesa de doua ori register file-ul:
-    * o data in starea de instruction decode/register fetch,
-    * pentru a citi valorile ambelor registre, si a doua oara
-    * in write-back, pentru a depune rezultatul (alu_out) in
-    * registrul Rd.
-    * Evident, nu toate instructiunile sunt de acest tip.
-    * In laburi ulterioare vom modifica aici.
-    */
+    /* All the assignments below suppose that the current instruction has the
+     * following format:
+     * [opcode] Rd Rr
+     * In this case the register file will be accessed twice:
+     * 1. once during the instruction decode/register fetch state,
+     * in order to read both register values
+     * 2. and the second time during the write-back stage, to store the result
+     * (alu_out) in the Rd register.
+     * Obviously, not all instructions have the same format. This will be
+     * modified in the next laboratories.
+     */
 
     wire [R_ADDR_WIDTH-1:0] internal_rr_addr;
     wire [R_ADDR_WIDTH-1:0] internal_rd_addr;

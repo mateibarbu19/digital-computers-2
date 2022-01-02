@@ -150,7 +150,7 @@ module control_unit #(
 			alu_rr :
 			{DATA_WIDTH{1'bx}};
 			
-	/* Bloc de atribuire al program counter-ului */
+	/* Program counter attribution and computation block */
 	always @(posedge clk, posedge reset) begin
 		if (reset) begin
 			program_counter <= 0;
@@ -195,14 +195,14 @@ module control_unit #(
 	end
 
 	assign alu_flags_in = sreg;
-	/* Bloc de atribuire al sreg-ului */
+	/* sreg attribution block */
 	always @(posedge clk, posedge reset)
 		if (reset)
 			sreg <= 0;
 		else
 			sreg <= alu_flags_out;
 	 
-    /* Bloc de atribuire al sp-ului */
+    /* sp attribution block */
     always @(posedge clk, posedge reset) begin
         if (reset)
             sp <= `STACK_START;
@@ -240,21 +240,21 @@ module control_unit #(
 			writeback_value <= alu_rr;
 	end
 
-	/* Buffer pentru instructiunea citita */
+	/* Read instruction buffer */
 	always @(posedge clk, posedge reset)
 		if (reset)
 			instr_buffer <= 0;
 		else if (pipeline_stage == `STAGE_IF)
 			 instr_buffer <= instruction;
 
-	 /* Buffer pentru output-ul UAL-ului */
+	 /* ALU output buffer */
 	always @(posedge clk, posedge reset)
 		if (reset)
 			alu_out_buffer <= 0;
 		else if (pipeline_stage == `STAGE_EX)
 			 alu_out_buffer <= alu_out;
 
-	/* Buffer pentru rd_data si rr_data */
+	/* rd_data and rr_data buffer */
 	always @(posedge clk, posedge reset)
 		if (reset) begin
 			alu_rd <= 0;

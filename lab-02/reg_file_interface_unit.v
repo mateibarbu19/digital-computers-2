@@ -31,7 +31,7 @@ module reg_file_interface_unit #(
         output wire                     rr_oe,
         output wire                     rd_oe
     );
-    /* All the above assignments suppose that the current instruction has the
+    /* All the assignments below suppose that the current instruction has the
      * following format: [opcode] Rd Rr. In this case the register file will be
      * accessed twice: once during the instruction decode/register fetch state,
      * in order to read both register values, and the second time during the

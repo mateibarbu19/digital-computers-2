@@ -171,7 +171,7 @@ module control_unit #(
                                 {DATA_WIDTH{1'bx}} :
                 {DATA_WIDTH{1'bx}};
 
-    /* Bloc de atribuire al program counter-ului */
+    /* Program counter attribution and computation block */
     always @(posedge clk, posedge reset) begin
         if (reset) begin
             program_counter <= 0;
@@ -217,16 +217,16 @@ module control_unit #(
     end
 
     assign alu_flags_in = sreg;
-    /* Bloc de atribuire al sreg-ului */
+    /* sreg attribution block */
     always @(posedge clk, posedge reset)
         if (reset)
             sreg <= 0;
         else sreg <= alu_flags_out;
 
-    /* Bloc de atribuire al sp-ului */
+    /* sp attribution block */
     always @(posedge clk, posedge reset) begin
         if (reset)
-            sp <= 0;
+            sp <= 8'hBF;
         else if (signals[`CONTROL_IO_READ] && opcode_group[`GROUP_STACK])
             sp <= bus_data;
         else
@@ -269,7 +269,7 @@ module control_unit #(
             writeback_value <= 0;
     end
 
-    /* Buffer pentru instructiunea citita */
+    /* Read instruction buffer */
     always @(posedge clk, posedge reset)
         if (reset)
             instr_buffer <= 0;
@@ -280,7 +280,7 @@ module control_unit #(
             end
         end
 
-    /* Buffer pentru output-ul UAL-ului */
+    /* ALU output buffer */
     always @(posedge clk, posedge reset)
         if (reset)
             alu_out_buffer <= 0;
@@ -294,7 +294,7 @@ module control_unit #(
     * 2. the other is be the value to be modified, either by setting or clearing
     */
 
-    /* Buffer pentru rd_data si rr_data */
+    /* rd_data and rr_data buffer */
     always @(posedge clk, posedge reset)
         if (reset) begin
             alu_rd <= 0;

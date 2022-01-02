@@ -2,7 +2,7 @@
 /* verilator lint_off UNDRIVEN */
 /* verilator lint_off UNOPTFLAT */
 `timescale 1ns / 1ps
-/* Traducerea si adaptarea:
+/* Translated from:
  * http://www.asic-world.com/examples/verilog/ram_dp_sr_sw.html
  */
 `include "defines.vh"

@@ -32,7 +32,7 @@
 `define SREG                6'h3F
 `define SPH                 6'h3E
 `define SPL                 6'h3D
-`define STACK_START			 8'hBF // adresa de incepu a stivei (stiva creste in jos)s
+`define STACK_START			8'hBF // the stack grows towards lower addresses
 
 /* test values */
 `define TEST_INSTR_WIDTH     16
@@ -112,13 +112,13 @@
 `define FLAG_COUNT            7
 
 /* Control signals */
-`define CONTROL_MEM_READ        0 // semnal activat de instructiunile care pot citi din memorie
-`define CONTROL_MEM_WRITE       1 // semnal activat de instructiunile care pot scrie in memorie
-`define CONTROL_REG_RR_READ     2 // semnal activat de instructiunile care pot citi Rr
-`define CONTROL_REG_RR_WRITE    3 // semnal activat de instructiunile care pot scrie Rr
-`define CONTROL_REG_RD_READ     4 // semnal activat de instructiunile care pot citi Rd
-`define CONTROL_REG_RD_WRITE    5 // semnal activat de instructiunile care pot scrie Rd
-`define CONTROL_STACK_POSTDEC   6 // semnal care va mari stiva (sp-- <=> st.push) - stiva creste in jos 
-`define CONTROL_STACK_PREINC    7 // semnal care va micsora stiva (sp++ <=> st.pop)
+`define CONTROL_MEM_READ        0 // signal activated by the instr. which can read from memory
+`define CONTROL_MEM_WRITE       1 // signal activated by the instr. which can write to memory
+`define CONTROL_REG_RR_READ     2 // signal activated by the instr. which can read Rr
+`define CONTROL_REG_RR_WRITE    3 // signal activated by the instr. which can write Rr
+`define CONTROL_REG_RD_READ     4 // signal activated by the instr. which can read Rd
+`define CONTROL_REG_RD_WRITE    5 // signal activated by the instr. which can write Rd
+`define CONTROL_STACK_POSTDEC   6 // signal which will increase the stacks size (sp-- <=> st.push)
+`define CONTROL_STACK_PREINC    7 // signal which will decrease the stacks size (sp++ <=> st.pop)
 
 `endif

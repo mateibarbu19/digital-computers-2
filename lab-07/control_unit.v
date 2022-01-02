@@ -175,7 +175,7 @@ module control_unit #(
             opcode_group[`GROUP_ALU_AUX]);
 
     assign alu_flags_in = sreg;
-    /* Bloc de atribuire al sreg-ului */
+    /* sreg attribution block */
     always @(posedge clk, posedge reset)
         if (reset)
             sreg <= 0;
@@ -186,10 +186,10 @@ module control_unit #(
         else if (state == `STATE_EX)
             sreg <= alu_out;
 
-    /* Bloc de atribuire al sp-ului */
+    /* sp attribution block */
     always @(posedge clk, posedge reset) begin
         if (reset)
-            sp <= 0;
+            sp <= 8'hBF;
         else if (bus_addr == {10'd0, `SPL})
             sp <= bus_data;
         else
@@ -199,7 +199,7 @@ module control_unit #(
             sp <= sp + 8'b1;
     end
 
-    /* Bloc de atribuire al program counter-ului */
+    /* Program counter attribution and computation block */
     always @(posedge clk, posedge reset) begin
         if (reset) begin
             program_counter <= 0;
@@ -265,7 +265,7 @@ module control_unit #(
             writeback_value <= alu_rr;
     end
 
-    /* Buffer pentru instructiunea citita */
+    /* Read instruction buffer */
     always @(posedge clk, posedge reset)
         if (reset) begin
             instr_buffer <= 0;
@@ -273,7 +273,7 @@ module control_unit #(
             instr_buffer <= instruction;
         end
 
-    /* Buffer pentru output-ul UAL-ului */
+    /* ALU output buffer */
     always @(posedge clk, posedge reset)
         if (reset) begin
             alu_out_buffer <= 0;
@@ -281,7 +281,7 @@ module control_unit #(
             alu_out_buffer <= alu_out;
         end
 
-    /* Buffer pentru rd_data si rr_data */
+    /* rd_data and rr_data buffer */
     always @(posedge clk, posedge reset)
         if (reset) begin
             alu_rd <= 0;

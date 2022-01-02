@@ -17,11 +17,11 @@ module decode_unit #(
     output      reg [              2:0] opcode_bit
 );
 
-    /* Fiindca register file-ul procesorului nostru (ATtiny20)
-    are doar 16 registre, putem ignora bitii Rr si Rd de pe pozitiile 9 si 8
-    (Atmel garanteaza ca, din motive de compatibilitate, vor fi mereu setati
-    pe 1, sau, echivalent, vor fi folosite numai registrele R16 ? R31).
-    Deci opcode = 000111rdxxxxxxxx devifne 00011111xxxxxxxx. (Btw, that's ADD)
+    /* Because the register file of our ATtiny20 implementation has only 16
+    registers, we can ignore the Rr and Rd bits at positions 9 and 8.
+    (Atmel guarantees for compatibility reasons that they will always be 1, or
+    equivalently ont the R16-R31 registers will be used.
+    So opcode = 000111rdxxxxxxxx becomes 00011111xxxxxxxx. (Btw, that's ADD.)
     */
 
     always @* begin
@@ -209,12 +209,12 @@ module decode_unit #(
             opcode_group[`GROUP_STORE_INDIRECT];
 
 
-    /* Operatii ce folosesc memoria */
+    /* Operations which use the memory */
     assign opcode_group[`GROUP_MEMORY] =
         (opcode_group[`GROUP_LOAD] ||
             opcode_group[`GROUP_STORE]);
 
-    /* Operatii ce folosesc doar registrele generale */
+    /* Operations which use the general registers */
     assign opcode_group[`GROUP_REGISTER] =
         (opcode_type == `TYPE_LDI) ||
             (opcode_type == `TYPE_MOV)

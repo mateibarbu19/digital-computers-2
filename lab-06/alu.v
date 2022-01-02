@@ -12,10 +12,10 @@ module alu #(parameter DATA_WIDTH = 8) (
     output      reg [  DATA_WIDTH-1:0] flags_out
 );
 
-    /* flags_out a fost transformat in reg, pentru a putea
-    * fi atribuit in interiorul unui bloc always, insa va fi
-    * sintetizat tot combinational (UAL-ul nici macar nu are clk
-    * drept input) */
+    /* flags_out was transformed to reg, so it could be attributed inside
+     * always block, though it will be synthesized using combinational logic,
+     * because UAL has no input clk
+     */
 
     always @* begin
         case (opsel)

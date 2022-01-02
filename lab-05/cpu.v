@@ -95,10 +95,10 @@ module cpu #(
         .flags_out(alu_flags_out)
     );
 
-    // Rom implementeaza un rom generic
-    // noi vrem sa folosim Rom-ul asta ca sursa de instructiuni,
-    // deci de aia avem DATA_WIDTH instantiat cu INSTR_WIDTH
-    // si ADDR_WIDTH instantiat cu I_ADDR_WIDTH
+    // Rom implements a generic read-only-memory.
+    // It is used to store the instructions, that's why we instantiate DATA_WIDTH
+    // with INSTR_WIDTH and ADDR_WIDTH with I_ADDR_WIDTH
+    // It responds on negedge clk
     rom #(
         .DATA_WIDTH(INSTR_WIDTH ),
         .ADDR_WIDTH(I_ADDR_WIDTH)

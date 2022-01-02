@@ -41,7 +41,7 @@ module signal_generation_unit (
     assign signals[`CONTROL_REG_RD_READ] =
         (pipeline_stage == `STAGE_ID) &&
             (opcode_group[`GROUP_ALU] ||
-                ((opcode_group[`GROUP_STORE_INDIRECT] || // X, Y sau Z
+                ((opcode_group[`GROUP_STORE_INDIRECT] || // X, Y or Z
                         opcode_group[`GROUP_LOAD_INDIRECT]) && !opcode_group[`GROUP_STACK]));
     assign signals[`CONTROL_REG_RD_WRITE] =
         (pipeline_stage == `STAGE_WB) &&
