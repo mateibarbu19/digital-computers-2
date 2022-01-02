@@ -100,7 +100,6 @@ module timer_unit #(parameter DATA_WIDTH = 8) (
 
     // Counter assignment block.
     always @(posedge clk_t, posedge reset) begin
-        $display("timp %t", $time);
         if (reset) begin
             tcnt0 <= 0;
         end else begin
