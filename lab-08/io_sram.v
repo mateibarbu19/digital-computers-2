@@ -38,7 +38,7 @@ module io_sram #(
     begin
         if (reset) begin
             for (i = 0; i < (1<<ADDR_WIDTH); i = i + 1) begin
-                memory[i[ADDR_WIDTH-1:0]] = 0;
+                memory[i[ADDR_WIDTH-1:0]] = i[ADDR_WIDTH-1:0] == `SPL ? 8'hBF : 0;
             end
         end
         else if (cs) begin

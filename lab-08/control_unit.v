@@ -151,13 +151,14 @@ module control_unit #(
     );
 
     assign indirect_addr =
-        (opcode_group[`GROUP_LOAD_INDIRECT] ||
-         opcode_group[`GROUP_STORE_INDIRECT]) ?
-            (opcode_group[`GROUP_STACK] ?
-                (cycle_count == 0) ? {8'b0, sp} : {10'd0, `SREG} :
-        // else, indirect to memory => X or Y or Z
-                {alu_rr, alu_rd}) :
-        // else, not indirect
+        (opcode_group[`GROUP_LOAD_INDIRECT] || opcode_group[`GROUP_STORE_INDIRECT]) ?
+            (((opcode_type == `TYPE_RCALL || opcode_type == `TYPE_CALL_ISR) && signals[`CONTROL_MEM_WRITE]) ||
+                ((opcode_type == `TYPE_RET || opcode_type == `TYPE_RETI) && signals[`CONTROL_MEM_READ])) ?
+                {8'b0, sp} :
+                (opcode_group[`GROUP_STACK] ?
+                    (cycle_count == 0) ? {8'b0, sp} : {10'd0, `SREG} :
+                    {alu_rr, alu_rd}) :
+            // else, not indirect
             {ADDR_WIDTH{1'bx}};
 
     assign data_to_store =
@@ -196,7 +197,7 @@ module control_unit #(
     /* Bloc de atribuire al sp-ului */
     always @(posedge clk, posedge reset) begin
         if (reset)
-            sp <= 0;
+            sp <= 8'hBF;
         else if (bus_addr == {10'd0, `SPL})
             sp <= bus_data;
         else
@@ -265,15 +266,9 @@ module control_unit #(
                 (opcode_type == `TYPE_RET || opcode_type == `TYPE_RETI))
         begin
             if (cycle_count == 0) begin
-                $display("Aici1 %t %d", $time, bus_data);
                 saved_pc[7:0]  <= bus_data;
-                $strobe("saved_pc %d", saved_pc);
-                $strobe("bus_data %d", bus_data);
             end else begin
-                $display("Aici2 %t %d", $time, bus_data);
                 saved_pc[15:8] <= bus_data;
-                $strobe("saved_pc %d", saved_pc);
-                $strobe("bus_data %d", bus_data);
             end
         end
     end

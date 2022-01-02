@@ -1,6 +1,8 @@
     TCCR0A      equ 0x19
     TCCR0B      equ 0x18
     TIMSK       equ 0x26
+    DDRA        equ 0x01
+    PORTA       equ 0x02
  
     rjmp        main            ; Adresa 0x0000
     reti                        ; Adresa 0x0001
@@ -21,8 +23,16 @@
     reti                        ; Adresa 0x0010
  
 TIM0_OVF_ISR:
-    ; Rutina doar încarcă valoarea 42 în R31.
-    ldi         R31, 0x2A
+    ; ldi         R16, 2
+    ; out         DDRA, R16
+    sbi           DDRA, 0
+    sbi           PORTA, 0
+    nop
+    nop
+    nop
+    cbi           DDRA, 0
+    cbi           PORTA, 0
+
     reti
  
 main:
