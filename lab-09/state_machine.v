@@ -1,0 +1,1 @@
+../lab-08/state_machine.v
