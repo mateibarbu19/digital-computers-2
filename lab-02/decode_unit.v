@@ -23,8 +23,8 @@ module decode_unit #(
     /* Decode instructions */
     always @* begin
         casez (instruction)
-			// Example: Add with carry instruction decode
-			16'b0001_11??_????_????: begin
+	    // Example: Add with carry instruction decode
+	    16'b0001_11??_????_????: begin
                 opcode_type = `TYPE_ADC;
                 opcode_rd   = instruction[8:4];
                 opcode_rr   = {instruction[9], instruction[3:0]};
