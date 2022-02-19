@@ -1,1 +1,0 @@
-../lab-08/cpu_test.v
