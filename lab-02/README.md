@@ -49,7 +49,7 @@ contain any procedural blocks.
 ## Control Unit
 
 The "brains of this implementation, is responsible for making the connections in
-the `CPU` module transfer information in a organized fashion.
+the `CPU` module transfer information in an organized fashion.
 
 First of all, it manages the program counter, we will see in the next
 laboratories why this is necessary (hint: when we have branches and jumps the
@@ -119,7 +119,7 @@ This file basically acts as a middle man between the `control_unit` and
 `dual_port_sram`.
 
 Why do we need such a middle man? Because we need to interpret the decoded
-bit's outputted by the `decode_unit` and signals. It helps know when is the
+bit's outputted by the `decode_unit` and signals. It helps to know when is the
 right time to transfer data/to and from the registers, and at what addresses.
 
 Code source: `reg_file_interface.v`
@@ -135,7 +135,8 @@ It consists of:
 2. Address accessed from memory
 3. Data sent/retrieved to/from memory
 
-Code source: `bus_interface_unit.v`
+Code source: `bus_interface_unit.v`, will be present in the next lab
+
 
 ---
 
